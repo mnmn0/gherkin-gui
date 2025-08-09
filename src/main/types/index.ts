@@ -104,30 +104,6 @@ export interface TestSummary {
   successRate: number;
 }
 
-export interface ProjectConfig {
-  projectName: string;
-  projectPath: string;
-  buildTool: 'maven' | 'gradle';
-  buildFilePath: string;
-  javaHome?: string;
-  defaultClasspath: string[];
-  defaultSpringProfiles: string[];
-  codeGenerationTemplates: CodeTemplate[];
-}
-
-export interface CodeTemplate {
-  name: string;
-  description: string;
-  template: string;
-  variables: TemplateVariable[];
-}
-
-export interface TemplateVariable {
-  name: string;
-  description: string;
-  defaultValue?: string;
-  required: boolean;
-}
 
 export interface GenerationConfig {
   template?: string;
@@ -180,4 +156,82 @@ export interface AppError {
   severity: 'info' | 'warning' | 'error' | 'critical';
   context?: Record<string, any>;
   timestamp: Date;
+}
+
+export interface GenerationTemplate {
+  id: string;
+  name: string;
+  description: string;
+  type: 'junit5' | 'junit4' | 'testng' | 'cucumber' | 'custom';
+  content: string;
+  variables: TemplateVariable[];
+  isDefault: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface TemplateVariable {
+  name: string;
+  type: 'string' | 'boolean' | 'number' | 'array';
+  defaultValue?: string;
+  description?: string;
+}
+
+export interface ProjectConfig {
+  projectName: string;
+  description?: string;
+  specificationDirectory: string;
+  reportDirectory: string;
+  testConfiguration: {
+    buildTool: 'maven' | 'gradle';
+    javaVersion: string;
+    testFramework: string;
+    springBootVersion: string;
+  };
+  codeGeneration?: {
+    defaultPackage: string;
+    baseTestClass?: string;
+    generateStepDefinitions: boolean;
+    includePageObjects: boolean;
+  };
+  fileWatching?: {
+    enabled: boolean;
+    autoRegenerate: boolean;
+  };
+}
+
+export interface GlobalConfig {
+  language?: string;
+  theme?: 'light' | 'dark' | 'auto';
+  autoSave?: boolean;
+  showWelcomeScreen?: boolean;
+  editor?: {
+    fontFamily: string;
+    fontSize: number;
+    tabSize: number;
+    wordWrap: boolean;
+    showLineNumbers: boolean;
+    highlightActiveLine: boolean;
+  };
+  ui?: {
+    sidebarWidth: number;
+    zoomLevel: number;
+    compactMode: boolean;
+    showStatusBar: boolean;
+  };
+  maxRecentFiles?: number;
+  backupInterval?: number;
+  enableTelemetry?: boolean;
+  enableDebugLogging?: boolean;
+}
+
+export interface ConfigurationPreset {
+  id: string;
+  name: string;
+  description: string;
+  category: 'project' | 'testing' | 'generation' | 'editor';
+  config: Partial<ProjectConfig & GlobalConfig>;
+  isBuiltIn: boolean;
+  createdAt: Date;
+  updatedAt: Date;
 }
