@@ -44,7 +44,7 @@ export const TestExecutionPage: React.FC = () => {
     } catch (error) {
       setState((prev) => ({
         ...prev,
-        error: `Failed to load specifications: ${error}`,
+        error: `仕様書の読み込みに失敗しました: ${error}`,
         isLoading: false,
       }));
     }
@@ -122,7 +122,7 @@ export const TestExecutionPage: React.FC = () => {
     } catch (error) {
       setState((prev) => ({
         ...prev,
-        error: `Failed to start test execution: ${error}`,
+        error: `テスト実行の開始に失敗しました: ${error}`,
         isLoading: false,
       }));
     }
@@ -145,7 +145,7 @@ export const TestExecutionPage: React.FC = () => {
     } catch (error) {
       setState((prev) => ({
         ...prev,
-        error: `Failed to cancel execution: ${error}`,
+        error: `実行のキャンセルに失敗しました: ${error}`,
       }));
     }
   };
@@ -159,15 +159,15 @@ export const TestExecutionPage: React.FC = () => {
       <div className="page-header">
         <div className="header-content">
           <div className="header-text">
-            <h1>Test Execution</h1>
-            <p>Run and monitor test executions</p>
+            <h1>テスト実行</h1>
+            <p>テストの実行と監視</p>
           </div>
           <div className="header-tabs">
             <button
               className={`tab-btn ${state.viewMode === 'runner' ? 'active' : ''}`}
               onClick={handleViewRunner}
             >
-              🚀 Test Runner
+              🚀 テストランナー
             </button>
             <button
               className={`tab-btn ${state.viewMode === 'monitor' ? 'active' : ''}`}
@@ -175,7 +175,7 @@ export const TestExecutionPage: React.FC = () => {
                 setState((prev) => ({ ...prev, viewMode: 'monitor' }))
               }
             >
-              📊 Monitor ({state.activeExecutions.size})
+              📊 モニター ({state.activeExecutions.size})
             </button>
           </div>
         </div>

@@ -49,7 +49,7 @@ export const CodeGenerationPage: React.FC = () => {
     } catch (error) {
       setState((prev) => ({
         ...prev,
-        error: `Failed to load specifications: ${error}`,
+        error: `仕様書の読み込みに失敗しました: ${error}`,
         isLoading: false,
       }));
     }
@@ -78,7 +78,7 @@ export const CodeGenerationPage: React.FC = () => {
     } catch (error) {
       setState((prev) => ({
         ...prev,
-        error: `Failed to load specification: ${error}`,
+        error: `仕様書の読み込みに失敗しました: ${error}`,
         isLoading: false,
       }));
     }
@@ -99,7 +99,7 @@ export const CodeGenerationPage: React.FC = () => {
     } catch (error) {
       setState((prev) => ({
         ...prev,
-        error: `Failed to generate code: ${error}`,
+        error: `コード生成に失敗しました: ${error}`,
         isLoading: false,
       }));
     }
@@ -112,8 +112,8 @@ export const CodeGenerationPage: React.FC = () => {
   return (
     <div className="page">
       <div className="page-header">
-        <h1>Code Generation</h1>
-        <p>Generate JUnit test code from Gherkin specifications</p>
+        <h1>コード生成</h1>
+        <p>Gherkin仕様書からJUnitテストコードを生成</p>
       </div>
 
       {state.error && (

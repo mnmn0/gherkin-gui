@@ -13,38 +13,38 @@ interface NavigationItem {
 const navigationItems: NavigationItem[] = [
   {
     id: 'specifications',
-    label: 'Specifications',
+    label: '仕様書',
     path: '/specifications',
     icon: '📝',
-    description: 'Manage Gherkin test specifications',
+    description: 'Gherkinテスト仕様書の管理',
   },
   {
     id: 'code-generation',
-    label: 'Code Generation',
+    label: 'コード生成',
     path: '/code-generation',
     icon: '⚙️',
-    description: 'Generate JUnit test code',
+    description: 'JUnitテストコードの生成',
   },
   {
     id: 'test-execution',
-    label: 'Test Execution',
+    label: 'テスト実行',
     path: '/test-execution',
     icon: '🚀',
-    description: 'Run and monitor tests',
+    description: 'テストの実行と監視',
   },
   {
     id: 'reports',
-    label: 'Reports',
+    label: 'レポート',
     path: '/reports',
     icon: '📊',
-    description: 'View test reports and analytics',
+    description: 'テストレポートと分析の表示',
   },
   {
     id: 'settings',
-    label: 'Settings',
+    label: '設定',
     path: '/settings',
     icon: '⚙️',
-    description: 'Project configuration and settings',
+    description: 'プロジェクトの構成と設定',
   },
 ];
 
@@ -81,8 +81,8 @@ export const NavigationSidebar: React.FC = () => {
 
       <div className="sidebar-footer">
         <div className="project-info">
-          <div className="project-name">Current Project</div>
-          <div className="project-path">Spring Boot App</div>
+          <div className="project-name">現在のプロジェクト</div>
+          <div className="project-path">Spring Boot アプリケーション</div>
         </div>
       </div>
     </div>

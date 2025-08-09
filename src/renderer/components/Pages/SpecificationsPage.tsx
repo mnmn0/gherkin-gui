@@ -41,7 +41,7 @@ export const SpecificationsPage: React.FC = () => {
     } catch (error) {
       setState((prev) => ({
         ...prev,
-        error: `Failed to load specifications: ${error}`,
+        error: `仕様書の読み込みに失敗しました: ${error}`,
         isLoading: false,
       }));
     }
@@ -61,7 +61,7 @@ export const SpecificationsPage: React.FC = () => {
     } catch (error) {
       setState((prev) => ({
         ...prev,
-        error: `Failed to load specification: ${error}`,
+        error: `仕様書の読み込みに失敗しました: ${error}`,
         isLoading: false,
       }));
     }
@@ -87,7 +87,7 @@ export const SpecificationsPage: React.FC = () => {
     } catch (error) {
       setState((prev) => ({
         ...prev,
-        error: `Failed to save specification: ${error}`,
+        error: `仕様書の保存に失敗しました: ${error}`,
         isLoading: false,
       }));
     }
@@ -102,7 +102,7 @@ export const SpecificationsPage: React.FC = () => {
     } catch (error) {
       setState((prev) => ({
         ...prev,
-        error: `Failed to create specification: ${error}`,
+        error: `仕様書の作成に失敗しました: ${error}`,
         isLoading: false,
       }));
     }
@@ -125,7 +125,7 @@ export const SpecificationsPage: React.FC = () => {
     } catch (error) {
       setState((prev) => ({
         ...prev,
-        error: `Failed to delete specification: ${error}`,
+        error: `仕様書の削除に失敗しました: ${error}`,
         isLoading: false,
       }));
     }
@@ -147,8 +147,8 @@ export const SpecificationsPage: React.FC = () => {
   return (
     <div className="specifications-page">
       <div className="page-header">
-        <h1>Test Specifications</h1>
-        <p>Manage your Gherkin test specifications</p>
+        <h1>テスト仕様書</h1>
+        <p>Gherkinテスト仕様書の管理</p>
       </div>
 
       {state.error && (

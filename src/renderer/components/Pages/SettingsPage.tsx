@@ -62,7 +62,7 @@ export const SettingsPage: React.FC = () => {
     } catch (error) {
       setState((prev) => ({
         ...prev,
-        error: `Failed to load settings: ${error}`,
+        error: `設定の読み込みに失敗しました: ${error}`,
         isLoading: false,
       }));
     }
@@ -121,7 +121,7 @@ export const SettingsPage: React.FC = () => {
     } catch (error) {
       setState((prev) => ({
         ...prev,
-        error: `Failed to create preset: ${error}`,
+        error: `プリセットの作成に失敗しました: ${error}`,
       }));
     }
   };
@@ -136,7 +136,7 @@ export const SettingsPage: React.FC = () => {
     } catch (error) {
       setState((prev) => ({
         ...prev,
-        error: `Failed to delete preset: ${error}`,
+        error: `プリセットの削除に失敗しました: ${error}`,
       }));
     }
   };
@@ -170,7 +170,7 @@ export const SettingsPage: React.FC = () => {
     } catch (error) {
       setState((prev) => ({
         ...prev,
-        error: `Failed to save settings: ${error}`,
+        error: `設定の保存に失敗しました: ${error}`,
         isLoading: false,
       }));
     }
@@ -204,7 +204,7 @@ export const SettingsPage: React.FC = () => {
     } catch (error) {
       setState((prev) => ({
         ...prev,
-        error: `Failed to export settings: ${error}`,
+        error: `設定のエクスポートに失敗しました: ${error}`,
       }));
     }
   };
@@ -240,7 +240,7 @@ export const SettingsPage: React.FC = () => {
     } catch (error) {
       setState((prev) => ({
         ...prev,
-        error: `Failed to import settings: ${error}`,
+        error: `設定のインポートに失敗しました: ${error}`,
       }));
     }
   };
@@ -250,7 +250,7 @@ export const SettingsPage: React.FC = () => {
       return (
         <div className="loading">
           <div className="loading-spinner" />
-          <span>Loading settings...</span>
+          <span>設定を読み込み中...</span>
         </div>
       );
     }
@@ -302,8 +302,8 @@ export const SettingsPage: React.FC = () => {
       <div className="page-header">
         <div className="header-content">
           <div className="header-text">
-            <h1>Settings</h1>
-            <p>Configure project and global settings</p>
+            <h1>設定</h1>
+            <p>プロジェクトとグローバル設定の構成</p>
           </div>
           <div className="header-actions">
             <input
@@ -325,20 +325,20 @@ export const SettingsPage: React.FC = () => {
                 document.getElementById('import-settings')?.click()
               }
             >
-              📥 Import
+              📥 インポート
             </button>
             <button
               className="btn btn-secondary"
               onClick={handleExportSettings}
             >
-              📤 Export
+              📤 エクスポート
             </button>
             <button
               className="btn btn-secondary"
               onClick={handleReset}
               disabled={!state.hasUnsavedChanges}
             >
-              🔄 Reset
+              🔄 リセット
             </button>
             <button
               className="btn btn-primary"
@@ -348,10 +348,10 @@ export const SettingsPage: React.FC = () => {
               {state.isLoading ? (
                 <>
                   <div className="loading-spinner small" />
-                  Saving...
+                  保存中...
                 </>
               ) : (
-                <>💾 Save Changes</>
+                <>💾 変更を保存</>
               )}
             </button>
           </div>
@@ -364,7 +364,7 @@ export const SettingsPage: React.FC = () => {
               setState((prev) => ({ ...prev, activeTab: 'project' }))
             }
           >
-            🏗️ Project Settings
+            🏗️ プロジェクト設定
           </button>
           <button
             className={`tab-btn ${state.activeTab === 'global' ? 'active' : ''}`}
@@ -372,7 +372,7 @@ export const SettingsPage: React.FC = () => {
               setState((prev) => ({ ...prev, activeTab: 'global' }))
             }
           >
-            🌐 Global Settings
+            🌐 グローバル設定
           </button>
           <button
             className={`tab-btn ${state.activeTab === 'templates' ? 'active' : ''}`}
@@ -380,7 +380,7 @@ export const SettingsPage: React.FC = () => {
               setState((prev) => ({ ...prev, activeTab: 'templates' }))
             }
           >
-            📄 Templates ({state.templates.length})
+            📄 テンプレート ({state.templates.length})
           </button>
           <button
             className={`tab-btn ${state.activeTab === 'presets' ? 'active' : ''}`}
@@ -388,7 +388,7 @@ export const SettingsPage: React.FC = () => {
               setState((prev) => ({ ...prev, activeTab: 'presets' }))
             }
           >
-            📦 Presets ({state.presets.length})
+            📦 プリセット ({state.presets.length})
           </button>
         </div>
       </div>
@@ -407,13 +407,13 @@ export const SettingsPage: React.FC = () => {
       {state.hasUnsavedChanges && (
         <div className="changes-banner">
           <span className="changes-icon">⚠️</span>
-          <span>You have unsaved changes</span>
+          <span>未保存の変更があります</span>
           <div className="changes-actions">
             <button className="btn-link" onClick={handleReset}>
-              Discard
+              破棄
             </button>
             <button className="btn btn-primary btn-small" onClick={handleSave}>
-              Save Now
+              今すぐ保存
             </button>
           </div>
         </div>
