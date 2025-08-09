@@ -25,7 +25,7 @@ export class FileManagerService {
     try {
       await fs.mkdir(this.specPath, { recursive: true });
       await fs.mkdir(this.reportPath, { recursive: true });
-    } catch (_error) {
+    } catch {
       // Directory creation failed - this will be handled by subsequent operations
     }
   }
@@ -54,7 +54,7 @@ export class FileManagerService {
       return specifications.sort(
         (a, b) => b.lastModified.getTime() - a.lastModified.getTime(),
       );
-    } catch (_error) {
+    } catch {
       return [];
     }
   }
@@ -148,7 +148,6 @@ export class FileManagerService {
           try {
             const content = await fs.readFile(filePath, 'utf-8');
             const report: TestReport = JSON.parse(content);
-            const stats = await fs.stat(filePath);
 
             reports.push({
               id: report.id,
@@ -157,7 +156,7 @@ export class FileManagerService {
               timestamp: new Date(report.timestamp),
               summary: this.calculateSummary(report),
             });
-          } catch (_parseError) {
+          } catch {
             // Skip invalid report files
           }
         }
@@ -166,7 +165,7 @@ export class FileManagerService {
       return reports.sort(
         (a, b) => b.timestamp.getTime() - a.timestamp.getTime(),
       );
-    } catch (_error) {
+    } catch {
       return [];
     }
   }
@@ -237,7 +236,7 @@ export class FileManagerService {
       await fs.writeFile(backupPath, content, 'utf-8');
 
       return backupPath;
-    } catch (_error) {
+    } catch {
       return null;
     }
   }
@@ -260,7 +259,7 @@ export class FileManagerService {
           await fs.unlink(path.join(backupDir, backup));
         }
       }
-    } catch (_error) {
+    } catch {
       // Backup cleanup failed - not critical
     }
   }
@@ -275,7 +274,7 @@ export class FileManagerService {
           await this.deleteReport(report.filePath);
         }
       }
-    } catch (_error) {
+    } catch {
       // Report cleanup failed - not critical
     }
   }

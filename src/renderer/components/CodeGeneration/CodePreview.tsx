@@ -25,9 +25,8 @@ export const CodePreview: React.FC<CodePreviewProps> = ({
     try {
       await navigator.clipboard.writeText(generatedCode);
       // TODO: Show toast notification
-      console.log('Code copied to clipboard');
-    } catch (error) {
-      console.error('Failed to copy code:', error);
+    } catch {
+      // Failed to copy code to clipboard
     }
   };
 
@@ -49,7 +48,7 @@ export const CodePreview: React.FC<CodePreviewProps> = ({
       const result = await apiService.validateCode(generatedCode);
       setValidationResult(result);
     } catch (error) {
-      console.error('Failed to validate code:', error);
+      // Failed to validate code
       setValidationResult({
         valid: false,
         errors: [

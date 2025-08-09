@@ -46,8 +46,8 @@ export const ReportAnalytics: React.FC<ReportAnalyticsProps> = ({
         .map((report) => apiService.loadReport(report.filePath));
       const loadedReports = await Promise.all(reportPromises);
       setFullReports(loadedReports);
-    } catch (error) {
-      console.error('Failed to load reports for analytics:', error);
+    } catch {
+      // Failed to load reports for analytics
     }
     setIsLoading(false);
   };
@@ -201,22 +201,18 @@ export const ReportAnalytics: React.FC<ReportAnalyticsProps> = ({
   const renderTrendChart = () => {
     if (trendData.length === 0) return null;
 
-    const maxSuccess = Math.max(...trendData.map((d) => d.successRate));
-    const minSuccess = Math.min(...trendData.map((d) => d.successRate));
-    const range = maxSuccess - minSuccess || 1;
-
     return (
       <div className="trend-chart">
         <div className="chart-header">
           <h3>Success Rate Trend</h3>
           <div className="time-range-selector">
-            {(['7d', '30d', '90d', 'all'] as const).map((range) => (
+            {(['7d', '30d', '90d', 'all'] as const).map((timeRange) => (
               <button
-                key={range}
-                className={`range-btn ${selectedTimeRange === range ? 'active' : ''}`}
-                onClick={() => setSelectedTimeRange(range)}
+                key={timeRange}
+                className={`range-btn ${selectedTimeRange === timeRange ? 'active' : ''}`}
+                onClick={() => setSelectedTimeRange(timeRange)}
               >
-                {range === 'all' ? 'All Time' : range.toUpperCase()}
+                {timeRange === 'all' ? 'All Time' : timeRange.toUpperCase()}
               </button>
             ))}
           </div>

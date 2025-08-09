@@ -15,8 +15,8 @@ export const SpecificationViewer: React.FC<SpecificationViewerProps> = ({
   onEdit,
   onBack,
 }) => {
-  const renderGherkinContent = (content: string) => {
-    const lines = content.split('\n');
+  const renderGherkinContent = (gherkinContent: string) => {
+    const lines = gherkinContent.split('\n');
 
     return lines.map((line, index) => {
       let className = 'gherkin-line';

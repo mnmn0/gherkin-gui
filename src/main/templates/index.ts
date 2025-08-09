@@ -478,35 +478,27 @@ export class TemplateEngine {
     generatedCode: string,
     templateName: string,
   ): GenerationTemplate {
-    const variablePattern =
-      /\b(?:com\.example\.[a-z]+|UserService|UserController|test|TestClass)\b/g;
     const variables = new Set<string>();
 
     let template = generatedCode;
 
-    template = template.replace(
-      /package\s+(com\.example\.[a-z]+);/,
-      (match, packageName) => {
-        variables.add('packageName');
-        return 'package {{packageName}};';
-      },
-    );
+    template = template.replace(/package\s+(com\.example\.[a-z]+);/, () => {
+      variables.add('packageName');
+      return 'package {{packageName}};';
+    });
 
     template = template.replace(
       /public\s+class\s+([A-Z][a-zA-Z0-9]*)\s*\{/,
-      (match, className) => {
+      () => {
         variables.add('className');
         return 'public class {{className}} {';
       },
     );
 
-    template = template.replace(
-      /@ActiveProfiles\("([^"]+)"\)/,
-      (match, profile) => {
-        variables.add('testProfile');
-        return '@ActiveProfiles("{{testProfile}}")';
-      },
-    );
+    template = template.replace(/@ActiveProfiles\("([^"]+)"\)/, () => {
+      variables.add('testProfile');
+      return '@ActiveProfiles("{{testProfile}}")';
+    });
 
     const templateVariables = Array.from(variables).map((name) => ({
       name,

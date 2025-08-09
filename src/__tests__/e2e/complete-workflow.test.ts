@@ -521,10 +521,9 @@ Feature: User Account Management
       await fileManager.saveSpecification(specPath, initialContent);
 
       // Set up change detection
-      let changeDetected = false;
       fileManager.on('file-changed', (filePath: string) => {
         if (filePath === specPath) {
-          changeDetected = true;
+          // File change detected
         }
       });
 
@@ -549,50 +548,3 @@ Feature: User Account Management
     });
   });
 });
-
-// Helper function to create a complete project structure
-async function createCompleteProjectStructure(baseDir: string): Promise<void> {
-  const directories = [
-    'src/main/java/com/example',
-    'src/test/java/com/example',
-    'src/main/resources',
-    'src/test/resources',
-    '.gherkin/spec',
-    '.gherkin/report',
-    '.gherkin/backup',
-    'target/classes',
-    'target/test-classes',
-  ];
-
-  for (const dir of directories) {
-    const fullPath = path.join(baseDir, dir);
-    fs.mkdirSync(fullPath, { recursive: true });
-  }
-
-  // Create application.properties
-  const appPropsPath = path.join(
-    baseDir,
-    'src',
-    'main',
-    'resources',
-    'application.properties',
-  );
-  fs.writeFileSync(
-    appPropsPath,
-    `spring.profiles.active=dev
-server.port=8080`,
-  );
-
-  const testPropsPath = path.join(
-    baseDir,
-    'src',
-    'test',
-    'resources',
-    'application-test.properties',
-  );
-  fs.writeFileSync(
-    testPropsPath,
-    `spring.profiles.active=test
-spring.datasource.url=jdbc:h2:mem:testdb`,
-  );
-}

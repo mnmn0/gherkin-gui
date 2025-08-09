@@ -166,8 +166,7 @@ export const SettingsPage: React.FC = () => {
         isLoading: false,
       }));
 
-      // Show success feedback
-      console.log('Settings saved successfully');
+      // Settings saved successfully
     } catch (error) {
       setState((prev) => ({
         ...prev,

@@ -160,11 +160,6 @@ describe('File Operations Integration', () => {
     await fileManager.saveSpecification(specPath, updatedContent);
 
     // Check if backup was created
-    const backupPattern = path.join(
-      path.dirname(specPath),
-      '.backup',
-      `backup-test.feature.*.bak`,
-    );
     const backupDir = path.join(path.dirname(specPath), '.backup');
 
     if (fs.existsSync(backupDir)) {

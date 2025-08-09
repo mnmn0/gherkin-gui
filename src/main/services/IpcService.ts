@@ -519,7 +519,7 @@ export class IpcService {
       };
 
       await this.fileManager.saveReport(report);
-    } catch (error) {
+    } catch {
       // Report save failed - continue silently
     }
   }

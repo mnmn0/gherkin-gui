@@ -34,7 +34,7 @@ export class CodeGenerationService {
     const imports = this.generateImports(config);
     const classAnnotations = this.generateClassAnnotations(config);
     const setupMethods = this.generateSetupMethods(feature);
-    const testMethods = this.generateTestMethods(feature, config);
+    const testMethods = this.generateTestMethods(feature);
     const stepMethods = this.generateStepMethods(feature);
 
     const javaCode = `package ${packageName};
@@ -182,15 +182,12 @@ ${stepMethods}
     return setupCode;
   }
 
-  private generateTestMethods(
-    feature: GherkinFeature,
-    _config: GenerationConfig,
-  ): string {
+  private generateTestMethods(feature: GherkinFeature): string {
     const testMethods: string[] = [];
 
-    feature.scenarios.forEach((scenario, index) => {
+    feature.scenarios.forEach((scenario) => {
       const methodName = this.generateMethodName(scenario.name);
-      const testMethod = this.generateTestMethod(scenario, methodName, index);
+      const testMethod = this.generateTestMethod(scenario, methodName);
       testMethods.push(testMethod);
     });
 
@@ -200,7 +197,6 @@ ${stepMethods}
   private generateTestMethod(
     scenario: GherkinScenario,
     methodName: string,
-    _index: number,
   ): string {
     const tags = scenario.tags.length > 0 ? scenario.tags.join(', ') : '';
     const tagComment = tags ? `    // Tags: ${tags}\n` : '';

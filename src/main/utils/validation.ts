@@ -260,7 +260,6 @@ export function validateGherkinSyntax(content: string): ValidationResult {
   let hasFeature = false;
   let inScenario = false;
   let inBackground = false;
-  let inExamples = false;
 
   lines.forEach((line, index) => {
     const trimmedLine = line.trim();
@@ -290,7 +289,6 @@ export function validateGherkinSyntax(content: string): ValidationResult {
     ) {
       inScenario = true;
       inBackground = false;
-      inExamples = false;
       if (trimmedLine === 'Scenario:' || trimmedLine === 'Scenario Outline:') {
         errors.push({
           line: lineNumber,
@@ -319,7 +317,6 @@ export function validateGherkinSyntax(content: string): ValidationResult {
           code: 'EXAMPLES_WITHOUT_SCENARIO',
         });
       }
-      inExamples = true;
     }
 
     const stepKeywords = ['Given', 'When', 'Then', 'And', 'But'];

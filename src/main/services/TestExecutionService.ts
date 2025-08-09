@@ -175,18 +175,26 @@ export class TestExecutionService extends EventEmitter {
     let stderrData = '';
 
     process.stdout?.on('data', (data: Buffer) => {
-      const output = data.toString();
-      stdoutData += output;
+      const dataOutput = data.toString();
+      stdoutData += dataOutput;
 
-      this.parseProgressFromOutput(output, executionId);
-      this.emit('execution:output', { executionId, output, type: 'stdout' });
+      this.parseProgressFromOutput(dataOutput, executionId);
+      this.emit('execution:output', {
+        executionId,
+        output: dataOutput,
+        type: 'stdout',
+      });
     });
 
     process.stderr?.on('data', (data: Buffer) => {
-      const output = data.toString();
-      stderrData += output;
+      const dataOutput = data.toString();
+      stderrData += dataOutput;
 
-      this.emit('execution:output', { executionId, output, type: 'stderr' });
+      this.emit('execution:output', {
+        executionId,
+        output: dataOutput,
+        type: 'stderr',
+      });
     });
 
     process.on('close', async (code: number | null) => {
@@ -236,17 +244,17 @@ export class TestExecutionService extends EventEmitter {
       let currentTest = '';
 
       if (line.includes('Running ')) {
-        const match = line.match(/Running\s+([^\s]+)/);
-        if (match) {
-          currentTest = match[1];
-          progress = this.calculateProgress(executionId, line);
+        const runningMatch = line.match(/Running\s+([^\s]+)/);
+        if (runningMatch) {
+          currentTest = runningMatch[1];
+          progress = this.calculateProgress(executionId);
         }
       } else if (line.includes('Tests run:')) {
-        const match = line.match(
+        const testsMatch = line.match(
           /Tests run:\s*(\d+),.*Failures:\s*(\d+),.*Errors:\s*(\d+),.*Skipped:\s*(\d+)/,
         );
-        if (match) {
-          const total = parseInt(match[1]);
+        if (testsMatch) {
+          const total = parseInt(testsMatch[1]);
           progress = Math.min(100, (total / (total + 5)) * 100); // Estimate
         }
       }
@@ -257,7 +265,7 @@ export class TestExecutionService extends EventEmitter {
     }
   }
 
-  private calculateProgress(executionId: string, output: string): number {
+  private calculateProgress(executionId: string): number {
     const execution = this.executionStatus.get(executionId);
     if (!execution) return 0;
 
@@ -291,7 +299,6 @@ export class TestExecutionService extends EventEmitter {
   private updateExecutionStatus(
     executionId: string,
     status: TestExecution['status'],
-    message?: string,
   ): void {
     const execution = this.executionStatus.get(executionId);
     if (execution) {
@@ -315,7 +322,7 @@ export class TestExecutionService extends EventEmitter {
       if (config.buildTool === 'gradle') {
         return await this.parseGradleResults(config, stdout, stderr);
       }
-    } catch (error) {
+    } catch {
       // Failed to parse detailed results, using fallback
     }
 
@@ -370,7 +377,7 @@ export class TestExecutionService extends EventEmitter {
         executionTime: totalTime,
         testCases,
       };
-    } catch (error) {
+    } catch {
       return this.createFallbackResult(
         config.specificationPath,
         stdout,
@@ -423,7 +430,7 @@ export class TestExecutionService extends EventEmitter {
         executionTime: totalTime,
         testCases,
       };
-    } catch (error) {
+    } catch {
       return this.createFallbackResult(
         config.specificationPath,
         stdout,
@@ -458,7 +465,6 @@ export class TestExecutionService extends EventEmitter {
       const errors = parseInt(testSuiteMatch[3]);
       skippedTests = parseInt(testSuiteMatch[4]);
       executionTime = parseFloat(testSuiteMatch[5]) * 1000; // Convert to milliseconds
-      const className = testSuiteMatch[6];
 
       failedTests = failures + errors;
       passedTests = totalTests - failedTests - skippedTests;
@@ -562,7 +568,7 @@ export class TestExecutionService extends EventEmitter {
   }
 
   cleanup(): void {
-    for (const [executionId, process] of this.runningExecutions) {
+    for (const [, process] of this.runningExecutions) {
       if (!process.killed) {
         process.kill('SIGTERM');
       }

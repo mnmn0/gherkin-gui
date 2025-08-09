@@ -28,7 +28,7 @@ export class FileWatcherService extends EventEmitter {
         { recursive: false },
         (eventType, filename) => {
           if (filename) {
-            this.handleFileChange(path.join(dirPath, filename), eventType);
+            this.handleFileChange(path.join(dirPath, filename));
           }
         },
       );
@@ -36,10 +36,10 @@ export class FileWatcherService extends EventEmitter {
       this.watchers.set(dirPath, watcher);
       this.scanDirectory(dirPath);
 
-      watcher.on('error', (error) => {
+      watcher.on('error', () => {
         this.unwatchDirectory(dirPath);
       });
-    } catch (error) {
+    } catch {
       // Directory watching failed - continue silently
     }
   }
@@ -69,7 +69,7 @@ export class FileWatcherService extends EventEmitter {
     this.debounceTimers.clear();
   }
 
-  private handleFileChange(filePath: string, eventType: string): void {
+  private handleFileChange(filePath: string): void {
     const existingTimer = this.debounceTimers.get(filePath);
     if (existingTimer) {
       clearTimeout(existingTimer);
@@ -104,7 +104,7 @@ export class FileWatcherService extends EventEmitter {
           this.emitChange(filePath, 'modified');
         }
       }
-    } catch (error) {
+    } catch {
       // File change processing failed - continue silently
     }
   }
@@ -121,11 +121,11 @@ export class FileWatcherService extends EventEmitter {
           if (stats.isFile()) {
             this.fileStates.set(filePath, stats);
           }
-        } catch (error) {
+        } catch {
           // File stat failed - skip this file
         }
       }
-    } catch (error) {
+    } catch {
       // Directory scan failed - continue silently
     }
   }
