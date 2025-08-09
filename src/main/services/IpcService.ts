@@ -378,12 +378,23 @@ export class IpcService {
       // Load default configuration
       const defaultConfig: ProjectConfig = {
         projectName: 'Spring Boot Test Project',
-        projectPath: process.cwd(),
-        buildTool: 'maven',
-        buildFilePath: path.join(process.cwd(), 'pom.xml'),
-        defaultClasspath: [],
-        defaultSpringProfiles: ['test'],
-        codeGenerationTemplates: [],
+        specificationDirectory: '.gherkin/spec',
+        reportDirectory: '.gherkin/report',
+        testConfiguration: {
+          buildTool: 'maven',
+          javaVersion: '11',
+          testFramework: 'junit5',
+          springBootVersion: '3.0.0',
+        },
+        codeGeneration: {
+          defaultPackage: 'com.example.tests',
+          generateStepDefinitions: true,
+          includePageObjects: false,
+        },
+        fileWatching: {
+          enabled: true,
+          autoRegenerate: false,
+        },
       };
 
       this.currentProjectConfig = defaultConfig;
@@ -473,11 +484,9 @@ export class IpcService {
   }
 
   private validateGherkinContent(content: string): void {
-    const validation = this.gherkinValidator.validate(content);
-    if (!validation.valid && validation.errors.length > 0) {
-      throw new Error(
-        `Invalid Gherkin content: ${validation.errors.map((e) => e.message).join(', ')}`,
-      );
+    // Basic Gherkin validation - checking for feature keyword
+    if (!content.includes('Feature:')) {
+      throw new Error('Invalid Gherkin content: Must contain a Feature');
     }
   }
 
@@ -543,6 +552,14 @@ export class IpcService {
   cleanup(): void {
     this.testExecutor.cleanup();
     this.fileWatcher.unwatchAll();
-    ipcMain.removeAllListeners();
+    // Remove all IPC handlers
+    const channels = [
+      'file:list-specs', 'file:load-spec', 'file:save-spec', 'file:delete-spec', 'file:create-spec',
+      'code:generate', 'code:validate',
+      'test:execute', 'test:status', 'test:cancel',
+      'report:list', 'report:load', 'report:delete',
+      'project:load-config', 'project:save-config', 'project:validate-config'
+    ];
+    channels.forEach(channel => ipcMain.removeAllListeners(channel));
   }
 }

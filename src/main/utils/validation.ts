@@ -206,42 +206,39 @@ export class ProjectConfigValidator {
       });
     }
 
-    if (!config.projectPath || config.projectPath.trim() === '') {
+    if (!config.specificationDirectory || config.specificationDirectory.trim() === '') {
       errors.push({
-        message: 'Project path is required',
-        code: 'MISSING_PROJECT_PATH',
+        message: 'Specification directory is required',
+        code: 'MISSING_SPEC_DIRECTORY',
       });
     }
 
-    if (!config.buildTool) {
+    if (!config.reportDirectory || config.reportDirectory.trim() === '') {
       errors.push({
-        message: 'Build tool must be specified',
-        code: 'MISSING_BUILD_TOOL',
+        message: 'Report directory is required',
+        code: 'MISSING_REPORT_DIRECTORY',
       });
     }
 
-    if (!config.buildFilePath) {
+    if (!config.testConfiguration) {
       errors.push({
-        message: 'Build file path is required',
-        code: 'MISSING_BUILD_FILE',
+        message: 'Test configuration is required',
+        code: 'MISSING_TEST_CONFIG',
       });
-    }
+    } else {
+      if (!config.testConfiguration.buildTool) {
+        errors.push({
+          message: 'Build tool must be specified in test configuration',
+          code: 'MISSING_BUILD_TOOL',
+        });
+      }
 
-    if (config.defaultClasspath && config.defaultClasspath.length === 0) {
-      warnings.push({
-        message: 'Default classpath is empty',
-        code: 'EMPTY_DEFAULT_CLASSPATH',
-      });
-    }
-
-    if (
-      config.codeGenerationTemplates &&
-      config.codeGenerationTemplates.length === 0
-    ) {
-      warnings.push({
-        message: 'No code generation templates defined',
-        code: 'NO_TEMPLATES',
-      });
+      if (!config.testConfiguration.javaVersion) {
+        errors.push({
+          message: 'Java version must be specified in test configuration',
+          code: 'MISSING_JAVA_VERSION',
+        });
+      }
     }
 
     return {

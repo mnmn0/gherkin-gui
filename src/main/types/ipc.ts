@@ -79,8 +79,10 @@ export interface IpcChannels {
 }
 
 export interface IpcEvents {
+  'execution:started': { executionId: string; config: TestConfig };
   'execution:progress': ExecutionProgress;
   'execution:complete': { executionId: string; result: TestResult };
+  'execution:cancelled': { executionId: string };
   'file:changed': {
     filePath: string;
     changeType: 'created' | 'modified' | 'deleted';

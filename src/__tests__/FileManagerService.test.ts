@@ -21,6 +21,9 @@ describe('FileManagerService', () => {
 
   describe('Specification Management', () => {
     it('should create specification directories', async () => {
+      // Wait a bit for async directory creation in constructor
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
       const specDir = path.join(tempDir, '.gherkin', 'spec');
       const reportDir = path.join(tempDir, '.gherkin', 'report');
 
@@ -249,9 +252,14 @@ describe('FileManagerService', () => {
     });
 
     it('should handle invalid JSON in report files', async () => {
+      // Ensure directory exists first
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
       const reportDir = path.join(tempDir, '.gherkin', 'report');
       const invalidReportPath = path.join(reportDir, 'invalid.json');
 
+      // Ensure report directory exists
+      await fs.mkdir(reportDir, { recursive: true });
       await fs.writeFile(invalidReportPath, 'invalid json content');
 
       const reports = await service.listReports();

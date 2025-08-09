@@ -24,6 +24,8 @@ export const TestRunner: React.FC<TestRunnerProps> = ({
     environmentVars: {
       SPRING_PROFILES_ACTIVE: 'test',
     },
+    buildTool: 'maven',
+    buildFilePath: '',
   });
 
   const handleSpecSelect = (specId: string) => {

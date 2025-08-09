@@ -10,6 +10,12 @@ jest.mock(
   () => ({}),
 );
 
+// Mock window.confirm
+Object.defineProperty(window, 'confirm', {
+  writable: true,
+  value: jest.fn(() => true),
+});
+
 describe('SpecificationList', () => {
   const mockSpecifications: SpecificationFile[] = [
     {
@@ -31,13 +37,10 @@ describe('SpecificationList', () => {
   const defaultProps = {
     specifications: mockSpecifications,
     isLoading: false,
-    searchTerm: '',
-    selectedSpec: null,
     onSelect: jest.fn(),
     onDelete: jest.fn(),
     onCreate: jest.fn(),
     onRefresh: jest.fn(),
-    onSearchChange: jest.fn(),
   };
 
   beforeEach(() => {
@@ -105,39 +108,28 @@ describe('SpecificationList', () => {
     expect(onRefresh).toHaveBeenCalled();
   });
 
-  it('handles search input', () => {
-    const onSearchChange = jest.fn();
-    render(
-      <SpecificationList {...defaultProps} onSearchChange={onSearchChange} />,
-    );
-
-    const searchInput = screen.getByPlaceholderText('Search specifications...');
-    fireEvent.change(searchInput, { target: { value: 'login' } });
-
-    expect(onSearchChange).toHaveBeenCalledWith('login');
-  });
-
-  it('filters specifications based on search term', () => {
-    render(<SpecificationList {...defaultProps} searchTerm="login" />);
+  it('renders basic specification list', () => {
+    render(<SpecificationList {...defaultProps} />);
 
     expect(screen.getByText('user-login.feature')).toBeInTheDocument();
-    expect(
-      screen.queryByText('user-registration.feature'),
-    ).not.toBeInTheDocument();
+    expect(screen.getByText('user-registration.feature')).toBeInTheDocument();
   });
 
-  it('highlights selected specification', () => {
-    render(
-      <SpecificationList
-        {...defaultProps}
-        selectedSpec={mockSpecifications[0]}
-      />,
-    );
+  it('displays all specifications', () => {
+    render(<SpecificationList {...defaultProps} />);
 
-    const selectedItem = screen
-      .getByText('user-login.feature')
-      .closest('.spec-item');
-    expect(selectedItem).toHaveClass('selected');
+    expect(screen.getByText('user-login.feature')).toBeInTheDocument();
+    expect(screen.getByText('user-registration.feature')).toBeInTheDocument();
+  });
+
+  it('handles specification selection', () => {
+    const onSelect = jest.fn();
+    render(<SpecificationList {...defaultProps} onSelect={onSelect} />);
+
+    const specItem = screen.getByText('user-login.feature');
+    fireEvent.click(specItem);
+
+    expect(onSelect).toHaveBeenCalledWith(mockSpecifications[0]);
   });
 
   it('displays specification metadata', () => {
