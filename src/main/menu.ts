@@ -43,7 +43,7 @@ export default class MenuBuilder {
 
       Menu.buildFromTemplate([
         {
-          label: 'Inspect element',
+          label: '要素を検証',
           click: () => {
             this.mainWindow.webContents.inspectElement(x, y);
           },
@@ -54,29 +54,29 @@ export default class MenuBuilder {
 
   buildDarwinTemplate(): MenuItemConstructorOptions[] {
     const subMenuAbout: DarwinMenuItemConstructorOptions = {
-      label: 'Electron',
+      label: 'Spring Boot Test GUI',
       submenu: [
         {
-          label: 'About ElectronReact',
+          label: 'Spring Boot Test GUIについて',
           selector: 'orderFrontStandardAboutPanel:',
         },
         { type: 'separator' },
-        { label: 'Services', submenu: [] },
+        { label: 'サービス', submenu: [] },
         { type: 'separator' },
         {
-          label: 'Hide ElectronReact',
+          label: 'Spring Boot Test GUIを隠す',
           accelerator: 'Command+H',
           selector: 'hide:',
         },
         {
-          label: 'Hide Others',
+          label: 'ほかを隠す',
           accelerator: 'Command+Shift+H',
           selector: 'hideOtherApplications:',
         },
-        { label: 'Show All', selector: 'unhideAllApplications:' },
+        { label: 'すべてを表示', selector: 'unhideAllApplications:' },
         { type: 'separator' },
         {
-          label: 'Quit',
+          label: '終了',
           accelerator: 'Command+Q',
           click: () => {
             app.quit();
@@ -85,40 +85,40 @@ export default class MenuBuilder {
       ],
     };
     const subMenuEdit: DarwinMenuItemConstructorOptions = {
-      label: 'Edit',
+      label: '編集',
       submenu: [
-        { label: 'Undo', accelerator: 'Command+Z', selector: 'undo:' },
-        { label: 'Redo', accelerator: 'Shift+Command+Z', selector: 'redo:' },
+        { label: '取り消す', accelerator: 'Command+Z', selector: 'undo:' },
+        { label: 'やり直す', accelerator: 'Shift+Command+Z', selector: 'redo:' },
         { type: 'separator' },
-        { label: 'Cut', accelerator: 'Command+X', selector: 'cut:' },
-        { label: 'Copy', accelerator: 'Command+C', selector: 'copy:' },
-        { label: 'Paste', accelerator: 'Command+V', selector: 'paste:' },
+        { label: 'カット', accelerator: 'Command+X', selector: 'cut:' },
+        { label: 'コピー', accelerator: 'Command+C', selector: 'copy:' },
+        { label: 'ペースト', accelerator: 'Command+V', selector: 'paste:' },
         {
-          label: 'Select All',
+          label: 'すべてを選択',
           accelerator: 'Command+A',
           selector: 'selectAll:',
         },
       ],
     };
     const subMenuViewDev: MenuItemConstructorOptions = {
-      label: 'View',
+      label: '表示',
       submenu: [
         {
-          label: 'Reload',
+          label: '再読み込み',
           accelerator: 'Command+R',
           click: () => {
             this.mainWindow.webContents.reload();
           },
         },
         {
-          label: 'Toggle Full Screen',
+          label: 'フルスクリーン切り替え',
           accelerator: 'Ctrl+Command+F',
           click: () => {
             this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen());
           },
         },
         {
-          label: 'Toggle Developer Tools',
+          label: '開発者ツール切り替え',
           accelerator: 'Alt+Command+I',
           click: () => {
             this.mainWindow.webContents.toggleDevTools();
@@ -127,10 +127,10 @@ export default class MenuBuilder {
       ],
     };
     const subMenuViewProd: MenuItemConstructorOptions = {
-      label: 'View',
+      label: '表示',
       submenu: [
         {
-          label: 'Toggle Full Screen',
+          label: 'フルスクリーン切り替え',
           accelerator: 'Ctrl+Command+F',
           click: () => {
             this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen());
@@ -139,29 +139,29 @@ export default class MenuBuilder {
       ],
     };
     const subMenuWindow: DarwinMenuItemConstructorOptions = {
-      label: 'Window',
+      label: 'ウィンドウ',
       submenu: [
         {
-          label: 'Minimize',
+          label: '最小化',
           accelerator: 'Command+M',
           selector: 'performMiniaturize:',
         },
-        { label: 'Close', accelerator: 'Command+W', selector: 'performClose:' },
+        { label: '閉じる', accelerator: 'Command+W', selector: 'performClose:' },
         { type: 'separator' },
-        { label: 'Bring All to Front', selector: 'arrangeInFront:' },
+        { label: 'すべてを手前に移動', selector: 'arrangeInFront:' },
       ],
     };
     const subMenuHelp: MenuItemConstructorOptions = {
-      label: 'Help',
+      label: 'ヘルプ',
       submenu: [
         {
-          label: 'Learn More',
+          label: '詳細情報',
           click() {
             shell.openExternal('https://electronjs.org');
           },
         },
         {
-          label: 'Documentation',
+          label: 'ドキュメント',
           click() {
             shell.openExternal(
               'https://github.com/electron/electron/tree/main/docs#readme',
@@ -169,13 +169,13 @@ export default class MenuBuilder {
           },
         },
         {
-          label: 'Community Discussions',
+          label: 'コミュニティディスカッション',
           click() {
             shell.openExternal('https://www.electronjs.org/community');
           },
         },
         {
-          label: 'Search Issues',
+          label: '問題を検索',
           click() {
             shell.openExternal('https://github.com/electron/electron/issues');
           },
@@ -195,14 +195,14 @@ export default class MenuBuilder {
   buildDefaultTemplate() {
     const templateDefault = [
       {
-        label: '&File',
+        label: 'ファイル(&F)',
         submenu: [
           {
-            label: '&Open',
+            label: '開く(&O)',
             accelerator: 'Ctrl+O',
           },
           {
-            label: '&Close',
+            label: '閉じる(&C)',
             accelerator: 'Ctrl+W',
             click: () => {
               this.mainWindow.close();
@@ -211,20 +211,20 @@ export default class MenuBuilder {
         ],
       },
       {
-        label: '&View',
+        label: '表示(&V)',
         submenu:
           process.env.NODE_ENV === 'development' ||
           process.env.DEBUG_PROD === 'true'
             ? [
                 {
-                  label: '&Reload',
+                  label: '再読み込み(&R)',
                   accelerator: 'Ctrl+R',
                   click: () => {
                     this.mainWindow.webContents.reload();
                   },
                 },
                 {
-                  label: 'Toggle &Full Screen',
+                  label: 'フルスクリーン切り替え(&F)',
                   accelerator: 'F11',
                   click: () => {
                     this.mainWindow.setFullScreen(
@@ -233,7 +233,7 @@ export default class MenuBuilder {
                   },
                 },
                 {
-                  label: 'Toggle &Developer Tools',
+                  label: '開発者ツール切り替え(&D)',
                   accelerator: 'Alt+Ctrl+I',
                   click: () => {
                     this.mainWindow.webContents.toggleDevTools();
@@ -242,7 +242,7 @@ export default class MenuBuilder {
               ]
             : [
                 {
-                  label: 'Toggle &Full Screen',
+                  label: 'フルスクリーン切り替え(&F)',
                   accelerator: 'F11',
                   click: () => {
                     this.mainWindow.setFullScreen(
@@ -253,16 +253,16 @@ export default class MenuBuilder {
               ],
       },
       {
-        label: 'Help',
+        label: 'ヘルプ(&H)',
         submenu: [
           {
-            label: 'Learn More',
+            label: '詳細情報',
             click() {
               shell.openExternal('https://electronjs.org');
             },
           },
           {
-            label: 'Documentation',
+            label: 'ドキュメント',
             click() {
               shell.openExternal(
                 'https://github.com/electron/electron/tree/main/docs#readme',
@@ -270,13 +270,13 @@ export default class MenuBuilder {
             },
           },
           {
-            label: 'Community Discussions',
+            label: 'コミュニティディスカッション',
             click() {
               shell.openExternal('https://www.electronjs.org/community');
             },
           },
           {
-            label: 'Search Issues',
+            label: '問題を検索',
             click() {
               shell.openExternal('https://github.com/electron/electron/issues');
             },
