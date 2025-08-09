@@ -88,7 +88,11 @@ export default class MenuBuilder {
       label: '編集',
       submenu: [
         { label: '取り消す', accelerator: 'Command+Z', selector: 'undo:' },
-        { label: 'やり直す', accelerator: 'Shift+Command+Z', selector: 'redo:' },
+        {
+          label: 'やり直す',
+          accelerator: 'Shift+Command+Z',
+          selector: 'redo:',
+        },
         { type: 'separator' },
         { label: 'カット', accelerator: 'Command+X', selector: 'cut:' },
         { label: 'コピー', accelerator: 'Command+C', selector: 'copy:' },
@@ -146,7 +150,11 @@ export default class MenuBuilder {
           accelerator: 'Command+M',
           selector: 'performMiniaturize:',
         },
-        { label: '閉じる', accelerator: 'Command+W', selector: 'performClose:' },
+        {
+          label: '閉じる',
+          accelerator: 'Command+W',
+          selector: 'performClose:',
+        },
         { type: 'separator' },
         { label: 'すべてを手前に移動', selector: 'arrangeInFront:' },
       ],
