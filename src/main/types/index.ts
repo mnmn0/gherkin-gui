@@ -68,6 +68,18 @@ export interface TestResult {
   skippedTests: number;
   executionTime: number;
   testCases: TestCase[];
+  testName: string;
+  status: 'PASSED' | 'FAILED' | 'SKIPPED';
+  errorMessage?: string;
+  stackTrace?: string;
+  assertions: TestAssertion[];
+}
+
+export interface TestAssertion {
+  message: string;
+  passed: boolean;
+  expected?: any;
+  actual?: any;
 }
 
 export interface TestCase {
@@ -85,6 +97,9 @@ export interface ReportFile {
   filePath: string;
   timestamp: Date;
   summary: TestSummary;
+  name: string;
+  createdAt: string;
+  size: number;
 }
 
 export interface TestReport {
@@ -94,6 +109,12 @@ export interface TestReport {
   specificationPath: string;
   testResult: TestResult;
   configuration: TestConfig;
+  startTime: string;
+  endTime: string;
+  environment: string;
+  reportName?: string;
+  summary: TestSummary;
+  testSuites: TestSuite[];
 }
 
 export interface TestSummary {
@@ -102,6 +123,21 @@ export interface TestSummary {
   failedTests: number;
   skippedTests: number;
   successRate: number;
+  executionTime: number;
+  recentFailures?: TestFailure[];
+}
+
+export interface TestFailure {
+  testName: string;
+  errorMessage: string;
+  timestamp: string;
+}
+
+export interface TestSuite {
+  name: string;
+  testResults: TestResult[];
+  status: 'passed' | 'failed' | 'skipped';
+  executionTime: number;
 }
 
 export interface GenerationConfig {
@@ -210,18 +246,18 @@ export interface GlobalConfig {
   autoSave?: boolean;
   showWelcomeScreen?: boolean;
   editor?: {
-    fontFamily: string;
-    fontSize: number;
-    tabSize: number;
-    wordWrap: boolean;
-    showLineNumbers: boolean;
-    highlightActiveLine: boolean;
+    fontFamily?: string;
+    fontSize?: number;
+    tabSize?: number;
+    wordWrap?: boolean;
+    showLineNumbers?: boolean;
+    highlightActiveLine?: boolean;
   };
   ui?: {
-    sidebarWidth: number;
-    zoomLevel: number;
-    compactMode: boolean;
-    showStatusBar: boolean;
+    sidebarWidth?: number;
+    zoomLevel?: number;
+    compactMode?: boolean;
+    showStatusBar?: boolean;
   };
   maxRecentFiles?: number;
   backupInterval?: number;
@@ -238,4 +274,11 @@ export interface ConfigurationPreset {
   isBuiltIn: boolean;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface ConfigurationPresetData {
+  name: string;
+  description: string;
+  category: 'project' | 'testing' | 'generation' | 'editor';
+  config: Partial<ProjectConfig & GlobalConfig>;
 }
