@@ -1,0 +1,201 @@
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-toggle:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+.theme-toggle:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Size Variants */
+.theme-toggle--sm {
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--font-size-xs);
+  gap: var(--space-1);
+}
+
+.theme-toggle--sm .theme-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.theme-toggle--md {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-size-sm);
+  gap: var(--space-2);
+}
+
+.theme-toggle--md .theme-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.theme-toggle--lg {
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--font-size-base);
+  gap: var(--space-3);
+}
+
+.theme-toggle--lg .theme-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Icon Styles */
+.theme-toggle__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.theme-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--color-text-secondary);
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.theme-toggle:hover .theme-icon {
+  color: var(--color-primary-600);
+  transform: rotate(180deg);
+}
+
+/* Label Styles */
+.theme-toggle__label {
+  white-space: nowrap;
+  transition: color var(--transition-fast);
+}
+
+.theme-toggle:hover .theme-toggle__label {
+  color: var(--color-primary-600);
+}
+
+/* Glass Effect Variant */
+.theme-toggle.glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  box-shadow: var(--glass-shadow);
+}
+
+.theme-toggle.glass:hover {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+[data-theme="dark"] .theme-toggle.glass:hover {
+  background: rgba(17, 24, 39, 0.9);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Animation for theme switching */
+.theme-toggle__icon {
+  position: relative;
+}
+
+.theme-toggle__icon::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--color-primary-200) 0%, transparent 60%);
+  opacity: 0;
+  transform: scale(0);
+  transition: all var(--transition-base);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.theme-toggle:active .theme-toggle__icon::before {
+  opacity: 0.5;
+  transform: scale(1.5);
+}
+
+/* Icon-only variant */
+.theme-toggle--icon-only .theme-toggle__label {
+  display: none;
+}
+
+.theme-toggle--icon-only {
+  padding: var(--space-2);
+  width: 40px;
+  height: 40px;
+  justify-content: center;
+  border-radius: var(--radius-full);
+}
+
+.theme-toggle--icon-only.theme-toggle--sm {
+  width: 32px;
+  height: 32px;
+  padding: var(--space-1);
+}
+
+.theme-toggle--icon-only.theme-toggle--lg {
+  width: 48px;
+  height: 48px;
+  padding: var(--space-3);
+}
+
+/* Compact view adjustments */
+.view-compact .theme-toggle {
+  padding: var(--space-1) var(--space-2);
+  font-size: var(--font-size-xs);
+}
+
+.view-compact .theme-toggle .theme-icon {
+  width: 14px;
+  height: 14px;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .theme-toggle {
+    border-width: 2px;
+  }
+  
+  .theme-toggle:focus-visible {
+    outline-width: 3px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle,
+  .theme-icon,
+  .theme-toggle__label,
+  .theme-toggle__icon::before {
+    transition: none;
+  }
+  
+  .theme-toggle:hover .theme-icon {
+    transform: none;
+  }
+}
