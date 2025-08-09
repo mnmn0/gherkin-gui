@@ -101,7 +101,7 @@ export class ApiService {
     return window.electron.on('error:occurred', callback);
   }
 
-  removeAllListeners(channel: keyof IpcEvents): void {
+  removeAllListeners(channel: string): void {
     window.electron.removeAllListeners(channel);
   }
 }

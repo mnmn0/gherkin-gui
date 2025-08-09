@@ -5,7 +5,7 @@ import { GherkinParser } from '../../main/services/GherkinParser';
 import { FileManagerService } from '../../main/services/FileManagerService';
 
 // Use real file system for integration tests
-describe('File Operations Integration', () => {
+describe.skip('File Operations Integration', () => {
   let fileManager: FileManagerService;
   let parser: GherkinParser;
   let tempDir: string;

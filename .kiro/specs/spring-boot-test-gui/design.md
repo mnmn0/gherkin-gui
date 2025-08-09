@@ -11,6 +11,7 @@ Spring BootテストGUIソフトウェアは、Electron + React + TypeScriptで�
 - **Testing**: Jest + React Testing Library
 - **Code Generation**: Custom Gherkin parser + JUnit template engine
 - **Process Management**: Node.js child_process for JUnit execution
+- **Internationalization**: 日本語UI実装（ハードコーディング方式）
 
 ## Architecture
 
@@ -87,9 +88,9 @@ sequenceDiagram
 ### Frontend Components
 
 #### 1. Main Layout Components
-- **AppLayout**: メインレイアウトコンテナ
-- **NavigationSidebar**: 機能間のナビゲーション
-- **ContentArea**: メインコンテンツ表示エリア
+- **AppLayout**: メインレイアウトコンテナ（日本語ラベル対応）
+- **NavigationSidebar**: 機能間のナビゲーション（日本語メニュー項目）
+- **ContentArea**: メインコンテンツ表示エリア（日本語ヘッダー対応）
 
 #### 2. Specification Management Components
 - **SpecificationList**: テスト仕様一覧表示
@@ -345,10 +346,92 @@ interface ErrorHandler {
 
 ### User Error Feedback
 
-- **Toast Notifications**: 軽微なエラーや警告
-- **Modal Dialogs**: 重要なエラーや確認が必要な場合
-- **Inline Validation**: フォーム入力時のリアルタイム検証
-- **Error Boundaries**: React コンポーネントレベルのエラーキャッチ
+- **Toast Notifications**: 軽微なエラーや警告（日本語メッセージ）
+- **Modal Dialogs**: 重要なエラーや確認が必要な場合（日本語ダイアログ）
+- **Inline Validation**: フォーム入力時のリアルタイム検証（日本語バリデーションメッセージ）
+- **Error Boundaries**: React コンポーネントレベルのエラーキャッチ（日本語エラー表示）
+
+### Japanese UI Implementation Strategy
+
+#### 1. 言語実装方針
+- **ハードコーディング方式**: i18nライブラリを使用せず、すべてのUI文字列を日本語で直接実装
+- **一貫性**: 統一された日本語表記とトーン（敬語は使用せず、簡潔で分かりやすい表現）
+- **専門用語**: 開発者向けの専門用語は適切な日本語訳を使用（例：「テスト仕様」「実行結果」「設定」）
+
+#### 2. UI文字列の分類と実装
+```typescript
+// UI Labels and Messages
+interface JapaneseUIStrings {
+  // Navigation
+  navigation: {
+    specifications: 'テスト仕様';
+    codeGeneration: 'コード生成';
+    testExecution: 'テスト実行';
+    reports: 'レポート';
+    settings: '設定';
+  };
+  
+  // Common Actions
+  actions: {
+    create: '作成';
+    edit: '編集';
+    delete: '削除';
+    save: '保存';
+    cancel: 'キャンセル';
+    execute: '実行';
+    export: 'エクスポート';
+  };
+  
+  // Status Messages
+  status: {
+    running: '実行中';
+    completed: '完了';
+    failed: '失敗';
+    cancelled: 'キャンセル済み';
+    passed: '成功';
+    skipped: 'スキップ';
+  };
+  
+  // Error Messages
+  errors: {
+    fileNotFound: 'ファイルが見つかりません';
+    invalidGherkin: 'Gherkin構文にエラーがあります';
+    executionFailed: 'テスト実行に失敗しました';
+    configurationError: '設定に問題があります';
+  };
+  
+  // Form Labels
+  forms: {
+    fileName: 'ファイル名';
+    description: '説明';
+    testName: 'テスト名';
+    classpath: 'クラスパス';
+    springProfiles: 'Springプロファイル';
+  };
+}
+```
+
+#### 3. コンポーネント別日本語化対応
+
+**Specification Management**
+- ファイル一覧: 「テスト仕様一覧」
+- 新規作成: 「新しいテスト仕様を作成」
+- 編集画面: 「テスト仕様の編集」
+
+**Code Generation**
+- 生成画面: 「JUnitコード生成」
+- プレビュー: 「生成されたコードのプレビュー」
+- エクスポート: 「コードをエクスポート」
+
+**Test Execution**
+- 実行画面: 「テスト実行」
+- 進捗表示: 「実行進捗」
+- 設定画面: 「実行設定」
+
+**Reports**
+- レポート一覧: 「テスト結果レポート」
+- 詳細表示: 「詳細結果」
+- 分析画面: 「テスト結果分析」
 
 ## Testing Strategy
 

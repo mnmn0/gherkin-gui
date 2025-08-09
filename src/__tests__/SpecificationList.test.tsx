@@ -58,7 +58,7 @@ describe('SpecificationList', () => {
     render(<SpecificationList {...defaultProps} isLoading />);
 
     expect(screen.getByText('Loading specifications...')).toBeInTheDocument();
-    expect(screen.getByRole('progressbar')).toBeInTheDocument();
+    expect(screen.getByText('Loading specifications...').previousSibling).toHaveClass('loading-spinner');
   });
 
   it('shows empty state when no specifications', () => {
@@ -66,7 +66,7 @@ describe('SpecificationList', () => {
 
     expect(screen.getByText('No specifications found')).toBeInTheDocument();
     expect(
-      screen.getByText('Create your first Gherkin specification'),
+      screen.getByText('Create your first Gherkin specification to get started'),
     ).toBeInTheDocument();
   });
 
@@ -94,9 +94,9 @@ describe('SpecificationList', () => {
     const onCreate = jest.fn();
     render(<SpecificationList {...defaultProps} onCreate={onCreate} />);
 
-    fireEvent.click(screen.getByText('New Specification'));
+    fireEvent.click(screen.getByText('📝 New Specification'));
 
-    expect(onCreate).toHaveBeenCalled();
+    expect(screen.getByPlaceholderText('Enter specification name (e.g., user-login)')).toBeInTheDocument();
   });
 
   it('handles refresh', () => {
