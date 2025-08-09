@@ -206,7 +206,10 @@ export class ProjectConfigValidator {
       });
     }
 
-    if (!config.specificationDirectory || config.specificationDirectory.trim() === '') {
+    if (
+      !config.specificationDirectory ||
+      config.specificationDirectory.trim() === ''
+    ) {
       errors.push({
         message: 'Specification directory is required',
         code: 'MISSING_SPEC_DIRECTORY',

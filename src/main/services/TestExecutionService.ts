@@ -150,9 +150,9 @@ export class TestExecutionService extends EventEmitter {
     const projectDir = path.dirname(config.buildFilePath);
 
     const env: Record<string, string> = {
-      ...Object.fromEntries(
-        Object.entries(process.env).filter(([, value]) => value != null)
-      ) as Record<string, string>,
+      ...(Object.fromEntries(
+        Object.entries(process.env).filter(([, value]) => value != null),
+      ) as Record<string, string>),
       ...config.environmentVars,
     };
 

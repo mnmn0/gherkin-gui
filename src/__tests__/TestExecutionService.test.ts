@@ -138,7 +138,9 @@ describe('TestExecutionService', () => {
 
     it('should handle non-existent execution', async () => {
       // cancelExecution returns void, so we just ensure it doesn't throw
-      await expect(service.cancelExecution('non-existent-id')).resolves.toBeUndefined();
+      await expect(
+        service.cancelExecution('non-existent-id'),
+      ).resolves.toBeUndefined();
     });
   });
 
@@ -176,7 +178,9 @@ describe('TestExecutionService', () => {
     });
 
     it('should throw for non-existent execution', async () => {
-      await expect(service.getExecutionStatus('non-existent-id')).rejects.toThrow();
+      await expect(
+        service.getExecutionStatus('non-existent-id'),
+      ).rejects.toThrow();
     });
   });
 });

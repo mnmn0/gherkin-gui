@@ -554,12 +554,23 @@ export class IpcService {
     this.fileWatcher.unwatchAll();
     // Remove all IPC handlers
     const channels = [
-      'file:list-specs', 'file:load-spec', 'file:save-spec', 'file:delete-spec', 'file:create-spec',
-      'code:generate', 'code:validate',
-      'test:execute', 'test:status', 'test:cancel',
-      'report:list', 'report:load', 'report:delete',
-      'project:load-config', 'project:save-config', 'project:validate-config'
+      'file:list-specs',
+      'file:load-spec',
+      'file:save-spec',
+      'file:delete-spec',
+      'file:create-spec',
+      'code:generate',
+      'code:validate',
+      'test:execute',
+      'test:status',
+      'test:cancel',
+      'report:list',
+      'report:load',
+      'report:delete',
+      'project:load-config',
+      'project:save-config',
+      'project:validate-config',
     ];
-    channels.forEach(channel => ipcMain.removeAllListeners(channel));
+    channels.forEach((channel) => ipcMain.removeAllListeners(channel));
   }
 }
