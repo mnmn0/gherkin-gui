@@ -19,7 +19,7 @@ export const ReportList: React.FC<ReportListProps> = ({
   onRefresh,
   onViewAnalytics,
 }) => {
-  const formatDate = (date: Date) => {
+  const formatDate = (date: Date | string) => {
     return new Intl.DateTimeFormat('en-US', {
       year: 'numeric',
       month: 'short',
@@ -161,7 +161,7 @@ export const ReportList: React.FC<ReportListProps> = ({
                       ?.slice(0, 2)
                       .map((failure, index) => (
                         <div key={index} className="failure-item">
-                          {failure}
+                          {failure.testName}: {failure.errorMessage}
                         </div>
                       ))}
                     {(report.summary.recentFailures?.length || 0) > 2 && (
