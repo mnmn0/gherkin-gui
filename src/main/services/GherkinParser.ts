@@ -39,20 +39,30 @@ export class GherkinParser {
       tags: [],
     };
 
+    let pendingTags: string[] = [];
+
     while (this.currentLine < this.lines.length) {
       const line = this.getCurrentLine().trim();
 
       if (line.startsWith('@')) {
-        feature.tags = [...(feature.tags || []), ...this.parseTags()];
+        pendingTags.push(...this.parseTags());
       } else if (line.startsWith('Feature:')) {
+        feature.tags = [...pendingTags];
+        pendingTags = [];
         feature.name = line.substring(8).trim();
         feature.description = this.parseDescription();
       } else if (line.startsWith('Background:')) {
         feature.background = this.parseBackground();
       } else if (line.startsWith('Scenario:')) {
-        feature.scenarios!.push(this.parseScenario());
+        const scenario = this.parseScenario();
+        scenario.tags = [...pendingTags];
+        pendingTags = [];
+        feature.scenarios!.push(scenario);
       } else if (line.startsWith('Scenario Outline:')) {
-        feature.scenarios!.push(this.parseScenarioOutline());
+        const scenario = this.parseScenarioOutline();
+        scenario.tags = [...pendingTags];
+        pendingTags = [];
+        feature.scenarios!.push(scenario);
       } else {
         this.nextLine();
       }
@@ -99,12 +109,11 @@ export class GherkinParser {
 
     this.nextLine();
     const steps = this.parseSteps();
-    const tags = this.extractScenarioTags();
 
     return {
       name,
       steps,
-      tags,
+      tags: [], // Tags will be set by the caller
     };
   }
 
@@ -115,12 +124,11 @@ export class GherkinParser {
     this.nextLine();
     const steps = this.parseSteps();
     const examples = this.parseExamples();
-    const tags = this.extractScenarioTags();
 
     return {
       name,
       steps,
-      tags,
+      tags: [], // Tags will be set by the caller
       examples,
     };
   }
