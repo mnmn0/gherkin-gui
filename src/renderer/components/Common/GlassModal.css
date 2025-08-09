@@ -1,0 +1,251 @@
+.glass-modal {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  animation: modalFadeIn var(--transition-base);
+}
+
+.glass-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  transition: opacity var(--transition-base);
+}
+
+.glass-modal__backdrop--blur {
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.glass-modal__backdrop--dark {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.glass-modal__backdrop--light {
+  background: rgba(255, 255, 255, 0.6);
+}
+
+[data-theme="dark"] .glass-modal__backdrop--light {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.glass-modal__container {
+  position: relative;
+  z-index: 1;
+  max-height: calc(100vh - var(--space-8));
+  overflow-y: auto;
+  width: 100%;
+  max-width: 100%;
+}
+
+.glass-modal__content {
+  margin: 0 auto;
+  animation: modalSlideIn var(--transition-base);
+  will-change: transform, opacity;
+}
+
+/* Size Variants */
+.glass-modal--sm {
+  max-width: 400px;
+}
+
+.glass-modal--md {
+  max-width: 500px;
+}
+
+.glass-modal--lg {
+  max-width: 700px;
+}
+
+.glass-modal--xl {
+  max-width: 900px;
+}
+
+/* Modal Header */
+.glass-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-6) var(--space-6) var(--space-4);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.glass-modal__title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.glass-modal__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--color-text-secondary);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.glass-modal__close:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-border);
+  color: var(--color-text-primary);
+}
+
+.glass-modal__close:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+/* Modal Body */
+.glass-modal__body {
+  padding: var(--space-6);
+}
+
+.glass-modal__header + .glass-modal__body {
+  padding-top: var(--space-4);
+}
+
+/* Animations */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalSlideIn {
+  from {
+    transform: translateY(-20px) scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .glass-modal {
+    padding: var(--space-2);
+    align-items: flex-end;
+  }
+  
+  .glass-modal__content {
+    animation: modalSlideInMobile var(--transition-base);
+  }
+  
+  .glass-modal--sm,
+  .glass-modal--md,
+  .glass-modal--lg,
+  .glass-modal--xl {
+    max-width: 100%;
+    width: 100%;
+  }
+  
+  .glass-modal__header {
+    padding: var(--space-4);
+  }
+  
+  .glass-modal__body {
+    padding: var(--space-4);
+  }
+  
+  .glass-modal__header + .glass-modal__body {
+    padding-top: var(--space-3);
+  }
+}
+
+@keyframes modalSlideInMobile {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Compact view adjustments */
+.view-compact .glass-modal__header {
+  padding: var(--space-4) var(--space-4) var(--space-3);
+}
+
+.view-compact .glass-modal__body {
+  padding: var(--space-4);
+}
+
+.view-compact .glass-modal__header + .glass-modal__body {
+  padding-top: var(--space-3);
+}
+
+.view-compact .glass-modal__title {
+  font-size: var(--font-size-lg);
+}
+
+/* Accessibility improvements */
+.glass-modal:focus-within {
+  /* Ensure modal is announced to screen readers */
+}
+
+@media (prefers-contrast: high) {
+  .glass-modal__backdrop--blur {
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: none;
+  }
+  
+  .glass-modal__close {
+    border-color: var(--color-border);
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .glass-modal,
+  .glass-modal__content,
+  .glass-modal__close,
+  .glass-modal__backdrop {
+    animation: none;
+    transition: none;
+  }
+  
+  .glass-modal__backdrop--blur {
+    backdrop-filter: none;
+  }
+}
+
+/* Browser support fallbacks */
+@supports not (backdrop-filter: blur(1px)) {
+  .glass-modal__backdrop--blur {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: none;
+  }
+}
+
+/* Performance optimizations */
+.glass-modal__content {
+  contain: layout style paint;
+}
+
+.glass-modal__backdrop {
+  will-change: opacity;
+}
+
+/* Nested modal support */
+.glass-modal + .glass-modal {
+  z-index: calc(var(--z-modal) + 1);
+}
