@@ -36,7 +36,7 @@ export const ReportsPage: React.FC = () => {
     } catch (error) {
       setState((prev) => ({
         ...prev,
-        error: `Failed to load reports: ${error}`,
+        error: `レポートの読み込みに失敗しました: ${error}`,
         isLoading: false,
       }));
     }
@@ -55,7 +55,7 @@ export const ReportsPage: React.FC = () => {
     } catch (error) {
       setState((prev) => ({
         ...prev,
-        error: `Failed to load report: ${error}`,
+        error: `レポートの読み込みに失敗しました: ${error}`,
         isLoading: false,
       }));
     }
@@ -77,7 +77,7 @@ export const ReportsPage: React.FC = () => {
     } catch (error) {
       setState((prev) => ({
         ...prev,
-        error: `Failed to delete report: ${error}`,
+        error: `レポートの削除に失敗しました: ${error}`,
         isLoading: false,
       }));
     }
@@ -100,13 +100,13 @@ export const ReportsPage: React.FC = () => {
       <div className="page-header">
         <div className="header-content">
           <div className="header-text">
-            <h1>Test Reports</h1>
-            <p>View test reports and analytics</p>
+            <h1>テストレポート</h1>
+            <p>テストレポートと分析の表示</p>
           </div>
           <div className="header-stats">
             <div className="stat-item">
               <span className="stat-value">{state.reports.length}</span>
-              <span className="stat-label">Total Reports</span>
+              <span className="stat-label">レポート総数</span>
             </div>
             <div className="stat-item">
               <span className="stat-value">
@@ -115,13 +115,13 @@ export const ReportsPage: React.FC = () => {
                     .length
                 }
               </span>
-              <span className="stat-label">Passed</span>
+              <span className="stat-label">成功</span>
             </div>
             <div className="stat-item">
               <span className="stat-value">
                 {state.reports.filter((r) => r.summary.failedTests > 0).length}
               </span>
-              <span className="stat-label">Failed</span>
+              <span className="stat-label">失敗</span>
             </div>
           </div>
         </div>
