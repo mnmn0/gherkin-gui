@@ -14,6 +14,7 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
+import { IpcService } from './services/IpcService';
 
 class AppUpdater {
   constructor() {
@@ -24,12 +25,7 @@ class AppUpdater {
 }
 
 let mainWindow: BrowserWindow | null = null;
-
-ipcMain.on('ipc-example', async (event, arg) => {
-  const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
-  console.log(msgTemplate(arg));
-  event.reply('ipc-example', msgTemplate('pong'));
-});
+let ipcService: IpcService | null = null;
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -96,7 +92,16 @@ const createWindow = async () => {
 
   mainWindow.on('closed', () => {
     mainWindow = null;
+    if (ipcService) {
+      ipcService.cleanup();
+      ipcService = null;
+    }
   });
+
+  // Initialize IPC service
+  ipcService = new IpcService();
+  ipcService.setWebContents(mainWindow.webContents);
+  ipcService.setupFileWatching();
 
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
@@ -117,6 +122,12 @@ const createWindow = async () => {
  */
 
 app.on('window-all-closed', () => {
+  // Cleanup IPC service
+  if (ipcService) {
+    ipcService.cleanup();
+    ipcService = null;
+  }
+  
   // Respect the OSX convention of having the application in memory even
   // after all windows have been closed
   if (process.platform !== 'darwin') {
