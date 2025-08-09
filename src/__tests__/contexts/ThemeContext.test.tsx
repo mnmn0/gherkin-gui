@@ -5,7 +5,7 @@ import { ThemeProvider, useTheme } from '../../renderer/contexts/ThemeContext';
 // モックコンポーネント
 const TestComponent: React.FC = () => {
   const { theme, toggleTheme, systemTheme } = useTheme();
-  
+
   return (
     <div>
       <span data-testid="current-theme">{theme}</span>
@@ -61,11 +61,11 @@ describe('ThemeContext', () => {
 
   test('初期テーマが正しく設定される', () => {
     mockMatchMedia(false); // ライトテーマのシステム設定
-    
+
     render(
       <ThemeProvider>
         <TestComponent />
-      </ThemeProvider>
+      </ThemeProvider>,
     );
 
     expect(screen.getByTestId('current-theme')).toHaveTextContent('auto');
@@ -74,11 +74,11 @@ describe('ThemeContext', () => {
 
   test('システムがダークモードの場合の初期設定', () => {
     mockMatchMedia(true); // ダークテーマのシステム設定
-    
+
     render(
       <ThemeProvider>
         <TestComponent />
-      </ThemeProvider>
+      </ThemeProvider>,
     );
 
     expect(screen.getByTestId('system-theme')).toHaveTextContent('dark');
@@ -86,11 +86,11 @@ describe('ThemeContext', () => {
 
   test('テーマの切り替えが正しく動作する', async () => {
     mockMatchMedia(false);
-    
+
     render(
       <ThemeProvider>
         <TestComponent />
-      </ThemeProvider>
+      </ThemeProvider>,
     );
 
     const toggleButton = screen.getByTestId('toggle-theme');
@@ -98,7 +98,7 @@ describe('ThemeContext', () => {
 
     // auto -> light -> dark -> auto のサイクル
     expect(themeDisplay).toHaveTextContent('auto');
-    
+
     fireEvent.click(toggleButton);
     await waitFor(() => {
       expect(themeDisplay).toHaveTextContent('light');
@@ -117,37 +117,40 @@ describe('ThemeContext', () => {
 
   test('テーマ設定がローカルストレージに保存される', async () => {
     mockMatchMedia(false);
-    
+
     render(
       <ThemeProvider>
         <TestComponent />
-      </ThemeProvider>
+      </ThemeProvider>,
     );
 
     const toggleButton = screen.getByTestId('toggle-theme');
-    
+
     fireEvent.click(toggleButton); // auto -> light
-    
+
     await waitFor(() => {
       expect(mockLocalStorage.setItem).toHaveBeenCalledWith(
         'gherkin-gui-preferences',
-        expect.stringContaining('"theme":"light"')
+        expect.stringContaining('"theme":"light"'),
       );
     });
   });
 
   test('保存されたテーマ設定が復元される', () => {
     mockMatchMedia(false);
-    mockLocalStorage.setItem('gherkin-gui-preferences', JSON.stringify({
-      theme: 'dark',
-      fontSize: 'large',
-      animations: false
-    }));
+    mockLocalStorage.setItem(
+      'gherkin-gui-preferences',
+      JSON.stringify({
+        theme: 'dark',
+        fontSize: 'large',
+        animations: false,
+      }),
+    );
 
     render(
       <ThemeProvider>
         <TestComponent />
-      </ThemeProvider>
+      </ThemeProvider>,
     );
 
     expect(screen.getByTestId('current-theme')).toHaveTextContent('dark');
@@ -162,7 +165,7 @@ describe('ThemeContext', () => {
       render(
         <ThemeProvider>
           <TestComponent />
-        </ThemeProvider>
+        </ThemeProvider>,
       );
     }).not.toThrow();
 
@@ -171,12 +174,14 @@ describe('ThemeContext', () => {
 
   test('useThemeがThemeProvider外で使用された場合にエラーをスローする', () => {
     // console.errorをモック
-    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
-    
+    const consoleSpy = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+
     expect(() => {
       render(<TestComponent />);
     }).toThrow('useTheme must be used within a ThemeProvider');
-    
+
     consoleSpy.mockRestore();
   });
 
@@ -206,35 +211,35 @@ describe('ThemeContext', () => {
     render(
       <ThemeProvider>
         <TestComponent />
-      </ThemeProvider>
+      </ThemeProvider>,
     );
 
     // reducedMotionQueryのイベントリスナーが登録されていることを確認
     expect(reducedMotionQuery.addEventListener).toHaveBeenCalledWith(
       'change',
-      expect.any(Function)
+      expect.any(Function),
     );
   });
 
   test('data-theme属性がドキュメントに正しく設定される', async () => {
     mockMatchMedia(false);
-    
+
     render(
       <ThemeProvider>
         <TestComponent />
-      </ThemeProvider>
+      </ThemeProvider>,
     );
 
     const toggleButton = screen.getByTestId('toggle-theme');
-    
+
     // 初期状態（auto -> light）
     expect(document.documentElement.getAttribute('data-theme')).toBe('light');
-    
+
     fireEvent.click(toggleButton); // light
     await waitFor(() => {
       expect(document.documentElement.getAttribute('data-theme')).toBe('light');
     });
-    
+
     fireEvent.click(toggleButton); // dark
     await waitFor(() => {
       expect(document.documentElement.getAttribute('data-theme')).toBe('dark');

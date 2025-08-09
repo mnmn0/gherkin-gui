@@ -47,7 +47,9 @@ const GlassCard: React.FC<GlassCardProps> = ({
     !padding && 'glass-card--no-padding',
     fallback && 'glass-card--fallback',
     className,
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   const style = {
     '--glass-opacity': opacity,
@@ -65,9 +67,7 @@ const GlassCard: React.FC<GlassCardProps> = ({
   return (
     <div {...cardProps}>
       {padding ? (
-        <div className="glass-card__content">
-          {children}
-        </div>
+        <div className="glass-card__content">{children}</div>
       ) : (
         children
       )}

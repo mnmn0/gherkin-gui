@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { 
-  FileText, 
-  Code, 
-  Play, 
-  BarChart3, 
-  Settings, 
+import {
+  FileText,
+  Code,
+  Play,
+  BarChart3,
+  Settings,
   TestTube,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
 } from 'lucide-react';
-import { useTheme } from '../../contexts/ThemeContext';
-import { useUserPreferences } from '../../contexts/ThemeContext';
+import { useTheme, useUserPreferences } from '../../contexts/ThemeContext';
 import ThemeToggle from '../Common/ThemeToggle';
 import GlassCard from '../Common/GlassCard';
 import './NavigationSidebar.css';
@@ -49,7 +48,7 @@ const navigationItems: NavigationItem[] = [
     path: '/test-execution',
     icon: Play,
     description: 'テストの実行と監視',
-    badge: { text: '2', variant: 'primary' }
+    badge: { text: '2', variant: 'primary' },
   },
   {
     id: 'reports',
@@ -71,10 +70,11 @@ interface NavigationSidebarProps {
   className?: string;
 }
 
-export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({ className = '' }) => {
+export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({
+  className = '',
+}) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { theme } = useTheme();
   const { preferences, updatePreferences } = useUserPreferences();
   const [isCollapsed, setIsCollapsed] = useState(preferences.sidebarCollapsed);
 
@@ -89,16 +89,20 @@ export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({ className 
   };
 
   const isCurrentPath = (path: string) => {
-    return location.pathname === path || 
-           (path !== '/' && location.pathname.startsWith(path));
+    return (
+      location.pathname === path ||
+      (path !== '/' && location.pathname.startsWith(path))
+    );
   };
 
   return (
-    <div className={`navigation-sidebar ${isCollapsed ? 'collapsed' : ''} ${className}`}>
+    <div
+      className={`navigation-sidebar ${isCollapsed ? 'collapsed' : ''} ${className}`}
+    >
       {/* サイドバーヘッダー */}
       <div className="sidebar-header">
-        <GlassCard 
-          size="sm" 
+        <GlassCard
+          size="sm"
           padding={false}
           className="app-logo-card"
           blur="light"
@@ -119,7 +123,9 @@ export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({ className 
         <button
           className="collapse-toggle"
           onClick={toggleCollapsed}
-          aria-label={isCollapsed ? 'サイドバーを展開' : 'サイドバーを折りたたみ'}
+          aria-label={
+            isCollapsed ? 'サイドバーを展開' : 'サイドバーを折りたたみ'
+          }
           title={isCollapsed ? 'サイドバーを展開' : 'サイドバーを折りたたみ'}
         >
           {isCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
@@ -127,19 +133,27 @@ export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({ className 
       </div>
 
       {/* ナビゲーション */}
-      <nav className="sidebar-nav" role="navigation" aria-label="メインナビゲーション">
+      <nav
+        className="sidebar-nav"
+        role="navigation"
+        aria-label="メインナビゲーション"
+      >
         <div className="nav-section">
           <div className="nav-items">
             {navigationItems.map((item) => {
               const IconComponent = item.icon;
               const isActive = isCurrentPath(item.path);
-              
+
               return (
                 <button
                   key={item.id}
                   className={`nav-item ${isActive ? 'active' : ''}`}
                   onClick={() => handleNavigation(item.path)}
-                  title={isCollapsed ? `${item.label} - ${item.description}` : item.description}
+                  title={
+                    isCollapsed
+                      ? `${item.label} - ${item.description}`
+                      : item.description
+                  }
                   aria-label={`${item.label} - ${item.description}`}
                   aria-current={isActive ? 'page' : undefined}
                 >
@@ -151,7 +165,9 @@ export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({ className 
                       <div className="nav-text">
                         <span className="nav-label">{item.label}</span>
                         {item.badge && (
-                          <span className={`nav-badge nav-badge--${item.badge.variant}`}>
+                          <span
+                            className={`nav-badge nav-badge--${item.badge.variant}`}
+                          >
                             {item.badge.text}
                           </span>
                         )}
@@ -182,11 +198,11 @@ export const NavigationSidebar: React.FC<NavigationSidebarProps> = ({ className 
             </div>
           </GlassCard>
         )}
-        
+
         <div className="sidebar-controls">
-          <ThemeToggle 
-            size={isCollapsed ? "sm" : "md"} 
-            className={isCollapsed ? "theme-toggle--icon-only" : ""}
+          <ThemeToggle
+            size={isCollapsed ? 'sm' : 'md'}
+            className={isCollapsed ? 'theme-toggle--icon-only' : ''}
           />
         </div>
       </div>

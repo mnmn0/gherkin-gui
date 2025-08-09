@@ -84,21 +84,21 @@ const GlassModal: React.FC<GlassModalProps> = ({
     if (!modal) return;
 
     const focusableElements = modal.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
     );
     const firstElement = focusableElements[0] as HTMLElement;
-    const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+    const lastElement = focusableElements[
+      focusableElements.length - 1
+    ] as HTMLElement;
 
     if (event.shiftKey) {
       if (document.activeElement === firstElement) {
         event.preventDefault();
         lastElement?.focus();
       }
-    } else {
-      if (document.activeElement === lastElement) {
-        event.preventDefault();
-        firstElement?.focus();
-      }
+    } else if (document.activeElement === lastElement) {
+      event.preventDefault();
+      firstElement?.focus();
     }
   };
 
@@ -137,9 +137,10 @@ const GlassModal: React.FC<GlassModalProps> = ({
       aria-modal="true"
       aria-labelledby={title ? 'modal-title' : ariaProps['aria-labelledby']}
       aria-describedby={ariaProps['aria-describedby']}
+      onKeyDown={handleKeyDown}
     >
       <div className={`glass-modal__backdrop ${getBackdropClass()}`} />
-      
+
       <div className="glass-modal__container">
         <div
           ref={modalRef}
@@ -180,17 +181,15 @@ const GlassModal: React.FC<GlassModalProps> = ({
                       strokeLinecap="round"
                       strokeLinejoin="round"
                     >
-                      <line x1="18" y1="6" x2="6" y2="18"></line>
-                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                      <line x1="18" y1="6" x2="6" y2="18" />
+                      <line x1="6" y1="6" x2="18" y2="18" />
                     </svg>
                   </button>
                 )}
               </div>
             )}
-            
-            <div className="glass-modal__body">
-              {children}
-            </div>
+
+            <div className="glass-modal__body">{children}</div>
           </GlassCard>
         </div>
       </div>

@@ -29,10 +29,12 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
     }
   };
 
-  const defaultSeparator = <ChevronRight size={14} className="breadcrumb-separator" />;
+  const defaultSeparator = (
+    <ChevronRight size={14} className="breadcrumb-separator" />
+  );
 
   return (
-    <nav 
+    <nav
       className={`breadcrumb ${className}`}
       aria-label="パンくず"
       role="navigation"
@@ -41,10 +43,10 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
         {items.map((item, index) => {
           const isLast = index === items.length - 1;
           const isClickable = item.path && !item.isActive;
-          
+
           return (
-            <li 
-              key={`${item.path || item.label}-${index}`} 
+            <li
+              key={`${item.path || item.label}-${index}`}
               className="breadcrumb-item"
             >
               {isClickable ? (
@@ -60,7 +62,7 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
                   <span className="breadcrumb-label">{item.label}</span>
                 </button>
               ) : (
-                <span 
+                <span
                   className={`breadcrumb-current ${item.isActive ? 'active' : ''}`}
                   aria-current={item.isActive ? 'page' : undefined}
                 >
@@ -70,9 +72,12 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({
                   <span className="breadcrumb-label">{item.label}</span>
                 </span>
               )}
-              
+
               {!isLast && (
-                <span className="breadcrumb-separator-wrapper" aria-hidden="true">
+                <span
+                  className="breadcrumb-separator-wrapper"
+                  aria-hidden="true"
+                >
                   {separator || defaultSeparator}
                 </span>
               )}

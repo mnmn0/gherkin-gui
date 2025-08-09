@@ -210,19 +210,30 @@ export interface GlassEffectProps {
 export type ComponentSize = 'sm' | 'md' | 'lg' | 'xl';
 
 // Status Variants
-export type StatusVariant = 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info';
+export type StatusVariant =
+  | 'primary'
+  | 'secondary'
+  | 'success'
+  | 'warning'
+  | 'error'
+  | 'info';
 
 // Button Variants
-export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'glass';
+export type ButtonVariant =
+  | 'primary'
+  | 'secondary'
+  | 'outline'
+  | 'ghost'
+  | 'glass';
 
 // Animation States
 export type AnimationState = 'idle' | 'loading' | 'success' | 'error';
 
 // Responsive Breakpoints (for TypeScript usage)
 export interface Breakpoints {
-  sm: string;  // 640px
-  md: string;  // 768px
-  lg: string;  // 1024px
-  xl: string;  // 1280px
+  sm: string; // 640px
+  md: string; // 768px
+  lg: string; // 1024px
+  xl: string; // 1280px
   '2xl': string; // 1536px
 }

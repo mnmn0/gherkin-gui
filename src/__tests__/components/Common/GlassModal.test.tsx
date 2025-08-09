@@ -8,7 +8,7 @@ describe('GlassModal', () => {
     render(
       <GlassModal isOpen={false} onClose={jest.fn()}>
         <p>モーダルコンテンツ</p>
-      </GlassModal>
+      </GlassModal>,
     );
 
     expect(screen.queryByText('モーダルコンテンツ')).not.toBeInTheDocument();
@@ -16,9 +16,9 @@ describe('GlassModal', () => {
 
   test('isOpenがtrueの時はモーダルをレンダリングする', () => {
     render(
-      <GlassModal isOpen={true} onClose={jest.fn()}>
+      <GlassModal isOpen onClose={jest.fn()}>
         <p>モーダルコンテンツ</p>
-      </GlassModal>
+      </GlassModal>,
     );
 
     expect(screen.getByText('モーダルコンテンツ')).toBeInTheDocument();
@@ -27,13 +27,16 @@ describe('GlassModal', () => {
 
   test('タイトルが正しく表示される', () => {
     render(
-      <GlassModal isOpen={true} onClose={jest.fn()} title="テストタイトル">
+      <GlassModal isOpen onClose={jest.fn()} title="テストタイトル">
         <p>モーダルコンテンツ</p>
-      </GlassModal>
+      </GlassModal>,
     );
 
     expect(screen.getByText('テストタイトル')).toBeInTheDocument();
-    expect(screen.getByRole('dialog')).toHaveAttribute('aria-labelledby', 'modal-title');
+    expect(screen.getByRole('dialog')).toHaveAttribute(
+      'aria-labelledby',
+      'modal-title',
+    );
   });
 
   test('閉じるボタンが表示されクリックで閉じる', async () => {
@@ -41,12 +44,14 @@ describe('GlassModal', () => {
     const user = userEvent.setup();
 
     render(
-      <GlassModal isOpen={true} onClose={handleClose}>
+      <GlassModal isOpen onClose={handleClose}>
         <p>モーダルコンテンツ</p>
-      </GlassModal>
+      </GlassModal>,
     );
 
-    const closeButton = screen.getByRole('button', { name: 'モーダルを閉じる' });
+    const closeButton = screen.getByRole('button', {
+      name: 'モーダルを閉じる',
+    });
     expect(closeButton).toBeInTheDocument();
 
     await user.click(closeButton);
@@ -55,12 +60,14 @@ describe('GlassModal', () => {
 
   test('showCloseButtonがfalseの時は閉じるボタンが表示されない', () => {
     render(
-      <GlassModal isOpen={true} onClose={jest.fn()} showCloseButton={false}>
+      <GlassModal isOpen onClose={jest.fn()} showCloseButton={false}>
         <p>モーダルコンテンツ</p>
-      </GlassModal>
+      </GlassModal>,
     );
 
-    expect(screen.queryByRole('button', { name: 'モーダルを閉じる' })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'モーダルを閉じる' }),
+    ).not.toBeInTheDocument();
   });
 
   test('Escapeキーでモーダルが閉じる', async () => {
@@ -68,9 +75,9 @@ describe('GlassModal', () => {
     const user = userEvent.setup();
 
     render(
-      <GlassModal isOpen={true} onClose={handleClose}>
+      <GlassModal isOpen onClose={handleClose}>
         <p>モーダルコンテンツ</p>
-      </GlassModal>
+      </GlassModal>,
     );
 
     await user.keyboard('{Escape}');
@@ -82,9 +89,9 @@ describe('GlassModal', () => {
     const user = userEvent.setup();
 
     render(
-      <GlassModal isOpen={true} onClose={handleClose} closeOnEscape={false}>
+      <GlassModal isOpen onClose={handleClose} closeOnEscape={false}>
         <p>モーダルコンテンツ</p>
-      </GlassModal>
+      </GlassModal>,
     );
 
     await user.keyboard('{Escape}');
@@ -96,9 +103,9 @@ describe('GlassModal', () => {
     const user = userEvent.setup();
 
     render(
-      <GlassModal isOpen={true} onClose={handleClose}>
+      <GlassModal isOpen onClose={handleClose}>
         <p>モーダルコンテンツ</p>
-      </GlassModal>
+      </GlassModal>,
     );
 
     const backdrop = screen.getByRole('dialog');
@@ -111,9 +118,9 @@ describe('GlassModal', () => {
     const user = userEvent.setup();
 
     render(
-      <GlassModal isOpen={true} onClose={handleClose} closeOnBackdrop={false}>
+      <GlassModal isOpen onClose={handleClose} closeOnBackdrop={false}>
         <p>モーダルコンテンツ</p>
-      </GlassModal>
+      </GlassModal>,
     );
 
     const backdrop = screen.getByRole('dialog');
@@ -126,9 +133,9 @@ describe('GlassModal', () => {
     const user = userEvent.setup();
 
     render(
-      <GlassModal isOpen={true} onClose={handleClose}>
+      <GlassModal isOpen onClose={handleClose}>
         <p>モーダルコンテンツ</p>
-      </GlassModal>
+      </GlassModal>,
     );
 
     await user.click(screen.getByText('モーダルコンテンツ'));
@@ -137,9 +144,9 @@ describe('GlassModal', () => {
 
   test('サイズプロップが正しく適用される', () => {
     const { container } = render(
-      <GlassModal isOpen={true} onClose={jest.fn()} size="lg">
+      <GlassModal isOpen onClose={jest.fn()} size="lg">
         <p>モーダルコンテンツ</p>
-      </GlassModal>
+      </GlassModal>,
     );
 
     const modalContent = container.querySelector('.glass-modal__content');
@@ -148,9 +155,9 @@ describe('GlassModal', () => {
 
   test('backdrop variantが正しく適用される', () => {
     const { container } = render(
-      <GlassModal isOpen={true} onClose={jest.fn()} backdrop="dark">
+      <GlassModal isOpen onClose={jest.fn()} backdrop="dark">
         <p>モーダルコンテンツ</p>
-      </GlassModal>
+      </GlassModal>,
     );
 
     const backdrop = container.querySelector('.glass-modal__backdrop');
@@ -159,13 +166,13 @@ describe('GlassModal', () => {
 
   test('ARIAプロパティが正しく設定される', () => {
     render(
-      <GlassModal 
-        isOpen={true} 
+      <GlassModal
+        isOpen
         onClose={jest.fn()}
         aria-describedby="modal-description"
       >
         <p id="modal-description">モーダルの説明</p>
-      </GlassModal>
+      </GlassModal>,
     );
 
     const modal = screen.getByRole('dialog');
@@ -202,9 +209,9 @@ describe('GlassModal', () => {
     const originalOverflow = document.body.style.overflow;
 
     const { rerender } = render(
-      <GlassModal isOpen={true} onClose={jest.fn()}>
+      <GlassModal isOpen onClose={jest.fn()}>
         <p>モーダルコンテンツ</p>
-      </GlassModal>
+      </GlassModal>,
     );
 
     expect(document.body.style.overflow).toBe('hidden');
@@ -212,7 +219,7 @@ describe('GlassModal', () => {
     rerender(
       <GlassModal isOpen={false} onClose={jest.fn()}>
         <p>モーダルコンテンツ</p>
-      </GlassModal>
+      </GlassModal>,
     );
 
     await waitFor(() => {

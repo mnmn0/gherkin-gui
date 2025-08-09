@@ -8,7 +8,7 @@ describe('GlassCard', () => {
     render(
       <GlassCard>
         <p>テストコンテンツ</p>
-      </GlassCard>
+      </GlassCard>,
     );
 
     expect(screen.getByText('テストコンテンツ')).toBeInTheDocument();
@@ -18,7 +18,7 @@ describe('GlassCard', () => {
     const { container } = render(
       <GlassCard>
         <p>テストコンテンツ</p>
-      </GlassCard>
+      </GlassCard>,
     );
 
     const card = container.firstChild as HTMLElement;
@@ -29,7 +29,7 @@ describe('GlassCard', () => {
     const { container } = render(
       <GlassCard size="lg">
         <p>テストコンテンツ</p>
-      </GlassCard>
+      </GlassCard>,
     );
 
     const card = container.firstChild as HTMLElement;
@@ -40,7 +40,7 @@ describe('GlassCard', () => {
     const { container } = render(
       <GlassCard blur="heavy">
         <p>テストコンテンツ</p>
-      </GlassCard>
+      </GlassCard>,
     );
 
     const card = container.firstChild as HTMLElement;
@@ -51,7 +51,7 @@ describe('GlassCard', () => {
     const { container } = render(
       <GlassCard border={false}>
         <p>テストコンテンツ</p>
-      </GlassCard>
+      </GlassCard>,
     );
 
     const card = container.firstChild as HTMLElement;
@@ -62,7 +62,7 @@ describe('GlassCard', () => {
     const { container } = render(
       <GlassCard shadow={false}>
         <p>テストコンテンツ</p>
-      </GlassCard>
+      </GlassCard>,
     );
 
     const card = container.firstChild as HTMLElement;
@@ -73,7 +73,7 @@ describe('GlassCard', () => {
     const { container } = render(
       <GlassCard hover>
         <p>テストコンテンツ</p>
-      </GlassCard>
+      </GlassCard>,
     );
 
     const card = container.firstChild as HTMLElement;
@@ -87,7 +87,7 @@ describe('GlassCard', () => {
     const { container } = render(
       <GlassCard interactive onClick={handleClick}>
         <p>テストコンテンツ</p>
-      </GlassCard>
+      </GlassCard>,
     );
 
     const card = container.firstChild as HTMLElement;
@@ -102,7 +102,7 @@ describe('GlassCard', () => {
     const { container } = render(
       <GlassCard padding={false}>
         <p>テストコンテンツ</p>
-      </GlassCard>
+      </GlassCard>,
     );
 
     const card = container.firstChild as HTMLElement;
@@ -114,7 +114,7 @@ describe('GlassCard', () => {
     const { container } = render(
       <GlassCard fallback>
         <p>テストコンテンツ</p>
-      </GlassCard>
+      </GlassCard>,
     );
 
     const card = container.firstChild as HTMLElement;
@@ -125,7 +125,7 @@ describe('GlassCard', () => {
     const { container } = render(
       <GlassCard className="custom-class">
         <p>テストコンテンツ</p>
-      </GlassCard>
+      </GlassCard>,
     );
 
     const card = container.firstChild as HTMLElement;
@@ -136,7 +136,7 @@ describe('GlassCard', () => {
     const { container } = render(
       <GlassCard aria-label="カスタムラベル" role="button">
         <p>テストコンテンツ</p>
-      </GlassCard>
+      </GlassCard>,
     );
 
     const card = container.firstChild as HTMLElement;
@@ -148,7 +148,7 @@ describe('GlassCard', () => {
     const { container } = render(
       <GlassCard opacity={0.5} blur="light">
         <p>テストコンテンツ</p>
-      </GlassCard>
+      </GlassCard>,
     );
 
     const card = container.firstChild as HTMLElement;
@@ -163,11 +163,11 @@ describe('GlassCard', () => {
     const { container } = render(
       <GlassCard interactive onClick={handleClick}>
         <p>テストコンテンツ</p>
-      </GlassCard>
+      </GlassCard>,
     );
 
     const card = container.firstChild as HTMLElement;
-    
+
     await user.tab();
     expect(card).toHaveFocus();
 

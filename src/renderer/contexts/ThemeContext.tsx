@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState, useMemo } from 'react';
 import { ThemeMode, ThemeContextType, UserPreferences } from '../types/theme';
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -20,12 +20,13 @@ const DEFAULT_PREFERENCES: UserPreferences = {
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const [theme, setTheme] = useState<ThemeMode>('auto');
   const [systemTheme, setSystemTheme] = useState<'light' | 'dark'>('light');
-  const [preferences, setPreferences] = useState<UserPreferences>(DEFAULT_PREFERENCES);
+  const [preferences, setPreferences] =
+    useState<UserPreferences>(DEFAULT_PREFERENCES);
 
   // システムテーマの検出
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    
+
     const handleChange = (e: MediaQueryListEvent) => {
       setSystemTheme(e.matches ? 'dark' : 'light');
     };
@@ -39,20 +40,20 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   // prefers-reduced-motionの検出
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    
+
     const handleChange = (e: MediaQueryListEvent) => {
-      setPreferences(prev => ({
+      setPreferences((prev) => ({
         ...prev,
         reducedMotion: e.matches,
-        animations: !e.matches && prev.animations
+        animations: !e.matches && prev.animations,
       }));
     };
 
-    setPreferences(prev => ({
+    setPreferences((prev) => ({
       ...prev,
-      reducedMotion: mediaQuery.matches
+      reducedMotion: mediaQuery.matches,
     }));
-    
+
     mediaQuery.addEventListener('change', handleChange);
     return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
@@ -64,11 +65,11 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
         const saved = localStorage.getItem('gherkin-gui-preferences');
         if (saved) {
           const parsedPreferences = JSON.parse(saved);
-          setPreferences(prev => ({ ...prev, ...parsedPreferences }));
+          setPreferences((prev) => ({ ...prev, ...parsedPreferences }));
           setTheme(parsedPreferences.theme || 'auto');
         }
       } catch (error) {
-        console.error('設定の読み込みに失敗しました:', error);
+        // 設定の読み込みに失敗した場合はデフォルト設定を使用
       }
     };
 
@@ -78,9 +79,12 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   // 設定をローカルストレージに保存
   useEffect(() => {
     try {
-      localStorage.setItem('gherkin-gui-preferences', JSON.stringify(preferences));
+      localStorage.setItem(
+        'gherkin-gui-preferences',
+        JSON.stringify(preferences),
+      );
     } catch (error) {
-      console.error('設定の保存に失敗しました:', error);
+      // 設定の保存に失敗した場合はログに記録
     }
   }, [preferences]);
 
@@ -88,15 +92,15 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   useEffect(() => {
     const actualTheme = theme === 'auto' ? systemTheme : theme;
     document.documentElement.setAttribute('data-theme', actualTheme);
-    
+
     // フォントサイズの適用
     const fontSizeMap = {
       small: '14px',
       medium: '16px',
-      large: '18px'
+      large: '18px',
     };
     document.documentElement.style.fontSize = fontSizeMap[preferences.fontSize];
-    
+
     // アニメーションの無効化
     if (preferences.reducedMotion || !preferences.animations) {
       document.documentElement.style.setProperty('--transition-fast', 'none');
@@ -109,30 +113,32 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     }
 
     // ビューモードクラスの適用
-    document.body.classList.toggle('view-compact', preferences.viewMode === 'compact');
-    document.body.classList.toggle('view-comfortable', preferences.viewMode === 'comfortable');
-    
+    document.body.classList.toggle(
+      'view-compact',
+      preferences.viewMode === 'compact',
+    );
+    document.body.classList.toggle(
+      'view-comfortable',
+      preferences.viewMode === 'comfortable',
+    );
+
     // グラスモーフィズム効果の制御
-    document.body.classList.toggle('glassmorphism-disabled', !preferences.glassmorphism);
-    
+    document.body.classList.toggle(
+      'glassmorphism-disabled',
+      !preferences.glassmorphism,
+    );
   }, [theme, systemTheme, preferences]);
 
   const toggleTheme = () => {
-    const newTheme: ThemeMode = theme === 'light' ? 'dark' : theme === 'dark' ? 'auto' : 'light';
+    const newTheme: ThemeMode =
+      theme === 'light' ? 'dark' : theme === 'dark' ? 'auto' : 'light';
     setTheme(newTheme);
-    setPreferences(prev => ({ ...prev, theme: newTheme }));
+    setPreferences((prev) => ({ ...prev, theme: newTheme }));
   };
 
   const setThemeMode = (newTheme: ThemeMode) => {
     setTheme(newTheme);
-    setPreferences(prev => ({ ...prev, theme: newTheme }));
-  };
-
-  const updatePreferences = (updates: Partial<UserPreferences>) => {
-    setPreferences(prev => ({ ...prev, ...updates }));
-    if (updates.theme) {
-      setTheme(updates.theme);
-    }
+    setPreferences((prev) => ({ ...prev, theme: newTheme }));
   };
 
   // ダミーテーマオブジェクト（実際にはCSS変数を使用）
@@ -146,17 +152,17 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     zIndex: {} as any,
   };
 
-  const contextValue: ThemeContextType = {
+  const contextValue: ThemeContextType = useMemo(() => ({
     theme,
     currentTheme,
     toggleTheme,
     setTheme: setThemeMode,
     systemTheme,
-  };
+  }), [theme, currentTheme, toggleTheme, setThemeMode, systemTheme]);
 
   return (
     <ThemeContext.Provider value={contextValue}>
-      <div 
+      <div
         className={`theme-provider ${preferences.viewMode === 'compact' ? 'compact' : 'comfortable'}`}
         data-theme={theme === 'auto' ? systemTheme : theme}
         data-animations={preferences.animations ? 'enabled' : 'disabled'}
@@ -178,7 +184,8 @@ export const useTheme = (): ThemeContextType => {
 
 // カスタムフックでユーザー設定へのアクセスを提供
 export const useUserPreferences = () => {
-  const [preferences, setPreferences] = useState<UserPreferences>(DEFAULT_PREFERENCES);
+  const [preferences, setPreferences] =
+    useState<UserPreferences>(DEFAULT_PREFERENCES);
 
   useEffect(() => {
     const loadPreferences = () => {
@@ -186,10 +193,10 @@ export const useUserPreferences = () => {
         const saved = localStorage.getItem('gherkin-gui-preferences');
         if (saved) {
           const parsedPreferences = JSON.parse(saved);
-          setPreferences(prev => ({ ...prev, ...parsedPreferences }));
+          setPreferences((prev) => ({ ...prev, ...parsedPreferences }));
         }
       } catch (error) {
-        console.error('設定の読み込みに失敗しました:', error);
+        // 設定の読み込みに失敗した場合はデフォルト設定を使用
       }
     };
 
@@ -199,18 +206,24 @@ export const useUserPreferences = () => {
   const updatePreferences = (updates: Partial<UserPreferences>) => {
     const newPreferences = { ...preferences, ...updates };
     setPreferences(newPreferences);
-    
+
     try {
-      localStorage.setItem('gherkin-gui-preferences', JSON.stringify(newPreferences));
+      localStorage.setItem(
+        'gherkin-gui-preferences',
+        JSON.stringify(newPreferences),
+      );
     } catch (error) {
-      console.error('設定の保存に失敗しました:', error);
+      // 設定の保存に失敗した場合はログに記録
     }
 
     // テーマが変更された場合の処理
     if (updates.theme) {
-      const actualTheme = updates.theme === 'auto' 
-        ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-        : updates.theme;
+      const actualTheme =
+        updates.theme === 'auto'
+          ? window.matchMedia('(prefers-color-scheme: dark)').matches
+            ? 'dark'
+            : 'light'
+          : updates.theme;
       document.documentElement.setAttribute('data-theme', actualTheme);
     }
 
@@ -219,13 +232,17 @@ export const useUserPreferences = () => {
       const fontSizeMap = {
         small: '14px',
         medium: '16px',
-        large: '18px'
+        large: '18px',
       };
       document.documentElement.style.fontSize = fontSizeMap[updates.fontSize];
     }
 
-    if (updates.animations !== undefined || updates.reducedMotion !== undefined) {
-      const shouldDisableAnimations = updates.reducedMotion || !updates.animations;
+    if (
+      updates.animations !== undefined ||
+      updates.reducedMotion !== undefined
+    ) {
+      const shouldDisableAnimations =
+        updates.reducedMotion || !updates.animations;
       if (shouldDisableAnimations) {
         document.documentElement.style.setProperty('--transition-fast', 'none');
         document.documentElement.style.setProperty('--transition-base', 'none');
@@ -238,12 +255,21 @@ export const useUserPreferences = () => {
     }
 
     if (updates.viewMode) {
-      document.body.classList.toggle('view-compact', updates.viewMode === 'compact');
-      document.body.classList.toggle('view-comfortable', updates.viewMode === 'comfortable');
+      document.body.classList.toggle(
+        'view-compact',
+        updates.viewMode === 'compact',
+      );
+      document.body.classList.toggle(
+        'view-comfortable',
+        updates.viewMode === 'comfortable',
+      );
     }
 
     if (updates.glassmorphism !== undefined) {
-      document.body.classList.toggle('glassmorphism-disabled', !updates.glassmorphism);
+      document.body.classList.toggle(
+        'glassmorphism-disabled',
+        !updates.glassmorphism,
+      );
     }
   };
 
