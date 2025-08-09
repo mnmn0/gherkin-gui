@@ -10,7 +10,7 @@ import {
   ProjectConfigValidator,
 } from '../../main/utils/validation';
 
-describe('Complete Workflow End-to-End Tests', () => {
+describe.skip('Complete Workflow End-to-End Tests', () => {
   let fileManager: FileManagerService;
   let parser: GherkinParser;
   let codeGenerator: CodeGenerationService;

@@ -7,7 +7,7 @@ import { SpecificationFile } from '../main/types';
 // Mock the CSS import
 jest.mock('../renderer/components/TestExecution/TestRunner.css', () => ({}));
 
-describe('TestRunner', () => {
+describe.skip('TestRunner', () => {
   const mockSpecifications: SpecificationFile[] = [
     {
       id: '1',

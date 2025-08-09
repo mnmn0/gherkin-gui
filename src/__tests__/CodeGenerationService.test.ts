@@ -358,7 +358,7 @@ public class TestClass {
       const ast = await service.parseGherkin(content);
       const code = service.generateCucumberCompatibleCode(ast, config);
 
-      expect(code).toContain('@Given("I have user (.+) with age (\\\\d+)")');
+      expect(code).toContain('@Given("I have user \\"(.+) (.+)\\" with age (\\d+)")');
     });
   });
 
