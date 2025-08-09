@@ -378,6 +378,9 @@ export class TestExecutionService extends EventEmitter {
         skippedTests,
         executionTime: totalTime,
         testCases,
+        testName: 'Test Execution',
+        status: failedTests > 0 ? 'FAILED' : 'PASSED',
+        assertions: [],
       };
     } catch {
       return this.createFallbackResult(
@@ -431,6 +434,9 @@ export class TestExecutionService extends EventEmitter {
         skippedTests,
         executionTime: totalTime,
         testCases,
+        testName: 'Test Execution',
+        status: failedTests > 0 ? 'FAILED' : 'PASSED',
+        assertions: [],
       };
     } catch {
       return this.createFallbackResult(
@@ -547,6 +553,9 @@ export class TestExecutionService extends EventEmitter {
           stackTrace: hasFailure ? stderr || 'Unknown error' : undefined,
         },
       ],
+      testName: 'Test Execution',
+      status: hasFailure ? 'FAILED' : 'PASSED',
+      assertions: [],
     };
   }
 

@@ -525,6 +525,21 @@ export class IpcService {
         specificationPath: testResult.specificationPath || 'unknown',
         testResult,
         configuration: {} as any, // TODO: Include actual test configuration
+        startTime: new Date().toISOString(),
+        endTime: new Date().toISOString(),
+        environment: 'development',
+        summary: {
+          totalTests: testResult.totalTests,
+          passedTests: testResult.passedTests,
+          failedTests: testResult.failedTests,
+          skippedTests: testResult.skippedTests,
+          successRate:
+            testResult.totalTests > 0
+              ? (testResult.passedTests / testResult.totalTests) * 100
+              : 0,
+          executionTime: testResult.executionTime,
+        },
+        testSuites: [],
       };
 
       await this.fileManager.saveReport(report);

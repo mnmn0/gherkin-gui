@@ -147,6 +147,7 @@ export class FileManagerService {
 
           try {
             const content = await fs.readFile(filePath, 'utf-8');
+            const stats = await fs.stat(filePath);
             const report: TestReport = JSON.parse(content);
 
             reports.push({
@@ -155,6 +156,9 @@ export class FileManagerService {
               filePath,
               timestamp: new Date(report.timestamp),
               summary: this.calculateSummary(report),
+              name: path.basename(filePath),
+              createdAt: stats.mtime.toISOString(),
+              size: stats.size,
             });
           } catch {
             // Skip invalid report files
@@ -306,6 +310,7 @@ export class FileManagerService {
       failedTests: failed,
       skippedTests: skipped,
       successRate: total > 0 ? (passed / total) * 100 : 0,
+      executionTime: result.executionTime,
     };
   }
 
