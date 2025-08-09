@@ -16,36 +16,36 @@ const navigationItems: NavigationItem[] = [
     label: 'Specifications',
     path: '/specifications',
     icon: '📝',
-    description: 'Manage Gherkin test specifications'
+    description: 'Manage Gherkin test specifications',
   },
   {
     id: 'code-generation',
     label: 'Code Generation',
     path: '/code-generation',
     icon: '⚙️',
-    description: 'Generate JUnit test code'
+    description: 'Generate JUnit test code',
   },
   {
     id: 'test-execution',
     label: 'Test Execution',
     path: '/test-execution',
     icon: '🚀',
-    description: 'Run and monitor tests'
+    description: 'Run and monitor tests',
   },
   {
     id: 'reports',
     label: 'Reports',
     path: '/reports',
     icon: '📊',
-    description: 'View test reports and analytics'
+    description: 'View test reports and analytics',
   },
   {
     id: 'settings',
     label: 'Settings',
     path: '/settings',
     icon: '⚙️',
-    description: 'Project configuration and settings'
-  }
+    description: 'Project configuration and settings',
+  },
 ];
 
 export const NavigationSidebar: React.FC = () => {

@@ -42,7 +42,7 @@ export const SpecificationList: React.FC<SpecificationListProps> = ({
     const k = 1024;
     const sizes = ['B', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+    return `${parseFloat((bytes / k ** i).toFixed(1))} ${sizes[i]}`;
   };
 
   const formatDate = (date: Date): string => {
@@ -59,14 +59,14 @@ export const SpecificationList: React.FC<SpecificationListProps> = ({
     <div className="specification-list">
       <div className="list-header">
         <div className="list-actions">
-          <button 
+          <button
             className="btn btn-primary"
             onClick={() => setShowCreateDialog(true)}
             disabled={isLoading}
           >
             📝 New Specification
           </button>
-          <button 
+          <button
             className="btn btn-secondary"
             onClick={onRefresh}
             disabled={isLoading}
@@ -89,14 +89,14 @@ export const SpecificationList: React.FC<SpecificationListProps> = ({
               autoFocus
             />
             <div className="dialog-actions">
-              <button 
+              <button
                 className="btn btn-primary"
                 onClick={handleCreate}
                 disabled={!newSpecName.trim()}
               >
                 Create
               </button>
-              <button 
+              <button
                 className="btn btn-secondary"
                 onClick={() => {
                   setShowCreateDialog(false);
@@ -113,7 +113,7 @@ export const SpecificationList: React.FC<SpecificationListProps> = ({
       <div className="list-content">
         {isLoading && (
           <div className="loading">
-            <div className="loading-spinner"></div>
+            <div className="loading-spinner" />
             <span>Loading specifications...</span>
           </div>
         )}
@@ -123,7 +123,7 @@ export const SpecificationList: React.FC<SpecificationListProps> = ({
             <div className="empty-icon">📝</div>
             <h3>No specifications found</h3>
             <p>Create your first Gherkin specification to get started</p>
-            <button 
+            <button
               className="btn btn-primary"
               onClick={() => setShowCreateDialog(true)}
             >
@@ -158,17 +158,21 @@ export const SpecificationList: React.FC<SpecificationListProps> = ({
                     </button>
                   </div>
                 </div>
-                
+
                 <div className="spec-content">
                   <h3 className="spec-name">{spec.name}</h3>
                   <div className="spec-meta">
                     <div className="meta-item">
                       <span className="meta-label">Size:</span>
-                      <span className="meta-value">{formatFileSize(spec.size)}</span>
+                      <span className="meta-value">
+                        {formatFileSize(spec.size)}
+                      </span>
                     </div>
                     <div className="meta-item">
                       <span className="meta-label">Modified:</span>
-                      <span className="meta-value">{formatDate(spec.lastModified)}</span>
+                      <span className="meta-value">
+                        {formatDate(spec.lastModified)}
+                      </span>
                     </div>
                   </div>
                 </div>

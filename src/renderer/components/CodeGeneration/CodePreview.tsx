@@ -52,7 +52,9 @@ export const CodePreview: React.FC<CodePreviewProps> = ({
       console.error('Failed to validate code:', error);
       setValidationResult({
         valid: false,
-        errors: [{ message: `Validation failed: ${error}`, code: 'VALIDATION_ERROR' }],
+        errors: [
+          { message: `Validation failed: ${error}`, code: 'VALIDATION_ERROR' },
+        ],
         warnings: [],
       });
     }
@@ -64,7 +66,9 @@ export const CodePreview: React.FC<CodePreviewProps> = ({
 
     return (
       <div className="validation-results">
-        <div className={`validation-status ${validationResult.valid ? 'valid' : 'invalid'}`}>
+        <div
+          className={`validation-status ${validationResult.valid ? 'valid' : 'invalid'}`}
+        >
           <span className="status-icon">
             {validationResult.valid ? '✅' : '❌'}
           </span>
@@ -80,7 +84,9 @@ export const CodePreview: React.FC<CodePreviewProps> = ({
               {validationResult.errors.map((error: any, index: number) => (
                 <li key={index} className="error-item">
                   <strong>{error.code}:</strong> {error.message}
-                  {error.line && <span className="line-info"> (line {error.line})</span>}
+                  {error.line && (
+                    <span className="line-info"> (line {error.line})</span>
+                  )}
                 </li>
               ))}
             </ul>
@@ -94,7 +100,9 @@ export const CodePreview: React.FC<CodePreviewProps> = ({
               {validationResult.warnings.map((warning: any, index: number) => (
                 <li key={index} className="warning-item">
                   <strong>{warning.code}:</strong> {warning.message}
-                  {warning.line && <span className="line-info"> (line {warning.line})</span>}
+                  {warning.line && (
+                    <span className="line-info"> (line {warning.line})</span>
+                  )}
                 </li>
               ))}
             </ul>
@@ -106,24 +114,31 @@ export const CodePreview: React.FC<CodePreviewProps> = ({
 
   const renderJavaCode = (code: string) => {
     const lines = code.split('\n');
-    
+
     return lines.map((line, index) => {
       let className = 'code-line';
-      
+
       if (line.trim().startsWith('package ')) {
         className += ' package';
       } else if (line.trim().startsWith('import ')) {
         className += ' import';
       } else if (line.trim().startsWith('@')) {
         className += ' annotation';
-      } else if (line.trim().startsWith('public class ') || line.trim().startsWith('class ')) {
+      } else if (
+        line.trim().startsWith('public class ') ||
+        line.trim().startsWith('class ')
+      ) {
         className += ' class-declaration';
-      } else if (line.trim().startsWith('public ') || line.trim().startsWith('private ') || line.trim().startsWith('protected ')) {
+      } else if (
+        line.trim().startsWith('public ') ||
+        line.trim().startsWith('private ') ||
+        line.trim().startsWith('protected ')
+      ) {
         className += ' method';
       } else if (line.trim().startsWith('//')) {
         className += ' comment';
       }
-      
+
       return (
         <div key={index} className={className}>
           <span className="line-number">{index + 1}</span>
@@ -135,9 +150,10 @@ export const CodePreview: React.FC<CodePreviewProps> = ({
 
   const getCodeStats = () => {
     const lines = generatedCode.split('\n').length;
-    const methods = (generatedCode.match(/@Test|@Given|@When|@Then/g) || []).length;
+    const methods = (generatedCode.match(/@Test|@Given|@When|@Then/g) || [])
+      .length;
     const characters = generatedCode.length;
-    
+
     return { lines, methods, characters };
   };
 
@@ -160,20 +176,18 @@ export const CodePreview: React.FC<CodePreviewProps> = ({
           </div>
         </div>
         <div className="header-actions">
-          <button 
+          <button
             className="btn btn-secondary"
             onClick={handleValidate}
             disabled={isValidating}
           >
             {isValidating ? (
               <>
-                <div className="loading-spinner small"></div>
+                <div className="loading-spinner small" />
                 Validating...
               </>
             ) : (
-              <>
-                ✓ Validate
-              </>
+              <>✓ Validate</>
             )}
           </button>
           <button className="btn btn-secondary" onClick={handleCopyToClipboard}>
@@ -200,11 +214,13 @@ export const CodePreview: React.FC<CodePreviewProps> = ({
               <span className="stat-label">Test Methods</span>
             </div>
             <div className="stat-item">
-              <span className="stat-value">{(stats.characters / 1024).toFixed(1)}</span>
+              <span className="stat-value">
+                {(stats.characters / 1024).toFixed(1)}
+              </span>
               <span className="stat-label">KB</span>
             </div>
           </div>
-          
+
           {renderValidationResults()}
         </div>
 
@@ -215,7 +231,7 @@ export const CodePreview: React.FC<CodePreviewProps> = ({
               <span className="file-name">{config.className}.java</span>
             </div>
             <div className="code-actions">
-              <button 
+              <button
                 className="action-btn"
                 onClick={handleCopyToClipboard}
                 title="Copy to clipboard"
@@ -224,10 +240,8 @@ export const CodePreview: React.FC<CodePreviewProps> = ({
               </button>
             </div>
           </div>
-          
-          <div className="java-code">
-            {renderJavaCode(generatedCode)}
-          </div>
+
+          <div className="java-code">{renderJavaCode(generatedCode)}</div>
         </div>
       </div>
     </div>

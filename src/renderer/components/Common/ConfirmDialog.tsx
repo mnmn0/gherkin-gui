@@ -39,8 +39,8 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   };
 
   return (
-    <div 
-      className="confirm-dialog-overlay" 
+    <div
+      className="confirm-dialog-overlay"
       onClick={handleOverlayClick}
       onKeyDown={handleKeyDown}
       tabIndex={-1}
@@ -61,7 +61,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
           <button className="btn btn-secondary" onClick={onCancel}>
             {cancelText}
           </button>
-          <button 
+          <button
             className={`btn btn-${confirmVariant}`}
             onClick={onConfirm}
             autoFocus
@@ -94,7 +94,7 @@ export const useConfirmDialog = () => {
       confirmText?: string;
       cancelText?: string;
       confirmVariant?: 'primary' | 'danger' | 'warning';
-    } = {}
+    } = {},
   ): Promise<boolean> => {
     return new Promise((resolve) => {
       setDialog({

@@ -28,7 +28,11 @@ export const SpecificationEditor: React.FC<SpecificationEditorProps> = ({
 
   const handleCancel = () => {
     if (hasChanges) {
-      if (window.confirm('You have unsaved changes. Are you sure you want to cancel?')) {
+      if (
+        window.confirm(
+          'You have unsaved changes. Are you sure you want to cancel?',
+        )
+      ) {
         onCancel();
       }
     } else {
@@ -46,17 +50,25 @@ export const SpecificationEditor: React.FC<SpecificationEditorProps> = ({
   };
 
   const insertTemplate = (template: string) => {
-    const textarea = document.getElementById('spec-editor') as HTMLTextAreaElement;
+    const textarea = document.getElementById(
+      'spec-editor',
+    ) as HTMLTextAreaElement;
     if (textarea) {
       const start = textarea.selectionStart;
       const end = textarea.selectionEnd;
-      const newContent = editorContent.substring(0, start) + template + editorContent.substring(end);
+      const newContent =
+        editorContent.substring(0, start) +
+        template +
+        editorContent.substring(end);
       setEditorContent(newContent);
-      
+
       // Set cursor position after inserted template
       setTimeout(() => {
         textarea.focus();
-        textarea.setSelectionRange(start + template.length, start + template.length);
+        textarea.setSelectionRange(
+          start + template.length,
+          start + template.length,
+        );
       }, 0);
     }
   };
@@ -67,7 +79,7 @@ Scenario: Scenario name
   Given initial condition
   When action is performed
   Then expected result occurs`,
-    
+
     scenarioOutline: `
 Scenario Outline: Scenario with examples
   Given I have <input>
@@ -78,12 +90,12 @@ Scenario Outline: Scenario with examples
     | input | output |
     | A     | X      |
     | B     | Y      |`,
-    
+
     background: `
 Background:
   Given the system is initialized
   And test data is prepared`,
-    
+
     dataTable: `
     | column1 | column2 | column3 |
     | value1  | value2  | value3  |`,
@@ -95,18 +107,17 @@ Background:
         <div className="header-left">
           <div className="spec-info">
             <h2>Editing: {specification.name}</h2>
-            {hasChanges && <span className="changes-indicator">● Unsaved changes</span>}
+            {hasChanges && (
+              <span className="changes-indicator">● Unsaved changes</span>
+            )}
           </div>
         </div>
         <div className="header-actions">
-          <button 
-            className="btn btn-secondary" 
-            onClick={handleCancel}
-          >
+          <button className="btn btn-secondary" onClick={handleCancel}>
             Cancel
           </button>
-          <button 
-            className="btn btn-primary" 
+          <button
+            className="btn btn-primary"
             onClick={handleSave}
             disabled={!hasChanges}
           >
@@ -173,12 +184,10 @@ Feature: User Login
           />
           <div className="editor-status">
             <div className="status-info">
-              Lines: {editorContent.split('\n').length} | 
-              Characters: {editorContent.length}
+              Lines: {editorContent.split('\n').length} | Characters:{' '}
+              {editorContent.length}
             </div>
-            <div className="keyboard-hint">
-              Ctrl+S to save
-            </div>
+            <div className="keyboard-hint">Ctrl+S to save</div>
           </div>
         </div>
       </div>

@@ -44,7 +44,7 @@ export const ReportList: React.FC<ReportListProps> = ({
   if (isLoading) {
     return (
       <div className="loading">
-        <div className="loading-spinner"></div>
+        <div className="loading-spinner" />
         <span>Loading reports...</span>
       </div>
     );
@@ -106,13 +106,13 @@ export const ReportList: React.FC<ReportListProps> = ({
               <span className="meta-item">
                 📅 {formatDate(report.createdAt)}
               </span>
-              <span className="meta-item">
-                📏 {report.size} bytes
-              </span>
+              <span className="meta-item">📏 {report.size} bytes</span>
             </div>
 
             <div className="report-summary">
-              <div className={`status-badge ${getStatusColor(report.summary.successRate)}`}>
+              <div
+                className={`status-badge ${getStatusColor(report.summary.successRate)}`}
+              >
                 <span className="status-icon">
                   {getStatusIcon(report.summary.successRate)}
                 </span>
@@ -124,15 +124,21 @@ export const ReportList: React.FC<ReportListProps> = ({
               <div className="test-stats">
                 <div className="stat-group">
                   <div className="stat-item passed">
-                    <span className="stat-number">{report.summary.passedTests}</span>
+                    <span className="stat-number">
+                      {report.summary.passedTests}
+                    </span>
                     <span className="stat-label">Passed</span>
                   </div>
                   <div className="stat-item failed">
-                    <span className="stat-number">{report.summary.failedTests}</span>
+                    <span className="stat-number">
+                      {report.summary.failedTests}
+                    </span>
                     <span className="stat-label">Failed</span>
                   </div>
                   <div className="stat-item skipped">
-                    <span className="stat-number">{report.summary.skippedTests}</span>
+                    <span className="stat-number">
+                      {report.summary.skippedTests}
+                    </span>
                     <span className="stat-label">Skipped</span>
                   </div>
                 </div>
@@ -151,11 +157,13 @@ export const ReportList: React.FC<ReportListProps> = ({
                 <div className="failure-preview">
                   <span className="failure-label">Recent failures:</span>
                   <div className="failure-list">
-                    {report.summary.recentFailures?.slice(0, 2).map((failure, index) => (
-                      <div key={index} className="failure-item">
-                        {failure}
-                      </div>
-                    ))}
+                    {report.summary.recentFailures
+                      ?.slice(0, 2)
+                      .map((failure, index) => (
+                        <div key={index} className="failure-item">
+                          {failure}
+                        </div>
+                      ))}
                     {(report.summary.recentFailures?.length || 0) > 2 && (
                       <div className="failure-more">
                         +{(report.summary.recentFailures?.length || 0) - 2} more

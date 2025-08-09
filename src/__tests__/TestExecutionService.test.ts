@@ -1,7 +1,6 @@
+import * as fs from 'fs';
 import { TestExecutionService } from '../main/services/TestExecutionService';
 import { TestConfig } from '../main/types';
-import * as path from 'path';
-import * as fs from 'fs';
 
 // Mock child_process
 jest.mock('child_process', () => ({
@@ -18,7 +17,7 @@ jest.mock('fs', () => ({
 
 describe('TestExecutionService', () => {
   let service: TestExecutionService;
-  const mockSpawn = require('child_process').spawn;
+  const mockSpawn = jest.requireMock('child_process').spawn;
   const mockFs = fs as jest.Mocked<typeof fs>;
 
   beforeEach(() => {
@@ -33,7 +32,7 @@ describe('TestExecutionService', () => {
         javaClasspath: ['target/classes', 'target/test-classes'],
         springProfiles: ['test'],
         jvmArgs: ['-Xmx512m'],
-        environmentVars: { SPRING_PROFILES_ACTIVE: 'test' }
+        environmentVars: { SPRING_PROFILES_ACTIVE: 'test' },
       };
 
       const mockProcess = {
@@ -61,7 +60,7 @@ describe('TestExecutionService', () => {
         javaClasspath: ['build/classes', 'build/test-classes'],
         springProfiles: ['test'],
         jvmArgs: ['-Xmx512m'],
-        environmentVars: { SPRING_PROFILES_ACTIVE: 'test' }
+        environmentVars: { SPRING_PROFILES_ACTIVE: 'test' },
       };
 
       const mockProcess = {
@@ -89,7 +88,7 @@ describe('TestExecutionService', () => {
         javaClasspath: [],
         springProfiles: [],
         jvmArgs: [],
-        environmentVars: {}
+        environmentVars: {},
       };
 
       mockFs.existsSync.mockReturnValue(false);
@@ -105,7 +104,7 @@ describe('TestExecutionService', () => {
         javaClasspath: [],
         springProfiles: [],
         jvmArgs: [],
-        environmentVars: {}
+        environmentVars: {},
       };
 
       const mockProcess = {
@@ -156,13 +155,13 @@ describe('TestExecutionService', () => {
 
     it('should handle invalid XML', () => {
       const invalidXml = '<invalid>xml';
-      
+
       expect(() => service.parseJUnitResults(invalidXml)).toThrow();
     });
 
     it('should handle empty XML', () => {
       const emptyXml = '<?xml version="1.0" encoding="UTF-8"?><root/>';
-      
+
       const result = service.parseJUnitResults(emptyXml);
       expect(result.testSuites).toHaveLength(0);
       expect(result.summary.totalTests).toBe(0);
@@ -176,7 +175,7 @@ describe('TestExecutionService', () => {
         javaClasspath: [],
         springProfiles: [],
         jvmArgs: [],
-        environmentVars: {}
+        environmentVars: {},
       };
 
       const mockProcess = {

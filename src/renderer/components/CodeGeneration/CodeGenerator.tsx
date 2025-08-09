@@ -14,19 +14,59 @@ interface CodeGeneratorProps {
 }
 
 const TEMPLATE_OPTIONS = [
-  { value: 'integration', label: 'Spring Boot Integration Test', description: 'Full integration test with Spring Boot context' },
-  { value: 'web', label: 'Spring Boot Web MVC Test', description: 'Web layer test using @WebMvcTest' },
-  { value: 'data', label: 'Spring Boot Data JPA Test', description: 'Data layer test using @DataJpaTest' },
-  { value: 'cucumber', label: 'Cucumber Step Definitions', description: 'Cucumber step definitions with Spring Boot' },
-  { value: 'testcontainers', label: 'TestContainers Integration', description: 'Integration test with TestContainers for database' },
+  {
+    value: 'integration',
+    label: 'Spring Boot Integration Test',
+    description: 'Full integration test with Spring Boot context',
+  },
+  {
+    value: 'web',
+    label: 'Spring Boot Web MVC Test',
+    description: 'Web layer test using @WebMvcTest',
+  },
+  {
+    value: 'data',
+    label: 'Spring Boot Data JPA Test',
+    description: 'Data layer test using @DataJpaTest',
+  },
+  {
+    value: 'cucumber',
+    label: 'Cucumber Step Definitions',
+    description: 'Cucumber step definitions with Spring Boot',
+  },
+  {
+    value: 'testcontainers',
+    label: 'TestContainers Integration',
+    description: 'Integration test with TestContainers for database',
+  },
 ];
 
 const ANNOTATION_OPTIONS = [
-  { value: '@SpringBootTest', label: '@SpringBootTest', description: 'Full Spring Boot application context' },
-  { value: '@WebMvcTest', label: '@WebMvcTest', description: 'Web layer test with MockMvc' },
-  { value: '@DataJpaTest', label: '@DataJpaTest', description: 'Data layer test with TestEntityManager' },
-  { value: '@JsonTest', label: '@JsonTest', description: 'JSON serialization test' },
-  { value: '@TestMethodOrder', label: '@TestMethodOrder', description: 'Control test execution order' },
+  {
+    value: '@SpringBootTest',
+    label: '@SpringBootTest',
+    description: 'Full Spring Boot application context',
+  },
+  {
+    value: '@WebMvcTest',
+    label: '@WebMvcTest',
+    description: 'Web layer test with MockMvc',
+  },
+  {
+    value: '@DataJpaTest',
+    label: '@DataJpaTest',
+    description: 'Data layer test with TestEntityManager',
+  },
+  {
+    value: '@JsonTest',
+    label: '@JsonTest',
+    description: 'JSON serialization test',
+  },
+  {
+    value: '@TestMethodOrder',
+    label: '@TestMethodOrder',
+    description: 'Control test execution order',
+  },
 ];
 
 export const CodeGenerator: React.FC<CodeGeneratorProps> = ({
@@ -42,18 +82,18 @@ export const CodeGenerator: React.FC<CodeGeneratorProps> = ({
   const [localConfig, setLocalConfig] = useState<GenerationConfig>(config);
 
   const handleConfigChange = (field: keyof GenerationConfig, value: any) => {
-    setLocalConfig(prev => ({ ...prev, [field]: value }));
+    setLocalConfig((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleAnnotationToggle = (annotation: string) => {
     const current = localConfig.springBootAnnotations || [];
     const newAnnotations = current.includes(annotation)
-      ? current.filter(a => a !== annotation)
+      ? current.filter((a) => a !== annotation)
       : [...current, annotation];
-    
-    setLocalConfig(prev => ({ 
-      ...prev, 
-      springBootAnnotations: newAnnotations 
+
+    setLocalConfig((prev) => ({
+      ...prev,
+      springBootAnnotations: newAnnotations,
     }));
   };
 
@@ -61,7 +101,8 @@ export const CodeGenerator: React.FC<CodeGeneratorProps> = ({
     onGenerate(localConfig);
   };
 
-  const isFormValid = localConfig.packageName && localConfig.className && selectedSpec;
+  const isFormValid =
+    localConfig.packageName && localConfig.className && selectedSpec;
 
   const formatDate = (date: Date): string => {
     return new Intl.DateTimeFormat('en-US', {
@@ -78,7 +119,7 @@ export const CodeGenerator: React.FC<CodeGeneratorProps> = ({
         <div className="spec-selector">
           <div className="section-header">
             <h3>Select Specification</h3>
-            <button 
+            <button
               className="btn btn-secondary"
               onClick={onRefresh}
               disabled={isLoading}
@@ -89,7 +130,7 @@ export const CodeGenerator: React.FC<CodeGeneratorProps> = ({
 
           {isLoading && (
             <div className="loading">
-              <div className="loading-spinner"></div>
+              <div className="loading-spinner" />
               <span>Loading specifications...</span>
             </div>
           )}
@@ -112,7 +153,8 @@ export const CodeGenerator: React.FC<CodeGeneratorProps> = ({
                   <div className="spec-details">
                     <div className="spec-name">{spec.name}</div>
                     <div className="spec-meta">
-                      {formatDate(spec.lastModified)} • {(spec.size / 1024).toFixed(1)} KB
+                      {formatDate(spec.lastModified)} •{' '}
+                      {(spec.size / 1024).toFixed(1)} KB
                     </div>
                   </div>
                 </div>
@@ -150,7 +192,9 @@ export const CodeGenerator: React.FC<CodeGeneratorProps> = ({
                 id="package-name"
                 type="text"
                 value={localConfig.packageName}
-                onChange={(e) => handleConfigChange('packageName', e.target.value)}
+                onChange={(e) =>
+                  handleConfigChange('packageName', e.target.value)
+                }
                 placeholder="com.example.test"
                 pattern="^[a-z][a-z0-9.]*$"
               />
@@ -165,7 +209,9 @@ export const CodeGenerator: React.FC<CodeGeneratorProps> = ({
                 id="class-name"
                 type="text"
                 value={localConfig.className}
-                onChange={(e) => handleConfigChange('className', e.target.value)}
+                onChange={(e) =>
+                  handleConfigChange('className', e.target.value)
+                }
                 placeholder="UserLoginTest"
                 pattern="^[A-Z][a-zA-Z0-9]*$"
               />
@@ -180,25 +226,32 @@ export const CodeGenerator: React.FC<CodeGeneratorProps> = ({
                 value={localConfig.template || 'integration'}
                 onChange={(e) => handleConfigChange('template', e.target.value)}
               >
-                {TEMPLATE_OPTIONS.map(option => (
+                {TEMPLATE_OPTIONS.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
                 ))}
               </select>
               <div className="form-help">
-                {TEMPLATE_OPTIONS.find(opt => opt.value === (localConfig.template || 'integration'))?.description}
+                {
+                  TEMPLATE_OPTIONS.find(
+                    (opt) =>
+                      opt.value === (localConfig.template || 'integration'),
+                  )?.description
+                }
               </div>
             </div>
 
             <div className="form-group">
               <label>Spring Boot Annotations</label>
               <div className="annotation-checkboxes">
-                {ANNOTATION_OPTIONS.map(option => (
+                {ANNOTATION_OPTIONS.map((option) => (
                   <label key={option.value} className="checkbox-label">
                     <input
                       type="checkbox"
-                      checked={(localConfig.springBootAnnotations || []).includes(option.value)}
+                      checked={(
+                        localConfig.springBootAnnotations || []
+                      ).includes(option.value)}
                       onChange={() => handleAnnotationToggle(option.value)}
                     />
                     <span className="checkbox-text">
@@ -215,7 +268,12 @@ export const CodeGenerator: React.FC<CodeGeneratorProps> = ({
               <textarea
                 id="custom-imports"
                 value={(localConfig.customImports || []).join('\n')}
-                onChange={(e) => handleConfigChange('customImports', e.target.value.split('\n').filter(line => line.trim()))}
+                onChange={(e) =>
+                  handleConfigChange(
+                    'customImports',
+                    e.target.value.split('\n').filter((line) => line.trim()),
+                  )
+                }
                 placeholder="import com.example.CustomService;&#10;import static com.example.TestUtils.*;"
                 rows={3}
               />
@@ -232,13 +290,11 @@ export const CodeGenerator: React.FC<CodeGeneratorProps> = ({
               >
                 {isLoading ? (
                   <>
-                    <div className="loading-spinner small"></div>
+                    <div className="loading-spinner small" />
                     Generating...
                   </>
                 ) : (
-                  <>
-                    ⚙️ Generate JUnit Code
-                  </>
+                  <>⚙️ Generate JUnit Code</>
                 )}
               </button>
             </div>

@@ -28,7 +28,9 @@ export const ReportAnalytics: React.FC<ReportAnalyticsProps> = ({
   reports,
   onBack,
 }) => {
-  const [selectedTimeRange, setSelectedTimeRange] = useState<'7d' | '30d' | '90d' | 'all'>('30d');
+  const [selectedTimeRange, setSelectedTimeRange] = useState<
+    '7d' | '30d' | '90d' | 'all'
+  >('30d');
   const [isLoading, setIsLoading] = useState(false);
   const [fullReports, setFullReports] = useState<TestReport[]>([]);
 
@@ -39,9 +41,9 @@ export const ReportAnalytics: React.FC<ReportAnalyticsProps> = ({
   const loadFullReports = async () => {
     setIsLoading(true);
     try {
-      const reportPromises = reports.slice(0, 50).map(report => 
-        apiService.loadReport(report.filePath)
-      );
+      const reportPromises = reports
+        .slice(0, 50)
+        .map((report) => apiService.loadReport(report.filePath));
       const loadedReports = await Promise.all(reportPromises);
       setFullReports(loadedReports);
     } catch (error) {
@@ -52,18 +54,19 @@ export const ReportAnalytics: React.FC<ReportAnalyticsProps> = ({
 
   const filteredReports = useMemo(() => {
     if (selectedTimeRange === 'all') return fullReports;
-    
+
     const now = new Date();
-    const days = selectedTimeRange === '7d' ? 7 : selectedTimeRange === '30d' ? 30 : 90;
+    const days =
+      selectedTimeRange === '7d' ? 7 : selectedTimeRange === '30d' ? 30 : 90;
     const cutoff = new Date(now.getTime() - days * 24 * 60 * 60 * 1000);
-    
-    return fullReports.filter(report => new Date(report.startTime) >= cutoff);
+
+    return fullReports.filter((report) => new Date(report.startTime) >= cutoff);
   }, [fullReports, selectedTimeRange]);
 
   const trendData = useMemo((): TrendData[] => {
     const grouped = new Map<string, TestReport[]>();
-    
-    filteredReports.forEach(report => {
+
+    filteredReports.forEach((report) => {
       const dateKey = new Date(report.startTime).toISOString().split('T')[0];
       if (!grouped.has(dateKey)) {
         grouped.set(dateKey, []);
@@ -72,13 +75,27 @@ export const ReportAnalytics: React.FC<ReportAnalyticsProps> = ({
     });
 
     const trends: TrendData[] = [];
-    
+
     grouped.forEach((reportsForDate, dateKey) => {
-      const totalPassed = reportsForDate.reduce((sum, r) => sum + r.summary.passedTests, 0);
-      const totalFailed = reportsForDate.reduce((sum, r) => sum + r.summary.failedTests, 0);
-      const totalSkipped = reportsForDate.reduce((sum, r) => sum + r.summary.skippedTests, 0);
-      const totalTime = reportsForDate.reduce((sum, r) => sum + r.summary.executionTime, 0);
-      const avgSuccessRate = reportsForDate.reduce((sum, r) => sum + r.summary.successRate, 0) / reportsForDate.length;
+      const totalPassed = reportsForDate.reduce(
+        (sum, r) => sum + r.summary.passedTests,
+        0,
+      );
+      const totalFailed = reportsForDate.reduce(
+        (sum, r) => sum + r.summary.failedTests,
+        0,
+      );
+      const totalSkipped = reportsForDate.reduce(
+        (sum, r) => sum + r.summary.skippedTests,
+        0,
+      );
+      const totalTime = reportsForDate.reduce(
+        (sum, r) => sum + r.summary.executionTime,
+        0,
+      );
+      const avgSuccessRate =
+        reportsForDate.reduce((sum, r) => sum + r.summary.successRate, 0) /
+        reportsForDate.length;
 
       trends.push({
         date: dateKey,
@@ -96,9 +113,9 @@ export const ReportAnalytics: React.FC<ReportAnalyticsProps> = ({
   const failurePatterns = useMemo((): FailurePattern[] => {
     const failures = new Map<string, FailurePattern>();
 
-    filteredReports.forEach(report => {
-      report.testSuites.forEach(suite => {
-        suite.testResults.forEach(test => {
+    filteredReports.forEach((report) => {
+      report.testSuites.forEach((suite) => {
+        suite.testResults.forEach((test) => {
           if (test.status === 'FAILED') {
             const key = `${suite.name}::${test.testName}`;
             if (!failures.has(key)) {
@@ -137,23 +154,39 @@ export const ReportAnalytics: React.FC<ReportAnalyticsProps> = ({
       };
     }
 
-    const totalTests = filteredReports.reduce((sum, r) => 
-      sum + r.summary.passedTests + r.summary.failedTests + r.summary.skippedTests, 0);
-    
-    const averageSuccessRate = filteredReports.reduce((sum, r) => 
-      sum + r.summary.successRate, 0) / filteredReports.length;
-    
-    const totalExecutionTime = filteredReports.reduce((sum, r) => 
-      sum + r.summary.executionTime, 0);
+    const totalTests = filteredReports.reduce(
+      (sum, r) =>
+        sum +
+        r.summary.passedTests +
+        r.summary.failedTests +
+        r.summary.skippedTests,
+      0,
+    );
 
-    const mostFailingTest = failurePatterns.length > 0 ? failurePatterns[0] : null;
+    const averageSuccessRate =
+      filteredReports.reduce((sum, r) => sum + r.summary.successRate, 0) /
+      filteredReports.length;
+
+    const totalExecutionTime = filteredReports.reduce(
+      (sum, r) => sum + r.summary.executionTime,
+      0,
+    );
+
+    const mostFailingTest =
+      failurePatterns.length > 0 ? failurePatterns[0] : null;
 
     const recentTrend = trendData.slice(-7);
     const olderTrend = trendData.slice(-14, -7);
-    const recentAvg = recentTrend.length > 0 ? 
-      recentTrend.reduce((sum, t) => sum + t.successRate, 0) / recentTrend.length : 0;
-    const olderAvg = olderTrend.length > 0 ? 
-      olderTrend.reduce((sum, t) => sum + t.successRate, 0) / olderTrend.length : 0;
+    const recentAvg =
+      recentTrend.length > 0
+        ? recentTrend.reduce((sum, t) => sum + t.successRate, 0) /
+          recentTrend.length
+        : 0;
+    const olderAvg =
+      olderTrend.length > 0
+        ? olderTrend.reduce((sum, t) => sum + t.successRate, 0) /
+          olderTrend.length
+        : 0;
     const improvementTrend = recentAvg - olderAvg;
 
     return {
@@ -168,8 +201,8 @@ export const ReportAnalytics: React.FC<ReportAnalyticsProps> = ({
   const renderTrendChart = () => {
     if (trendData.length === 0) return null;
 
-    const maxSuccess = Math.max(...trendData.map(d => d.successRate));
-    const minSuccess = Math.min(...trendData.map(d => d.successRate));
+    const maxSuccess = Math.max(...trendData.map((d) => d.successRate));
+    const minSuccess = Math.min(...trendData.map((d) => d.successRate));
     const range = maxSuccess - minSuccess || 1;
 
     return (
@@ -177,7 +210,7 @@ export const ReportAnalytics: React.FC<ReportAnalyticsProps> = ({
         <div className="chart-header">
           <h3>Success Rate Trend</h3>
           <div className="time-range-selector">
-            {(['7d', '30d', '90d', 'all'] as const).map(range => (
+            {(['7d', '30d', '90d', 'all'] as const).map((range) => (
               <button
                 key={range}
                 className={`range-btn ${selectedTimeRange === range ? 'active' : ''}`}
@@ -188,23 +221,23 @@ export const ReportAnalytics: React.FC<ReportAnalyticsProps> = ({
             ))}
           </div>
         </div>
-        
+
         <div className="chart-container">
           <div className="chart-area">
             <svg viewBox="0 0 800 200" className="trend-svg">
               {/* Grid lines */}
-              {[0, 25, 50, 75, 100].map(y => (
+              {[0, 25, 50, 75, 100].map((y) => (
                 <line
                   key={y}
                   x1="0"
-                  y1={200 - (y * 2)}
+                  y1={200 - y * 2}
                   x2="800"
-                  y2={200 - (y * 2)}
+                  y2={200 - y * 2}
                   stroke="#e0e0e0"
                   strokeDasharray="2,2"
                 />
               ))}
-              
+
               {/* Trend line */}
               {trendData.length > 1 && (
                 <polyline
@@ -212,11 +245,14 @@ export const ReportAnalytics: React.FC<ReportAnalyticsProps> = ({
                   stroke="#3498db"
                   strokeWidth="2"
                   points={trendData
-                    .map((d, i) => `${(i * 800) / (trendData.length - 1)},${200 - d.successRate * 2}`)
+                    .map(
+                      (d, i) =>
+                        `${(i * 800) / (trendData.length - 1)},${200 - d.successRate * 2}`,
+                    )
                     .join(' ')}
                 />
               )}
-              
+
               {/* Data points */}
               {trendData.map((d, i) => (
                 <circle
@@ -230,11 +266,14 @@ export const ReportAnalytics: React.FC<ReportAnalyticsProps> = ({
               ))}
             </svg>
           </div>
-          
+
           <div className="chart-labels">
             {trendData.map((d, i) => (
               <div key={i} className="chart-label">
-                {new Date(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                {new Date(d.date).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                })}
               </div>
             ))}
           </div>
@@ -246,7 +285,7 @@ export const ReportAnalytics: React.FC<ReportAnalyticsProps> = ({
   if (isLoading) {
     return (
       <div className="analytics-loading">
-        <div className="loading-spinner"></div>
+        <div className="loading-spinner" />
         <span>Loading analytics data...</span>
       </div>
     );
@@ -272,7 +311,9 @@ export const ReportAnalytics: React.FC<ReportAnalyticsProps> = ({
                 <span className="card-icon">🎯</span>
                 <span className="card-title">Total Tests</span>
               </div>
-              <div className="card-value">{summaryStats.totalTests.toLocaleString()}</div>
+              <div className="card-value">
+                {summaryStats.totalTests.toLocaleString()}
+              </div>
             </div>
 
             <div className="analytics-card">
@@ -280,7 +321,9 @@ export const ReportAnalytics: React.FC<ReportAnalyticsProps> = ({
                 <span className="card-icon">📊</span>
                 <span className="card-title">Average Success Rate</span>
               </div>
-              <div className="card-value">{summaryStats.averageSuccessRate.toFixed(1)}%</div>
+              <div className="card-value">
+                {summaryStats.averageSuccessRate.toFixed(1)}%
+              </div>
             </div>
 
             <div className="analytics-card">
@@ -298,17 +341,17 @@ export const ReportAnalytics: React.FC<ReportAnalyticsProps> = ({
                 <span className="card-icon">📈</span>
                 <span className="card-title">Trend</span>
               </div>
-              <div className={`card-value ${summaryStats.improvementTrend >= 0 ? 'positive' : 'negative'}`}>
-                {summaryStats.improvementTrend >= 0 ? '↗️' : '↘️'} 
+              <div
+                className={`card-value ${summaryStats.improvementTrend >= 0 ? 'positive' : 'negative'}`}
+              >
+                {summaryStats.improvementTrend >= 0 ? '↗️' : '↘️'}
                 {Math.abs(summaryStats.improvementTrend).toFixed(1)}%
               </div>
             </div>
           </div>
         </div>
 
-        <div className="charts-section">
-          {renderTrendChart()}
-        </div>
+        <div className="charts-section">{renderTrendChart()}</div>
 
         <div className="insights-section">
           <div className="failure-patterns">
@@ -327,7 +370,8 @@ export const ReportAnalytics: React.FC<ReportAnalyticsProps> = ({
                       <div className="pattern-info">
                         <div className="pattern-name">{pattern.testName}</div>
                         <div className="pattern-meta">
-                          {pattern.count} failures • Last seen {pattern.lastSeen.toLocaleDateString()}
+                          {pattern.count} failures • Last seen{' '}
+                          {pattern.lastSeen.toLocaleDateString()}
                         </div>
                       </div>
                       <div className="pattern-count">{pattern.count}×</div>
@@ -350,7 +394,12 @@ export const ReportAnalytics: React.FC<ReportAnalyticsProps> = ({
                 <div className="insight-content">
                   <div className="insight-title">Fastest Execution</div>
                   <div className="insight-value">
-                    {Math.min(...filteredReports.map(r => r.summary.executionTime / 1000)).toFixed(2)}s
+                    {Math.min(
+                      ...filteredReports.map(
+                        (r) => r.summary.executionTime / 1000,
+                      ),
+                    ).toFixed(2)}
+                    s
                   </div>
                 </div>
               </div>
@@ -360,7 +409,12 @@ export const ReportAnalytics: React.FC<ReportAnalyticsProps> = ({
                 <div className="insight-content">
                   <div className="insight-title">Slowest Execution</div>
                   <div className="insight-value">
-                    {Math.max(...filteredReports.map(r => r.summary.executionTime / 1000)).toFixed(2)}s
+                    {Math.max(
+                      ...filteredReports.map(
+                        (r) => r.summary.executionTime / 1000,
+                      ),
+                    ).toFixed(2)}
+                    s
                   </div>
                 </div>
               </div>
@@ -370,7 +424,10 @@ export const ReportAnalytics: React.FC<ReportAnalyticsProps> = ({
                 <div className="insight-content">
                   <div className="insight-title">Best Success Rate</div>
                   <div className="insight-value">
-                    {Math.max(...filteredReports.map(r => r.summary.successRate)).toFixed(1)}%
+                    {Math.max(
+                      ...filteredReports.map((r) => r.summary.successRate),
+                    ).toFixed(1)}
+                    %
                   </div>
                 </div>
               </div>
@@ -380,7 +437,10 @@ export const ReportAnalytics: React.FC<ReportAnalyticsProps> = ({
                 <div className="insight-content">
                   <div className="insight-title">Worst Success Rate</div>
                   <div className="insight-value">
-                    {Math.min(...filteredReports.map(r => r.summary.successRate)).toFixed(1)}%
+                    {Math.min(
+                      ...filteredReports.map((r) => r.summary.successRate),
+                    ).toFixed(1)}
+                    %
                   </div>
                 </div>
               </div>

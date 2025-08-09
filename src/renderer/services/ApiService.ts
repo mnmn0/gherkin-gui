@@ -32,7 +32,10 @@ export class ApiService {
   }
 
   // Code generation
-  async generateCode(specContent: string, config: GenerationConfig): Promise<string> {
+  async generateCode(
+    specContent: string,
+    config: GenerationConfig,
+  ): Promise<string> {
     return window.electron.invoke('code:generate', { specContent, config });
   }
 
@@ -75,7 +78,9 @@ export class ApiService {
     return window.electron.invoke('project:save-config', config);
   }
 
-  async validateProjectConfig(config: ProjectConfig): Promise<ValidationResult> {
+  async validateProjectConfig(
+    config: ProjectConfig,
+  ): Promise<ValidationResult> {
     return window.electron.invoke('project:validate-config', config);
   }
 

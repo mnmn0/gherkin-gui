@@ -24,26 +24,34 @@ export const ReportViewer: React.FC<ReportViewerProps> = ({
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'PASSED': return '✅';
-      case 'FAILED': return '❌';
-      case 'SKIPPED': return '⏭️';
-      default: return '❓';
+      case 'PASSED':
+        return '✅';
+      case 'FAILED':
+        return '❌';
+      case 'SKIPPED':
+        return '⏭️';
+      default:
+        return '❓';
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'PASSED': return 'success';
-      case 'FAILED': return 'error';
-      case 'SKIPPED': return 'warning';
-      default: return 'neutral';
+      case 'PASSED':
+        return 'success';
+      case 'FAILED':
+        return 'error';
+      case 'SKIPPED':
+        return 'warning';
+      default:
+        return 'neutral';
     }
   };
 
   const getAllFailedTests = (): TestResult[] => {
     const failedTests: TestResult[] = [];
-    report.testSuites.forEach(suite => {
-      suite.testResults.forEach(test => {
+    report.testSuites.forEach((suite) => {
+      suite.testResults.forEach((test) => {
         if (test.status === 'FAILED') {
           failedTests.push(test);
         }
@@ -82,7 +90,9 @@ export const ReportViewer: React.FC<ReportViewerProps> = ({
         <div className="summary-card neutral">
           <div className="card-icon">⏱️</div>
           <div className="card-content">
-            <div className="card-number">{formatDuration(report.summary.executionTime)}</div>
+            <div className="card-number">
+              {formatDuration(report.summary.executionTime)}
+            </div>
             <div className="card-label">Total Time</div>
           </div>
         </div>
@@ -110,9 +120,11 @@ export const ReportViewer: React.FC<ReportViewerProps> = ({
             </div>
             <div className="info-item">
               <span className="info-label">Success Rate:</span>
-              <span className={`info-value ${getStatusColor(
-                report.summary.successRate === 100 ? 'PASSED' : 'FAILED'
-              )}`}>
+              <span
+                className={`info-value ${getStatusColor(
+                  report.summary.successRate === 100 ? 'PASSED' : 'FAILED',
+                )}`}
+              >
                 {report.summary.successRate.toFixed(1)}%
               </span>
             </div>
@@ -123,13 +135,19 @@ export const ReportViewer: React.FC<ReportViewerProps> = ({
           <h3>Test Suites ({report.testSuites.length})</h3>
           <div className="suite-list">
             {report.testSuites.map((suite, index) => (
-              <div key={index} className="suite-item" onClick={() => {
-                setSelectedSuite(suite);
-                setViewMode('details');
-              }}>
+              <div
+                key={index}
+                className="suite-item"
+                onClick={() => {
+                  setSelectedSuite(suite);
+                  setViewMode('details');
+                }}
+              >
                 <div className="suite-header">
                   <span className="suite-name">{suite.name}</span>
-                  <span className={`suite-status ${getStatusColor(suite.status)}`}>
+                  <span
+                    className={`suite-status ${getStatusColor(suite.status)}`}
+                  >
                     {getStatusIcon(suite.status)} {suite.status}
                   </span>
                 </div>
@@ -141,7 +159,11 @@ export const ReportViewer: React.FC<ReportViewerProps> = ({
                     {formatDuration(suite.executionTime)}
                   </span>
                   <span className="suite-stat">
-                    {suite.testResults.filter(t => t.status === 'FAILED').length} failures
+                    {
+                      suite.testResults.filter((t) => t.status === 'FAILED')
+                        .length
+                    }{' '}
+                    failures
                   </span>
                 </div>
               </div>
@@ -158,15 +180,20 @@ export const ReportViewer: React.FC<ReportViewerProps> = ({
     return (
       <div className="details-content">
         <div className="details-header">
-          <button className="btn btn-secondary" onClick={() => {
-            setSelectedSuite(null);
-            setViewMode('overview');
-          }}>
+          <button
+            className="btn btn-secondary"
+            onClick={() => {
+              setSelectedSuite(null);
+              setViewMode('overview');
+            }}
+          >
             ← Back to Overview
           </button>
           <h2>{selectedSuite.name}</h2>
           <div className="suite-info">
-            <span className={`status-badge ${getStatusColor(selectedSuite.status)}`}>
+            <span
+              className={`status-badge ${getStatusColor(selectedSuite.status)}`}
+            >
               {getStatusIcon(selectedSuite.status)} {selectedSuite.status}
             </span>
             <span className="execution-time">
@@ -177,14 +204,16 @@ export const ReportViewer: React.FC<ReportViewerProps> = ({
 
         <div className="test-list">
           {selectedSuite.testResults.map((test, index) => (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className={`test-item ${getStatusColor(test.status)}`}
               onClick={() => setSelectedTest(test)}
             >
               <div className="test-header">
                 <div className="test-title">
-                  <span className="test-icon">{getStatusIcon(test.status)}</span>
+                  <span className="test-icon">
+                    {getStatusIcon(test.status)}
+                  </span>
                   <span className="test-name">{test.testName}</span>
                 </div>
                 <div className="test-info">
@@ -205,7 +234,7 @@ export const ReportViewer: React.FC<ReportViewerProps> = ({
                       <pre className="error-message">{test.errorMessage}</pre>
                     </div>
                   )}
-                  
+
                   {test.stackTrace && (
                     <div className="stack-section">
                       <h4>Stack Trace:</h4>
@@ -218,11 +247,16 @@ export const ReportViewer: React.FC<ReportViewerProps> = ({
                       <h4>Assertions:</h4>
                       <div className="assertions-list">
                         {test.assertions.map((assertion, i) => (
-                          <div key={i} className={`assertion-item ${assertion.passed ? 'passed' : 'failed'}`}>
+                          <div
+                            key={i}
+                            className={`assertion-item ${assertion.passed ? 'passed' : 'failed'}`}
+                          >
                             <span className="assertion-icon">
                               {assertion.passed ? '✅' : '❌'}
                             </span>
-                            <span className="assertion-text">{assertion.message}</span>
+                            <span className="assertion-text">
+                              {assertion.message}
+                            </span>
                           </div>
                         ))}
                       </div>
@@ -290,8 +324,12 @@ export const ReportViewer: React.FC<ReportViewerProps> = ({
           <div className="report-info">
             <h1>{report.reportName || 'Test Report'}</h1>
             <div className="report-metadata">
-              <span>Generated: {new Date(report.startTime).toLocaleString()}</span>
-              <span>Duration: {formatDuration(report.summary.executionTime)}</span>
+              <span>
+                Generated: {new Date(report.startTime).toLocaleString()}
+              </span>
+              <span>
+                Duration: {formatDuration(report.summary.executionTime)}
+              </span>
               <span>Environment: {report.environment}</span>
             </div>
           </div>

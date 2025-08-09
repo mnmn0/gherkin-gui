@@ -31,7 +31,7 @@ export const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
     const duration = end.getTime() - startTime.getTime();
     const seconds = Math.floor(duration / 1000);
     const minutes = Math.floor(seconds / 60);
-    
+
     if (minutes > 0) {
       return `${minutes}m ${seconds % 60}s`;
     }
@@ -40,21 +40,31 @@ export const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'running': return '🔄';
-      case 'completed': return '✅';
-      case 'failed': return '❌';
-      case 'cancelled': return '🚫';
-      default: return '❓';
+      case 'running':
+        return '🔄';
+      case 'completed':
+        return '✅';
+      case 'failed':
+        return '❌';
+      case 'cancelled':
+        return '🚫';
+      default:
+        return '❓';
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'running': return 'running';
-      case 'completed': return 'completed';
-      case 'failed': return 'failed';
-      case 'cancelled': return 'cancelled';
-      default: return 'unknown';
+      case 'running':
+        return 'running';
+      case 'completed':
+        return 'completed';
+      case 'failed':
+        return 'failed';
+      case 'cancelled':
+        return 'cancelled';
+      default:
+        return 'unknown';
     }
   };
 
@@ -64,22 +74,17 @@ export const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
     }
 
     const { progress, testsCompleted, totalTests } = execution.progress;
-    
+
     return (
       <div className="progress-section">
         <div className="progress-info">
           <span className="progress-text">
             {testsCompleted} / {totalTests} tests
           </span>
-          <span className="progress-percent">
-            {Math.round(progress)}%
-          </span>
+          <span className="progress-percent">{Math.round(progress)}%</span>
         </div>
         <div className="progress-bar">
-          <div 
-            className="progress-fill"
-            style={{ width: `${progress}%` }}
-          />
+          <div className="progress-fill" style={{ width: `${progress}%` }} />
         </div>
       </div>
     );
@@ -91,7 +96,7 @@ export const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
     }
 
     const { result } = execution;
-    
+
     return (
       <div className="result-summary">
         <div className="result-stats">
@@ -144,12 +149,19 @@ export const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
 
       <div className="execution-list">
         {executions.map((execution) => (
-          <div key={execution.id} className={`execution-card ${getStatusColor(execution.status)}`}>
+          <div
+            key={execution.id}
+            className={`execution-card ${getStatusColor(execution.status)}`}
+          >
             <div className="execution-header">
               <div className="execution-title">
-                <span className="status-icon">{getStatusIcon(execution.status)}</span>
+                <span className="status-icon">
+                  {getStatusIcon(execution.status)}
+                </span>
                 <div className="execution-info">
-                  <div className="execution-id">Execution #{execution.id.substring(0, 8)}</div>
+                  <div className="execution-id">
+                    Execution #{execution.id.substring(0, 8)}
+                  </div>
                   <div className="execution-time">
                     Started {formatDuration(execution.startTime)} ago
                   </div>
@@ -164,7 +176,9 @@ export const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
                     Cancel
                   </button>
                 )}
-                <div className={`status-badge ${getStatusColor(execution.status)}`}>
+                <div
+                  className={`status-badge ${getStatusColor(execution.status)}`}
+                >
                   {execution.status.toUpperCase()}
                 </div>
               </div>
@@ -173,7 +187,9 @@ export const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
             {execution.progress && execution.status === 'running' && (
               <div className="current-test">
                 <span className="current-test-label">Currently running:</span>
-                <span className="current-test-name">{execution.progress.currentTest}</span>
+                <span className="current-test-name">
+                  {execution.progress.currentTest}
+                </span>
               </div>
             )}
 
@@ -186,7 +202,9 @@ export const ExecutionMonitor: React.FC<ExecutionMonitorProps> = ({
                 <div className="config-item">
                   <span className="config-label">Specifications:</span>
                   <span className="config-value">
-                    {execution.config?.specificationPath?.split(',').length || 0} files
+                    {execution.config?.specificationPath?.split(',').length ||
+                      0}{' '}
+                    files
                   </span>
                 </div>
                 <div className="config-item">

@@ -40,18 +40,25 @@ export const Toast: React.FC<ToastProps> = ({ toast, onClose }) => {
 
   const getIcon = () => {
     switch (toast.type) {
-      case 'success': return '✅';
-      case 'error': return '❌';
-      case 'warning': return '⚠️';
-      case 'info': return 'ℹ️';
-      default: return 'ℹ️';
+      case 'success':
+        return '✅';
+      case 'error':
+        return '❌';
+      case 'warning':
+        return '⚠️';
+      case 'info':
+        return 'ℹ️';
+      default:
+        return 'ℹ️';
     }
   };
 
   if (!isVisible) return null;
 
   return (
-    <div className={`toast toast-${toast.type} ${isLeaving ? 'toast-leaving' : ''}`}>
+    <div
+      className={`toast toast-${toast.type} ${isLeaving ? 'toast-leaving' : ''}`}
+    >
       <div className="toast-content">
         <div className="toast-icon">{getIcon()}</div>
         <div className="toast-text">
@@ -66,10 +73,10 @@ export const Toast: React.FC<ToastProps> = ({ toast, onClose }) => {
       </div>
       {!toast.persistent && toast.duration !== 0 && (
         <div className="toast-progress">
-          <div 
+          <div
             className="toast-progress-bar"
-            style={{ 
-              animationDuration: `${toast.duration || 5000}ms` 
+            style={{
+              animationDuration: `${toast.duration || 5000}ms`,
             }}
           />
         </div>
@@ -83,20 +90,16 @@ interface ToastContainerProps {
   onClose: (id: string) => void;
 }
 
-export const ToastContainer: React.FC<ToastContainerProps> = ({ 
-  toasts, 
-  onClose 
+export const ToastContainer: React.FC<ToastContainerProps> = ({
+  toasts,
+  onClose,
 }) => {
   if (toasts.length === 0) return null;
 
   return (
     <div className="toast-container">
-      {toasts.map(toast => (
-        <Toast
-          key={toast.id}
-          toast={toast}
-          onClose={onClose}
-        />
+      {toasts.map((toast) => (
+        <Toast key={toast.id} toast={toast} onClose={onClose} />
       ))}
     </div>
   );
@@ -109,15 +112,15 @@ export const useToast = () => {
   const addToast = (toast: Omit<ToastMessage, 'id'>) => {
     const newToast: ToastMessage = {
       ...toast,
-      id: Date.now().toString() + Math.random().toString(36).substr(2, 9)
+      id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
     };
 
-    setToasts(prev => [newToast, ...prev]);
+    setToasts((prev) => [newToast, ...prev]);
     return newToast.id;
   };
 
   const removeToast = (id: string) => {
-    setToasts(prev => prev.filter(toast => toast.id !== id));
+    setToasts((prev) => prev.filter((toast) => toast.id !== id));
   };
 
   const clearToasts = () => {
@@ -125,17 +128,30 @@ export const useToast = () => {
   };
 
   // Convenience methods
-  const success = (title: string, message?: string, options?: Partial<ToastMessage>) =>
-    addToast({ ...options, type: 'success', title, message });
+  const success = (
+    title: string,
+    message?: string,
+    options?: Partial<ToastMessage>,
+  ) => addToast({ ...options, type: 'success', title, message });
 
-  const error = (title: string, message?: string, options?: Partial<ToastMessage>) =>
+  const error = (
+    title: string,
+    message?: string,
+    options?: Partial<ToastMessage>,
+  ) =>
     addToast({ ...options, type: 'error', title, message, persistent: true });
 
-  const warning = (title: string, message?: string, options?: Partial<ToastMessage>) =>
-    addToast({ ...options, type: 'warning', title, message });
+  const warning = (
+    title: string,
+    message?: string,
+    options?: Partial<ToastMessage>,
+  ) => addToast({ ...options, type: 'warning', title, message });
 
-  const info = (title: string, message?: string, options?: Partial<ToastMessage>) =>
-    addToast({ ...options, type: 'info', title, message });
+  const info = (
+    title: string,
+    message?: string,
+    options?: Partial<ToastMessage>,
+  ) => addToast({ ...options, type: 'info', title, message });
 
   return {
     toasts,
@@ -145,6 +161,6 @@ export const useToast = () => {
     success,
     error,
     warning,
-    info
+    info,
   };
 };

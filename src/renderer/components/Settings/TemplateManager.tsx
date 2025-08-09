@@ -11,7 +11,8 @@ export const TemplateManager: React.FC<TemplateManagerProps> = ({
   templates,
   onChange,
 }) => {
-  const [selectedTemplate, setSelectedTemplate] = useState<GenerationTemplate | null>(null);
+  const [selectedTemplate, setSelectedTemplate] =
+    useState<GenerationTemplate | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState<Partial<GenerationTemplate>>({});
 
@@ -21,7 +22,8 @@ export const TemplateManager: React.FC<TemplateManagerProps> = ({
       name: 'New Template',
       description: '',
       type: 'junit5',
-      content: '// New template content\npackage ${packageName};\n\n// Your template here...',
+      content:
+        '// New template content\npackage ${packageName};\n\n// Your template here...',
       variables: [],
       isDefault: false,
       createdAt: new Date(),
@@ -43,11 +45,11 @@ export const TemplateManager: React.FC<TemplateManagerProps> = ({
     if (!editForm.id) return;
 
     const updatedTemplate: GenerationTemplate = {
-      ...editForm as GenerationTemplate,
+      ...(editForm as GenerationTemplate),
       updatedAt: new Date(),
     };
 
-    const existingIndex = templates.findIndex(t => t.id === editForm.id);
+    const existingIndex = templates.findIndex((t) => t.id === editForm.id);
     let newTemplates: GenerationTemplate[];
 
     if (existingIndex >= 0) {
@@ -65,7 +67,10 @@ export const TemplateManager: React.FC<TemplateManagerProps> = ({
   const handleCancel = () => {
     setIsEditing(false);
     setEditForm({});
-    if (selectedTemplate && templates.find(t => t.id === selectedTemplate.id)) {
+    if (
+      selectedTemplate &&
+      templates.find((t) => t.id === selectedTemplate.id)
+    ) {
       setSelectedTemplate(selectedTemplate);
     } else {
       setSelectedTemplate(null);
@@ -73,9 +78,9 @@ export const TemplateManager: React.FC<TemplateManagerProps> = ({
   };
 
   const handleDelete = (template: GenerationTemplate) => {
-    const newTemplates = templates.filter(t => t.id !== template.id);
+    const newTemplates = templates.filter((t) => t.id !== template.id);
     onChange(newTemplates);
-    
+
     if (selectedTemplate?.id === template.id) {
       setSelectedTemplate(null);
       setIsEditing(false);
@@ -97,7 +102,7 @@ export const TemplateManager: React.FC<TemplateManagerProps> = ({
   };
 
   const handleSetDefault = (template: GenerationTemplate) => {
-    const newTemplates = templates.map(t => ({
+    const newTemplates = templates.map((t) => ({
       ...t,
       isDefault: t.id === template.id,
     }));
@@ -105,7 +110,7 @@ export const TemplateManager: React.FC<TemplateManagerProps> = ({
   };
 
   const handleFormChange = (field: keyof GenerationTemplate, value: any) => {
-    setEditForm(prev => ({
+    setEditForm((prev) => ({
       ...prev,
       [field]: value,
     }));
@@ -119,30 +124,30 @@ export const TemplateManager: React.FC<TemplateManagerProps> = ({
       description: '',
     };
 
-    setEditForm(prev => ({
+    setEditForm((prev) => ({
       ...prev,
       variables: [...(prev.variables || []), newVariable],
     }));
   };
 
   const handleRemoveVariable = (index: number) => {
-    setEditForm(prev => ({
+    setEditForm((prev) => ({
       ...prev,
       variables: (prev.variables || []).filter((_, i) => i !== index),
     }));
   };
 
   const handleVariableChange = (index: number, field: string, value: any) => {
-    setEditForm(prev => ({
+    setEditForm((prev) => ({
       ...prev,
-      variables: (prev.variables || []).map((v, i) => 
-        i === index ? { ...v, [field]: value } : v
+      variables: (prev.variables || []).map((v, i) =>
+        i === index ? { ...v, [field]: value } : v,
       ),
     }));
   };
 
-  const defaultTemplates = templates.filter(t => t.isDefault);
-  const customTemplates = templates.filter(t => !t.isDefault);
+  const defaultTemplates = templates.filter((t) => t.isDefault);
+  const customTemplates = templates.filter((t) => !t.isDefault);
 
   return (
     <div className="template-manager">
@@ -158,7 +163,7 @@ export const TemplateManager: React.FC<TemplateManagerProps> = ({
             <div className="template-section">
               <h4>Default Templates</h4>
               <div className="template-list">
-                {defaultTemplates.map(template => (
+                {defaultTemplates.map((template) => (
                   <div
                     key={template.id}
                     className={`template-item ${selectedTemplate?.id === template.id ? 'selected' : ''}`}
@@ -205,7 +210,7 @@ export const TemplateManager: React.FC<TemplateManagerProps> = ({
               </div>
             ) : (
               <div className="template-list">
-                {customTemplates.map(template => (
+                {customTemplates.map((template) => (
                   <div
                     key={template.id}
                     className={`template-item ${selectedTemplate?.id === template.id ? 'selected' : ''}`}
@@ -269,7 +274,11 @@ export const TemplateManager: React.FC<TemplateManagerProps> = ({
         {isEditing ? (
           <div className="edit-form">
             <div className="form-header">
-              <h3>{editForm.id && templates.find(t => t.id === editForm.id) ? 'Edit Template' : 'New Template'}</h3>
+              <h3>
+                {editForm.id && templates.find((t) => t.id === editForm.id)
+                  ? 'Edit Template'
+                  : 'New Template'}
+              </h3>
               <div className="form-actions">
                 <button className="btn btn-secondary" onClick={handleCancel}>
                   Cancel
@@ -298,7 +307,9 @@ export const TemplateManager: React.FC<TemplateManagerProps> = ({
                   <textarea
                     id="template-description"
                     value={editForm.description || ''}
-                    onChange={(e) => handleFormChange('description', e.target.value)}
+                    onChange={(e) =>
+                      handleFormChange('description', e.target.value)
+                    }
                     placeholder="Template description"
                     rows={3}
                   />
@@ -331,7 +342,9 @@ export const TemplateManager: React.FC<TemplateManagerProps> = ({
                   className="code-editor"
                 />
                 <div className="form-help">
-                  Use ${'{variableName}'} for template variables. Common variables: packageName, className, specificationName, testMethods
+                  Use ${'{variableName}'} for template variables. Common
+                  variables: packageName, className, specificationName,
+                  testMethods
                 </div>
               </div>
 
@@ -354,13 +367,17 @@ export const TemplateManager: React.FC<TemplateManagerProps> = ({
                         <input
                           type="text"
                           value={variable.name}
-                          onChange={(e) => handleVariableChange(index, 'name', e.target.value)}
+                          onChange={(e) =>
+                            handleVariableChange(index, 'name', e.target.value)
+                          }
                           placeholder="Variable name"
                           className="variable-name"
                         />
                         <select
                           value={variable.type}
-                          onChange={(e) => handleVariableChange(index, 'type', e.target.value)}
+                          onChange={(e) =>
+                            handleVariableChange(index, 'type', e.target.value)
+                          }
                           className="variable-type"
                         >
                           <option value="string">String</option>
@@ -371,7 +388,13 @@ export const TemplateManager: React.FC<TemplateManagerProps> = ({
                         <input
                           type="text"
                           value={variable.defaultValue || ''}
-                          onChange={(e) => handleVariableChange(index, 'defaultValue', e.target.value)}
+                          onChange={(e) =>
+                            handleVariableChange(
+                              index,
+                              'defaultValue',
+                              e.target.value,
+                            )
+                          }
                           placeholder="Default value"
                           className="variable-default"
                         />
@@ -379,7 +402,13 @@ export const TemplateManager: React.FC<TemplateManagerProps> = ({
                       <input
                         type="text"
                         value={variable.description || ''}
-                        onChange={(e) => handleVariableChange(index, 'description', e.target.value)}
+                        onChange={(e) =>
+                          handleVariableChange(
+                            index,
+                            'description',
+                            e.target.value,
+                          )
+                        }
                         placeholder="Variable description"
                         className="variable-description"
                       />
@@ -402,19 +431,30 @@ export const TemplateManager: React.FC<TemplateManagerProps> = ({
             <div className="preview-header">
               <div className="template-title">
                 <h3>{selectedTemplate.name}</h3>
-                <span className={`template-badge ${selectedTemplate.isDefault ? 'default' : 'custom'}`}>
+                <span
+                  className={`template-badge ${selectedTemplate.isDefault ? 'default' : 'custom'}`}
+                >
                   {selectedTemplate.isDefault ? 'Default' : 'Custom'}
                 </span>
               </div>
               <div className="preview-actions">
-                <button className="btn btn-secondary" onClick={() => handleEdit(selectedTemplate)}>
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => handleEdit(selectedTemplate)}
+                >
                   ✏️ Edit
                 </button>
-                <button className="btn btn-secondary" onClick={() => handleDuplicate(selectedTemplate)}>
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => handleDuplicate(selectedTemplate)}
+                >
                   📋 Duplicate
                 </button>
                 {!selectedTemplate.isDefault && (
-                  <button className="btn btn-secondary" onClick={() => handleSetDefault(selectedTemplate)}>
+                  <button
+                    className="btn btn-secondary"
+                    onClick={() => handleSetDefault(selectedTemplate)}
+                  >
                     ⭐ Set Default
                   </button>
                 )}
@@ -424,7 +464,9 @@ export const TemplateManager: React.FC<TemplateManagerProps> = ({
             <div className="template-details">
               <div className="detail-section">
                 <h4>Description</h4>
-                <p>{selectedTemplate.description || 'No description provided'}</p>
+                <p>
+                  {selectedTemplate.description || 'No description provided'}
+                </p>
               </div>
 
               <div className="detail-section">
@@ -434,19 +476,28 @@ export const TemplateManager: React.FC<TemplateManagerProps> = ({
 
               <div className="detail-section">
                 <h4>Variables ({selectedTemplate.variables?.length || 0})</h4>
-                {selectedTemplate.variables && selectedTemplate.variables.length > 0 ? (
+                {selectedTemplate.variables &&
+                selectedTemplate.variables.length > 0 ? (
                   <div className="variables-preview">
                     {selectedTemplate.variables.map((variable, index) => (
                       <div key={index} className="variable-preview">
                         <div className="variable-preview-header">
-                          <span className="variable-preview-name">${'{' + variable.name + '}'}</span>
-                          <span className="variable-preview-type">{variable.type}</span>
+                          <span className="variable-preview-name">
+                            ${`{${variable.name}}`}
+                          </span>
+                          <span className="variable-preview-type">
+                            {variable.type}
+                          </span>
                         </div>
                         {variable.description && (
-                          <div className="variable-preview-description">{variable.description}</div>
+                          <div className="variable-preview-description">
+                            {variable.description}
+                          </div>
                         )}
                         {variable.defaultValue && (
-                          <div className="variable-preview-default">Default: {variable.defaultValue}</div>
+                          <div className="variable-preview-default">
+                            Default: {variable.defaultValue}
+                          </div>
                         )}
                       </div>
                     ))}

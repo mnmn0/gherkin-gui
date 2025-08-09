@@ -11,6 +11,7 @@ import {
 
 export class GherkinValidator {
   private errors: ValidationError[] = [];
+
   private warnings: ValidationWarning[] = [];
 
   validateFeature(feature: GherkinFeature): ValidationResult {
@@ -45,7 +46,7 @@ export class GherkinValidator {
       this.addError(
         `Scenario ${index + 1} must have a name`,
         'MISSING_SCENARIO_NAME',
-        index + 1
+        index + 1,
       );
     }
 
@@ -53,7 +54,7 @@ export class GherkinValidator {
       this.addError(
         `Scenario "${scenario.name}" has no steps`,
         'NO_STEPS',
-        index + 1
+        index + 1,
       );
     } else {
       scenario.steps.forEach((step, stepIndex) => {
@@ -66,14 +67,18 @@ export class GherkinValidator {
     }
   }
 
-  private validateStep(step: GherkinStep, stepIndex: number, scenarioIndex: number): void {
+  private validateStep(
+    step: GherkinStep,
+    stepIndex: number,
+    scenarioIndex: number,
+  ): void {
     const validKeywords = ['Given', 'When', 'Then', 'And', 'But'];
-    
+
     if (!validKeywords.includes(step.keyword)) {
       this.addError(
         `Invalid step keyword "${step.keyword}"`,
         'INVALID_KEYWORD',
-        scenarioIndex + 1
+        scenarioIndex + 1,
       );
     }
 
@@ -81,7 +86,7 @@ export class GherkinValidator {
       this.addError(
         `Step ${stepIndex + 1} in scenario ${scenarioIndex + 1} must have text`,
         'MISSING_STEP_TEXT',
-        scenarioIndex + 1
+        scenarioIndex + 1,
       );
     }
 
@@ -89,7 +94,7 @@ export class GherkinValidator {
       this.addError(
         'Data table must be an array',
         'INVALID_DATA_TABLE',
-        scenarioIndex + 1
+        scenarioIndex + 1,
       );
     }
   }
@@ -100,14 +105,14 @@ export class GherkinValidator {
       return;
     }
 
-    const hasWhenOrThen = steps.some(step => 
-      step.keyword === 'When' || step.keyword === 'Then'
+    const hasWhenOrThen = steps.some(
+      (step) => step.keyword === 'When' || step.keyword === 'Then',
     );
 
     if (hasWhenOrThen) {
       this.addWarning(
         'Background should only contain Given steps',
-        'BACKGROUND_INVALID_KEYWORDS'
+        'BACKGROUND_INVALID_KEYWORDS',
       );
     }
   }
@@ -127,7 +132,7 @@ export class GherkinValidator {
         if (row.length !== headerCount) {
           this.addError(
             `Example row ${index + 1} has ${row.length} columns but expected ${headerCount}`,
-            'EXAMPLE_COLUMN_MISMATCH'
+            'EXAMPLE_COLUMN_MISMATCH',
           );
         }
       });
@@ -229,7 +234,10 @@ export class ProjectConfigValidator {
       });
     }
 
-    if (config.codeGenerationTemplates && config.codeGenerationTemplates.length === 0) {
+    if (
+      config.codeGenerationTemplates &&
+      config.codeGenerationTemplates.length === 0
+    ) {
       warnings.push({
         message: 'No code generation templates defined',
         code: 'NO_TEMPLATES',
@@ -276,7 +284,10 @@ export function validateGherkinSyntax(content: string): ValidationResult {
       }
     }
 
-    if (trimmedLine.startsWith('Scenario:') || trimmedLine.startsWith('Scenario Outline:')) {
+    if (
+      trimmedLine.startsWith('Scenario:') ||
+      trimmedLine.startsWith('Scenario Outline:')
+    ) {
       inScenario = true;
       inBackground = false;
       inExamples = false;
@@ -312,8 +323,8 @@ export function validateGherkinSyntax(content: string): ValidationResult {
     }
 
     const stepKeywords = ['Given', 'When', 'Then', 'And', 'But'];
-    const startsWithKeyword = stepKeywords.some(keyword => 
-      trimmedLine.startsWith(keyword + ' ')
+    const startsWithKeyword = stepKeywords.some((keyword) =>
+      trimmedLine.startsWith(`${keyword} `),
     );
 
     if (startsWithKeyword && !inScenario && !inBackground) {

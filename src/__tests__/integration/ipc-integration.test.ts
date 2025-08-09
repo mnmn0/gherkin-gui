@@ -1,12 +1,12 @@
 import { BrowserWindow, ipcMain } from 'electron';
+import * as path from 'path';
+import * as fs from 'fs';
+import * as os from 'os';
 import { IpcService } from '../../main/services/IpcService';
 import { FileManagerService } from '../../main/services/FileManagerService';
 import { GherkinParser } from '../../main/services/GherkinParser';
 import { CodeGenerationService } from '../../main/services/CodeGenerationService';
 import { TestExecutionService } from '../../main/services/TestExecutionService';
-import * as path from 'path';
-import * as fs from 'fs';
-import * as os from 'os';
 
 // Mock electron modules
 jest.mock('electron', () => ({
@@ -25,7 +25,7 @@ describe('IPC Integration Tests', () => {
 
   beforeAll(async () => {
     tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ipc-test-'));
-    
+
     mockWebContents = {
       send: jest.fn(),
     };
@@ -34,7 +34,7 @@ describe('IPC Integration Tests', () => {
     const mockWindow = {
       webContents: mockWebContents,
     };
-    
+
     (BrowserWindow as any).mockImplementation(() => mockWindow);
   });
 
@@ -73,14 +73,14 @@ describe('IPC Integration Tests', () => {
       // Test file save
       const saveHandler = mockHandlers.get('file:save-specification');
       expect(saveHandler).toBeDefined();
-      
+
       await saveHandler({}, specPath, specContent);
       expect(fs.existsSync(specPath)).toBe(true);
 
       // Test file load
       const loadHandler = mockHandlers.get('file:load-specification');
       expect(loadHandler).toBeDefined();
-      
+
       const loadedContent = await loadHandler({}, specPath);
       expect(loadedContent).toBe(specContent);
 
@@ -96,7 +96,7 @@ describe('IPC Integration Tests', () => {
 
       const listHandler = mockHandlers.get('file:list-specifications');
       const specList = await listHandler({});
-      
+
       expect(Array.isArray(specList)).toBe(true);
     });
 
@@ -139,7 +139,7 @@ describe('IPC Integration Tests', () => {
     Then I get the AST`;
 
       const result = await parseHandler({}, gherkinContent);
-      
+
       expect(result).toHaveProperty('feature');
       expect(result.feature.name).toBe('Parser Test');
       expect(result.feature.scenarios).toHaveLength(1);
@@ -187,29 +187,31 @@ describe('IPC Integration Tests', () => {
         feature: {
           name: 'Test Feature',
           description: 'Test description',
-          scenarios: [{
-            name: 'Test Scenario',
-            steps: [
-              { keyword: 'Given', text: 'I have a test step' },
-              { keyword: 'When', text: 'I execute the step' },
-              { keyword: 'Then', text: 'I see the result' }
-            ],
-            tags: []
-          }],
+          scenarios: [
+            {
+              name: 'Test Scenario',
+              steps: [
+                { keyword: 'Given', text: 'I have a test step' },
+                { keyword: 'When', text: 'I execute the step' },
+                { keyword: 'Then', text: 'I see the result' },
+              ],
+              tags: [],
+            },
+          ],
           background: undefined,
-          tags: []
+          tags: [],
         },
-        comments: []
+        comments: [],
       };
 
       const config = {
         packageName: 'com.example.test',
         className: 'TestFeatureTest',
-        springBootAnnotations: ['@SpringBootTest']
+        springBootAnnotations: ['@SpringBootTest'],
       };
 
       const result = await generateHandler({}, gherkinAST, config);
-      
+
       expect(typeof result).toBe('string');
       expect(result).toContain('package com.example.test;');
       expect(result).toContain('public class TestFeatureTest');
@@ -259,7 +261,7 @@ public class TestClass {
         javaClasspath: ['target/classes'],
         springProfiles: ['test'],
         jvmArgs: ['-Xmx512m'],
-        environmentVars: {}
+        environmentVars: {},
       };
 
       // Create a mock pom.xml for Maven detection
@@ -298,17 +300,21 @@ public class TestClass {
         progress: 50,
         currentTest: 'TestClass.testMethod',
         testsCompleted: 5,
-        totalTests: 10
+        totalTests: 10,
       };
 
-      ipcService.emitExecutionProgress('test-exec-1', progressData, mockWebContents);
+      ipcService.emitExecutionProgress(
+        'test-exec-1',
+        progressData,
+        mockWebContents,
+      );
 
       expect(mockWebContents.send).toHaveBeenCalledWith(
         'execution:progress',
         expect.objectContaining({
           executionId: 'test-exec-1',
-          progress: progressData
-        })
+          progress: progressData,
+        }),
       );
     });
 
@@ -325,18 +331,22 @@ public class TestClass {
           failedTests: 2,
           skippedTests: 0,
           executionTime: 5000,
-          successRate: 80
-        }
+          successRate: 80,
+        },
       };
 
-      ipcService.emitExecutionComplete('test-exec-1', testResult, mockWebContents);
+      ipcService.emitExecutionComplete(
+        'test-exec-1',
+        testResult,
+        mockWebContents,
+      );
 
       expect(mockWebContents.send).toHaveBeenCalledWith(
         'execution:complete',
         expect.objectContaining({
           executionId: 'test-exec-1',
-          result: testResult
-        })
+          result: testResult,
+        }),
       );
     });
 
@@ -348,8 +358,8 @@ public class TestClass {
         expect.objectContaining({
           message: 'Test error message',
           category: 'execution',
-          severity: 'error'
-        })
+          severity: 'error',
+        }),
       );
     });
   });
@@ -365,15 +375,15 @@ public class TestClass {
 
       // Test with invalid file path
       const loadHandler = mockHandlers.get('file:load-specification');
-      
-      await expect(loadHandler({}, '/non/existent/path.feature'))
-        .rejects.toThrow();
+
+      await expect(
+        loadHandler({}, '/non/existent/path.feature'),
+      ).rejects.toThrow();
 
       // Test with invalid Gherkin
       const parseHandler = mockHandlers.get('parser:parse-gherkin');
-      
-      await expect(parseHandler({}, 'Invalid Gherkin'))
-        .rejects.toThrow();
+
+      await expect(parseHandler({}, 'Invalid Gherkin')).rejects.toThrow();
     });
 
     it('should validate IPC parameters', async () => {
@@ -386,12 +396,10 @@ public class TestClass {
 
       // Test with missing parameters
       const saveHandler = mockHandlers.get('file:save-specification');
-      
-      await expect(saveHandler({}, undefined, 'content'))
-        .rejects.toThrow();
-      
-      await expect(saveHandler({}, 'path', undefined))
-        .rejects.toThrow();
+
+      await expect(saveHandler({}, undefined, 'content')).rejects.toThrow();
+
+      await expect(saveHandler({}, 'path', undefined)).rejects.toThrow();
     });
   });
 
@@ -399,8 +407,12 @@ public class TestClass {
     it('should properly initialize all services', () => {
       expect(ipcService.fileManagerService).toBeInstanceOf(FileManagerService);
       expect(ipcService.gherkinParser).toBeInstanceOf(GherkinParser);
-      expect(ipcService.codeGenerationService).toBeInstanceOf(CodeGenerationService);
-      expect(ipcService.testExecutionService).toBeInstanceOf(TestExecutionService);
+      expect(ipcService.codeGenerationService).toBeInstanceOf(
+        CodeGenerationService,
+      );
+      expect(ipcService.testExecutionService).toBeInstanceOf(
+        TestExecutionService,
+      );
     });
 
     it('should handle service dependencies', async () => {
@@ -419,7 +431,7 @@ public class TestClass {
       const config = {
         packageName: 'com.test',
         className: 'IntegrationTest',
-        springBootAnnotations: ['@SpringBootTest']
+        springBootAnnotations: ['@SpringBootTest'],
       };
 
       const generated = await generator.generateJUnitTest(parsed, config);

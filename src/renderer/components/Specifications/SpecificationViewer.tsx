@@ -17,13 +17,16 @@ export const SpecificationViewer: React.FC<SpecificationViewerProps> = ({
 }) => {
   const renderGherkinContent = (content: string) => {
     const lines = content.split('\n');
-    
+
     return lines.map((line, index) => {
       let className = 'gherkin-line';
-      
+
       if (line.trim().startsWith('Feature:')) {
         className += ' feature';
-      } else if (line.trim().startsWith('Scenario:') || line.trim().startsWith('Scenario Outline:')) {
+      } else if (
+        line.trim().startsWith('Scenario:') ||
+        line.trim().startsWith('Scenario Outline:')
+      ) {
         className += ' scenario';
       } else if (line.trim().startsWith('Background:')) {
         className += ' background';
@@ -38,7 +41,7 @@ export const SpecificationViewer: React.FC<SpecificationViewerProps> = ({
       } else if (line.trim().startsWith('|')) {
         className += ' table';
       }
-      
+
       return (
         <div key={index} className={className}>
           <span className="line-number">{index + 1}</span>
@@ -59,7 +62,10 @@ export const SpecificationViewer: React.FC<SpecificationViewerProps> = ({
             <h2>{specification.name}</h2>
             <div className="spec-metadata">
               <span>Size: {(specification.size / 1024).toFixed(1)} KB</span>
-              <span>Modified: {new Date(specification.lastModified).toLocaleString()}</span>
+              <span>
+                Modified:{' '}
+                {new Date(specification.lastModified).toLocaleString()}
+              </span>
             </div>
           </div>
         </div>
@@ -71,9 +77,7 @@ export const SpecificationViewer: React.FC<SpecificationViewerProps> = ({
       </div>
 
       <div className="viewer-content">
-        <div className="gherkin-preview">
-          {renderGherkinContent(content)}
-        </div>
+        <div className="gherkin-preview">{renderGherkinContent(content)}</div>
       </div>
     </div>
   );

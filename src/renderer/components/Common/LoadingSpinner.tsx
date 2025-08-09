@@ -12,13 +12,13 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   size = 'medium',
   color = 'primary',
   text,
-  className = ''
+  className = '',
 }) => {
   const spinnerClass = `loading-spinner ${size} ${color} ${className}`.trim();
 
   return (
     <div className="loading-container">
-      <div className={spinnerClass}></div>
+      <div className={spinnerClass} />
       {text && <span className="loading-text">{text}</span>}
     </div>
   );

@@ -11,11 +11,13 @@ import { validateGherkinSyntax } from '../utils/validation';
 
 export class GherkinParser {
   private lines: string[] = [];
+
   private currentLine = 0;
+
   private indentLevel = 0;
 
   parse(content: string): GherkinAST {
-    this.lines = content.split('\n').map(line => line.replace(/\r$/, ''));
+    this.lines = content.split('\n').map((line) => line.replace(/\r$/, ''));
     this.currentLine = 0;
 
     const feature = this.parseFeature();
@@ -32,7 +34,7 @@ export class GherkinParser {
   }
 
   private parseFeature(): GherkinFeature {
-    let feature: Partial<GherkinFeature> = {
+    const feature: Partial<GherkinFeature> = {
       scenarios: [],
       tags: [],
     };
@@ -69,15 +71,15 @@ export class GherkinParser {
 
     while (this.currentLine < this.lines.length) {
       const line = this.getCurrentLine().trim();
-      
+
       if (this.isKeyword(line)) {
         break;
       }
-      
+
       if (line.length > 0) {
         description.push(line);
       }
-      
+
       this.nextLine();
     }
 
@@ -87,14 +89,14 @@ export class GherkinParser {
   private parseBackground(): GherkinBackground {
     this.nextLine();
     const steps = this.parseSteps();
-    
+
     return { steps };
   }
 
   private parseScenario(): GherkinScenario {
     const line = this.getCurrentLine().trim();
     const name = line.substring(9).trim();
-    
+
     this.nextLine();
     const steps = this.parseSteps();
     const tags = this.extractScenarioTags();
@@ -109,7 +111,7 @@ export class GherkinParser {
   private parseScenarioOutline(): GherkinScenario {
     const line = this.getCurrentLine().trim();
     const name = line.substring(17).trim();
-    
+
     this.nextLine();
     const steps = this.parseSteps();
     const examples = this.parseExamples();
@@ -128,7 +130,7 @@ export class GherkinParser {
 
     while (this.currentLine < this.lines.length) {
       const line = this.getCurrentLine().trim();
-      
+
       if (this.isStepKeyword(line)) {
         steps.push(this.parseStep());
       } else if (this.isKeyword(line) || line.startsWith('Examples:')) {
@@ -179,17 +181,17 @@ export class GherkinParser {
 
     const delimiter = line.startsWith('"""') ? '"""' : "'''";
     const docLines: string[] = [];
-    
+
     this.nextLine();
 
     while (this.currentLine < this.lines.length) {
       const currentLine = this.getCurrentLine();
-      
+
       if (currentLine.trim() === delimiter) {
         this.nextLine();
         break;
       }
-      
+
       docLines.push(currentLine);
       this.nextLine();
     }
@@ -202,7 +204,7 @@ export class GherkinParser {
 
     while (this.currentLine < this.lines.length) {
       const line = this.getCurrentLine().trim();
-      
+
       if (!line.startsWith('|')) {
         break;
       }
@@ -210,8 +212,8 @@ export class GherkinParser {
       const row = line
         .split('|')
         .slice(1, -1)
-        .map(cell => cell.trim());
-      
+        .map((cell) => cell.trim());
+
       table.push(row);
       this.nextLine();
     }
@@ -222,11 +224,11 @@ export class GherkinParser {
   private parseExamples(): GherkinExamples | undefined {
     while (this.currentLine < this.lines.length) {
       const line = this.getCurrentLine().trim();
-      
+
       if (line.startsWith('Examples:')) {
         this.nextLine();
         const table = this.parseDataTable();
-        
+
         if (table.length > 0) {
           return {
             headers: table[0],
@@ -246,15 +248,15 @@ export class GherkinParser {
 
   private parseTags(): string[] {
     const tags: string[] = [];
-    
+
     while (this.currentLine < this.lines.length) {
       const line = this.getCurrentLine().trim();
-      
+
       if (!line.startsWith('@')) {
         break;
       }
 
-      const lineTags = line.split(/\s+/).filter(tag => tag.startsWith('@'));
+      const lineTags = line.split(/\s+/).filter((tag) => tag.startsWith('@'));
       tags.push(...lineTags);
       this.nextLine();
     }
@@ -268,9 +270,9 @@ export class GherkinParser {
 
     while (lineIndex >= 0) {
       const line = this.lines[lineIndex].trim();
-      
+
       if (line.startsWith('@')) {
-        const lineTags = line.split(/\s+/).filter(tag => tag.startsWith('@'));
+        const lineTags = line.split(/\s+/).filter((tag) => tag.startsWith('@'));
         tags.unshift(...lineTags);
         lineIndex--;
       } else if (line.length === 0 || line.startsWith('#')) {
@@ -299,16 +301,21 @@ export class GherkinParser {
 
   private isKeyword(line: string): boolean {
     const keywords = [
-      'Feature:', 'Background:', 'Scenario:', 'Scenario Outline:',
-      'Examples:', 'Rule:', 'Example:',
+      'Feature:',
+      'Background:',
+      'Scenario:',
+      'Scenario Outline:',
+      'Examples:',
+      'Rule:',
+      'Example:',
     ];
-    
-    return keywords.some(keyword => line.startsWith(keyword));
+
+    return keywords.some((keyword) => line.startsWith(keyword));
   }
 
   private isStepKeyword(line: string): boolean {
     const stepKeywords = ['Given', 'When', 'Then', 'And', 'But'];
-    return stepKeywords.some(keyword => line.startsWith(keyword + ' '));
+    return stepKeywords.some((keyword) => line.startsWith(`${keyword} `));
   }
 
   private getCurrentLine(): string {
@@ -327,52 +334,56 @@ export class GherkinParser {
     }
 
     lines.push(`Feature: ${ast.feature.name}`);
-    
+
     if (ast.feature.description) {
       lines.push('');
       const descLines = ast.feature.description.split('\n');
-      lines.push(...descLines.map(line => `  ${line}`));
+      lines.push(...descLines.map((line) => `  ${line}`));
     }
 
     if (ast.feature.background) {
       lines.push('');
       lines.push('  Background:');
-      ast.feature.background.steps.forEach(step => {
+      ast.feature.background.steps.forEach((step) => {
         lines.push(`    ${step.keyword} ${step.text}`);
         if (step.docString) {
           lines.push('      """');
-          lines.push(...step.docString.split('\n').map(line => `      ${line}`));
+          lines.push(
+            ...step.docString.split('\n').map((line) => `      ${line}`),
+          );
           lines.push('      """');
         }
         if (step.dataTable) {
-          step.dataTable.forEach(row => {
+          step.dataTable.forEach((row) => {
             lines.push(`      | ${row.join(' | ')} |`);
           });
         }
       });
     }
 
-    ast.feature.scenarios.forEach(scenario => {
+    ast.feature.scenarios.forEach((scenario) => {
       lines.push('');
-      
+
       if (scenario.tags.length > 0) {
         lines.push(`  ${scenario.tags.join(' ')}`);
       }
-      
+
       const scenarioType = scenario.examples ? 'Scenario Outline' : 'Scenario';
       lines.push(`  ${scenarioType}: ${scenario.name}`);
-      
-      scenario.steps.forEach(step => {
+
+      scenario.steps.forEach((step) => {
         lines.push(`    ${step.keyword} ${step.text}`);
-        
+
         if (step.docString) {
           lines.push('      """');
-          lines.push(...step.docString.split('\n').map(line => `      ${line}`));
+          lines.push(
+            ...step.docString.split('\n').map((line) => `      ${line}`),
+          );
           lines.push('      """');
         }
-        
+
         if (step.dataTable) {
-          step.dataTable.forEach(row => {
+          step.dataTable.forEach((row) => {
             lines.push(`      | ${row.join(' | ')} |`);
           });
         }
@@ -382,7 +393,7 @@ export class GherkinParser {
         lines.push('');
         lines.push('    Examples:');
         lines.push(`      | ${scenario.examples.headers.join(' | ')} |`);
-        scenario.examples.rows.forEach(row => {
+        scenario.examples.rows.forEach((row) => {
           lines.push(`      | ${row.join(' | ')} |`);
         });
       }

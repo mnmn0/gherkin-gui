@@ -38,29 +38,36 @@ export const CodeGenerationPage: React.FC = () => {
   }, []);
 
   const loadSpecifications = async () => {
-    setState(prev => ({ ...prev, isLoading: true, error: null }));
+    setState((prev) => ({ ...prev, isLoading: true, error: null }));
     try {
       const specs = await apiService.listSpecifications();
-      setState(prev => ({ ...prev, specifications: specs, isLoading: false }));
+      setState((prev) => ({
+        ...prev,
+        specifications: specs,
+        isLoading: false,
+      }));
     } catch (error) {
-      setState(prev => ({ 
-        ...prev, 
+      setState((prev) => ({
+        ...prev,
         error: `Failed to load specifications: ${error}`,
-        isLoading: false 
+        isLoading: false,
       }));
     }
   };
 
   const handleSpecSelect = async (spec: SpecificationFile) => {
-    setState(prev => ({ ...prev, isLoading: true }));
+    setState((prev) => ({ ...prev, isLoading: true }));
     try {
       const content = await apiService.loadSpecification(spec.filePath);
-      const className = spec.name.replace('.feature', '')
+      const className = `${spec.name
+        .replace('.feature', '')
         .split(/[-_\s]+/)
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-        .join('') + 'Test';
-        
-      setState(prev => ({
+        .map(
+          (word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase(),
+        )
+        .join('')}Test`;
+
+      setState((prev) => ({
         ...prev,
         selectedSpec: spec,
         specContent: content,
@@ -69,7 +76,7 @@ export const CodeGenerationPage: React.FC = () => {
         isLoading: false,
       }));
     } catch (error) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         error: `Failed to load specification: ${error}`,
         isLoading: false,
@@ -79,18 +86,18 @@ export const CodeGenerationPage: React.FC = () => {
 
   const handleGenerate = async (config: GenerationConfig) => {
     if (!state.selectedSpec || !state.specContent) return;
-    
-    setState(prev => ({ ...prev, isLoading: true, config }));
+
+    setState((prev) => ({ ...prev, isLoading: true, config }));
     try {
       const code = await apiService.generateCode(state.specContent, config);
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         generatedCode: code,
         viewMode: 'preview',
         isLoading: false,
       }));
     } catch (error) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         error: `Failed to generate code: ${error}`,
         isLoading: false,
@@ -99,7 +106,7 @@ export const CodeGenerationPage: React.FC = () => {
   };
 
   const handleBack = () => {
-    setState(prev => ({ ...prev, viewMode: 'generator' }));
+    setState((prev) => ({ ...prev, viewMode: 'generator' }));
   };
 
   return (
@@ -112,7 +119,9 @@ export const CodeGenerationPage: React.FC = () => {
       {state.error && (
         <div className="error-banner">
           {state.error}
-          <button onClick={() => setState(prev => ({ ...prev, error: null }))}>
+          <button
+            onClick={() => setState((prev) => ({ ...prev, error: null }))}
+          >
             ×
           </button>
         </div>
@@ -138,7 +147,9 @@ export const CodeGenerationPage: React.FC = () => {
             generatedCode={state.generatedCode}
             config={state.config}
             onBack={handleBack}
-            onRegenerate={() => setState(prev => ({ ...prev, viewMode: 'generator' }))}
+            onRegenerate={() =>
+              setState((prev) => ({ ...prev, viewMode: 'generator' }))
+            }
           />
         )}
       </div>

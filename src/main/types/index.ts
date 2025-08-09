@@ -104,7 +104,6 @@ export interface TestSummary {
   successRate: number;
 }
 
-
 export interface GenerationConfig {
   template?: string;
   packageName: string;
@@ -152,7 +151,12 @@ export interface ExecutionProgress {
 export interface AppError {
   code: string;
   message: string;
-  category: 'filesystem' | 'parsing' | 'generation' | 'execution' | 'configuration';
+  category:
+    | 'filesystem'
+    | 'parsing'
+    | 'generation'
+    | 'execution'
+    | 'configuration';
   severity: 'info' | 'warning' | 'error' | 'critical';
   context?: Record<string, any>;
   timestamp: Date;

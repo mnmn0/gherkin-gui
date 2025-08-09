@@ -1,8 +1,8 @@
-import { FileManagerService } from '../../main/services/FileManagerService';
-import { GherkinParser } from '../../main/services/GherkinParser';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
+import { GherkinParser } from '../../main/services/GherkinParser';
+import { FileManagerService } from '../../main/services/FileManagerService';
 
 // Use real file system for integration tests
 describe('File Operations Integration', () => {
@@ -13,7 +13,7 @@ describe('File Operations Integration', () => {
   beforeAll(async () => {
     // Create a temporary directory for testing
     tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'gherkin-gui-test-'));
-    
+
     fileManager = new FileManagerService();
     parser = new GherkinParser();
   });
@@ -37,17 +37,17 @@ describe('File Operations Integration', () => {
     Then I should be logged in`;
 
     const specPath = path.join(tempDir, 'auth.feature');
-    
+
     // Create the file
     await fileManager.saveSpecification(specPath, specContent);
-    
+
     // Verify file exists
     expect(fs.existsSync(specPath)).toBe(true);
-    
+
     // Read the file back
     const readContent = await fileManager.loadSpecification(specPath);
     expect(readContent).toBe(specContent);
-    
+
     // Parse the content
     const parsed = await parser.parse(readContent);
     expect(parsed.feature.name).toBe('User Authentication');
@@ -59,9 +59,21 @@ describe('File Operations Integration', () => {
   it('should list specifications from directory', async () => {
     // Create multiple specification files
     const specs = [
-      { name: 'login.feature', content: 'Feature: Login\n  Scenario: Login test\n    Given I am logged in' },
-      { name: 'signup.feature', content: 'Feature: Signup\n  Scenario: Signup test\n    Given I am on signup page' },
-      { name: 'profile.feature', content: 'Feature: Profile\n  Scenario: View profile\n    Given I have a profile' }
+      {
+        name: 'login.feature',
+        content:
+          'Feature: Login\n  Scenario: Login test\n    Given I am logged in',
+      },
+      {
+        name: 'signup.feature',
+        content:
+          'Feature: Signup\n  Scenario: Signup test\n    Given I am on signup page',
+      },
+      {
+        name: 'profile.feature',
+        content:
+          'Feature: Profile\n  Scenario: View profile\n    Given I have a profile',
+      },
     ];
 
     // Create specs directory
@@ -79,12 +91,12 @@ describe('File Operations Integration', () => {
 
     // List specifications
     const specList = await fileManager.listSpecifications();
-    
+
     expect(specList).toHaveLength(3);
-    expect(specList.map(s => s.name).sort()).toEqual([
+    expect(specList.map((s) => s.name).sort()).toEqual([
       'login.feature',
       'profile.feature',
-      'signup.feature'
+      'signup.feature',
     ]);
 
     // Verify each specification can be parsed
@@ -98,11 +110,12 @@ describe('File Operations Integration', () => {
 
   it('should handle file watching and change detection', async () => {
     const specPath = path.join(tempDir, 'watched.feature');
-    const initialContent = 'Feature: Initial\n  Scenario: Test\n    Given initial state';
-    
+    const initialContent =
+      'Feature: Initial\n  Scenario: Test\n    Given initial state';
+
     // Create initial file
     await fileManager.saveSpecification(specPath, initialContent);
-    
+
     // Start watching
     const changePromise = new Promise<string>((resolve) => {
       fileManager.on('file-changed', (filePath: string) => {
@@ -111,19 +124,23 @@ describe('File Operations Integration', () => {
     });
 
     // Modify the file
-    const updatedContent = 'Feature: Updated\n  Scenario: Test\n    Given updated state';
+    const updatedContent =
+      'Feature: Updated\n  Scenario: Test\n    Given updated state';
     await fileManager.saveSpecification(specPath, updatedContent);
 
     // Wait for change detection (with timeout)
     const changedFile = await Promise.race([
       changePromise,
-      new Promise<string>((_, reject) => 
-        setTimeout(() => reject(new Error('Timeout waiting for file change')), 2000)
-      )
+      new Promise<string>((_, reject) =>
+        setTimeout(
+          () => reject(new Error('Timeout waiting for file change')),
+          2000,
+        ),
+      ),
     ]);
 
     expect(changedFile).toBe(specPath);
-    
+
     // Verify content was updated
     const readContent = await fileManager.loadSpecification(specPath);
     expect(readContent).toBe(updatedContent);
@@ -131,25 +148,35 @@ describe('File Operations Integration', () => {
 
   it('should create backup files on save', async () => {
     const specPath = path.join(tempDir, 'backup-test.feature');
-    const originalContent = 'Feature: Original\n  Scenario: Test\n    Given original content';
-    
+    const originalContent =
+      'Feature: Original\n  Scenario: Test\n    Given original content';
+
     // Create initial file
     await fileManager.saveSpecification(specPath, originalContent);
-    
+
     // Update the file (should create backup)
-    const updatedContent = 'Feature: Updated\n  Scenario: Test\n    Given updated content';
+    const updatedContent =
+      'Feature: Updated\n  Scenario: Test\n    Given updated content';
     await fileManager.saveSpecification(specPath, updatedContent);
-    
+
     // Check if backup was created
-    const backupPattern = path.join(path.dirname(specPath), '.backup', `backup-test.feature.*.bak`);
+    const backupPattern = path.join(
+      path.dirname(specPath),
+      '.backup',
+      `backup-test.feature.*.bak`,
+    );
     const backupDir = path.join(path.dirname(specPath), '.backup');
-    
+
     if (fs.existsSync(backupDir)) {
-      const backupFiles = fs.readdirSync(backupDir)
-        .filter(file => file.startsWith('backup-test.feature.') && file.endsWith('.bak'));
-      
+      const backupFiles = fs
+        .readdirSync(backupDir)
+        .filter(
+          (file) =>
+            file.startsWith('backup-test.feature.') && file.endsWith('.bak'),
+        );
+
       expect(backupFiles.length).toBeGreaterThan(0);
-      
+
       // Verify backup contains original content
       const backupPath = path.join(backupDir, backupFiles[0]);
       const backupContent = fs.readFileSync(backupPath, 'utf-8');
@@ -170,14 +197,14 @@ describe('File Operations Integration', () => {
     Given concurrent operation ${i}
     When I perform action ${i}
     Then I should see result ${i}`;
-      
+
       return fileManager.saveSpecification(filePath, content);
     });
 
     await Promise.all(createPromises);
 
     // Verify all files were created
-    const files = fs.readdirSync(baseDir).filter(f => f.endsWith('.feature'));
+    const files = fs.readdirSync(baseDir).filter((f) => f.endsWith('.feature'));
     expect(files).toHaveLength(numFiles);
 
     // Read and parse all files concurrently
@@ -185,16 +212,16 @@ describe('File Operations Integration', () => {
       const filePath = path.join(baseDir, fileName);
       const content = await fileManager.loadSpecification(filePath);
       const parsed = await parser.parse(content);
-      
+
       return {
         fileName,
         feature: parsed.feature.name,
-        scenarioCount: parsed.feature.scenarios.length
+        scenarioCount: parsed.feature.scenarios.length,
       };
     });
 
     const results = await Promise.all(readPromises);
-    
+
     expect(results).toHaveLength(numFiles);
     results.forEach((result, index) => {
       expect(result.fileName).toBe(`concurrent-${index}.feature`);

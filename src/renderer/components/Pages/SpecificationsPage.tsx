@@ -30,24 +30,28 @@ export const SpecificationsPage: React.FC = () => {
   }, []);
 
   const loadSpecifications = async () => {
-    setState(prev => ({ ...prev, isLoading: true, error: null }));
+    setState((prev) => ({ ...prev, isLoading: true, error: null }));
     try {
       const specs = await apiService.listSpecifications();
-      setState(prev => ({ ...prev, specifications: specs, isLoading: false }));
+      setState((prev) => ({
+        ...prev,
+        specifications: specs,
+        isLoading: false,
+      }));
     } catch (error) {
-      setState(prev => ({ 
-        ...prev, 
+      setState((prev) => ({
+        ...prev,
         error: `Failed to load specifications: ${error}`,
-        isLoading: false 
+        isLoading: false,
       }));
     }
   };
 
   const handleSpecSelect = async (spec: SpecificationFile) => {
-    setState(prev => ({ ...prev, isLoading: true }));
+    setState((prev) => ({ ...prev, isLoading: true }));
     try {
       const content = await apiService.loadSpecification(spec.filePath);
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         selectedSpec: spec,
         specContent: content,
@@ -55,7 +59,7 @@ export const SpecificationsPage: React.FC = () => {
         isLoading: false,
       }));
     } catch (error) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         error: `Failed to load specification: ${error}`,
         isLoading: false,
@@ -64,16 +68,16 @@ export const SpecificationsPage: React.FC = () => {
   };
 
   const handleEdit = () => {
-    setState(prev => ({ ...prev, viewMode: 'edit' }));
+    setState((prev) => ({ ...prev, viewMode: 'edit' }));
   };
 
   const handleSave = async (content: string) => {
     if (!state.selectedSpec) return;
-    
-    setState(prev => ({ ...prev, isLoading: true }));
+
+    setState((prev) => ({ ...prev, isLoading: true }));
     try {
       await apiService.saveSpecification(state.selectedSpec.name, content);
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         specContent: content,
         viewMode: 'preview',
@@ -81,7 +85,7 @@ export const SpecificationsPage: React.FC = () => {
       }));
       await loadSpecifications();
     } catch (error) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         error: `Failed to save specification: ${error}`,
         isLoading: false,
@@ -90,13 +94,13 @@ export const SpecificationsPage: React.FC = () => {
   };
 
   const handleCreate = async (name: string) => {
-    setState(prev => ({ ...prev, isLoading: true }));
+    setState((prev) => ({ ...prev, isLoading: true }));
     try {
       await apiService.createSpecification(name);
       await loadSpecifications();
-      setState(prev => ({ ...prev, isLoading: false }));
+      setState((prev) => ({ ...prev, isLoading: false }));
     } catch (error) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         error: `Failed to create specification: ${error}`,
         isLoading: false,
@@ -105,21 +109,21 @@ export const SpecificationsPage: React.FC = () => {
   };
 
   const handleDelete = async (spec: SpecificationFile) => {
-    setState(prev => ({ ...prev, isLoading: true }));
+    setState((prev) => ({ ...prev, isLoading: true }));
     try {
       await apiService.deleteSpecification(spec.filePath);
       await loadSpecifications();
       if (state.selectedSpec?.id === spec.id) {
-        setState(prev => ({
+        setState((prev) => ({
           ...prev,
           selectedSpec: null,
           specContent: '',
           viewMode: 'list',
         }));
       }
-      setState(prev => ({ ...prev, isLoading: false }));
+      setState((prev) => ({ ...prev, isLoading: false }));
     } catch (error) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         error: `Failed to delete specification: ${error}`,
         isLoading: false,
@@ -128,11 +132,11 @@ export const SpecificationsPage: React.FC = () => {
   };
 
   const handleCancel = () => {
-    setState(prev => ({ ...prev, viewMode: 'preview' }));
+    setState((prev) => ({ ...prev, viewMode: 'preview' }));
   };
 
   const handleBack = () => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       selectedSpec: null,
       specContent: '',
@@ -150,7 +154,9 @@ export const SpecificationsPage: React.FC = () => {
       {state.error && (
         <div className="error-banner">
           {state.error}
-          <button onClick={() => setState(prev => ({ ...prev, error: null }))}>
+          <button
+            onClick={() => setState((prev) => ({ ...prev, error: null }))}
+          >
             ×
           </button>
         </div>

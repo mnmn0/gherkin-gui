@@ -4,7 +4,12 @@ import { GlobalSettings } from '../Settings/GlobalSettings';
 import { TemplateManager } from '../Settings/TemplateManager';
 import { PresetManager } from '../Settings/PresetManager';
 import { apiService } from '../../services/ApiService';
-import { ProjectConfig, GlobalConfig, GenerationTemplate, ConfigurationPreset } from '../../../main/types';
+import {
+  ProjectConfig,
+  GlobalConfig,
+  GenerationTemplate,
+  ConfigurationPreset,
+} from '../../../main/types';
 import './Page.css';
 import './SettingsPage.css';
 
@@ -36,16 +41,17 @@ export const SettingsPage: React.FC = () => {
   }, []);
 
   const loadSettings = async () => {
-    setState(prev => ({ ...prev, isLoading: true, error: null }));
+    setState((prev) => ({ ...prev, isLoading: true, error: null }));
     try {
-      const [projectConfig, globalConfig, templates, presets] = await Promise.all([
-        apiService.getProjectConfig(),
-        apiService.getGlobalConfig(),
-        apiService.getGenerationTemplates(),
-        apiService.getConfigurationPresets(),
-      ]);
+      const [projectConfig, globalConfig, templates, presets] =
+        await Promise.all([
+          apiService.getProjectConfig(),
+          apiService.getGlobalConfig(),
+          apiService.getGenerationTemplates(),
+          apiService.getConfigurationPresets(),
+        ]);
 
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         projectConfig,
         globalConfig,
@@ -54,7 +60,7 @@ export const SettingsPage: React.FC = () => {
         isLoading: false,
       }));
     } catch (error) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         error: `Failed to load settings: ${error}`,
         isLoading: false,
@@ -63,7 +69,7 @@ export const SettingsPage: React.FC = () => {
   };
 
   const handleProjectConfigChange = (config: ProjectConfig) => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       projectConfig: config,
       hasUnsavedChanges: true,
@@ -71,7 +77,7 @@ export const SettingsPage: React.FC = () => {
   };
 
   const handleGlobalConfigChange = (config: GlobalConfig) => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       globalConfig: config,
       hasUnsavedChanges: true,
@@ -79,7 +85,7 @@ export const SettingsPage: React.FC = () => {
   };
 
   const handleTemplatesChange = (templates: GenerationTemplate[]) => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       templates,
       hasUnsavedChanges: true,
@@ -87,28 +93,33 @@ export const SettingsPage: React.FC = () => {
   };
 
   const handleApplyPreset = (preset: ConfigurationPreset) => {
-    let updates: any = { hasUnsavedChanges: true };
+    const updates: any = { hasUnsavedChanges: true };
 
     if (preset.config.projectName !== undefined) {
       updates.projectConfig = { ...state.projectConfig, ...preset.config };
     }
 
-    if (preset.config.language !== undefined || preset.config.theme !== undefined) {
+    if (
+      preset.config.language !== undefined ||
+      preset.config.theme !== undefined
+    ) {
       updates.globalConfig = { ...state.globalConfig, ...preset.config };
     }
 
-    setState(prev => ({ ...prev, ...updates }));
+    setState((prev) => ({ ...prev, ...updates }));
   };
 
-  const handleCreatePreset = async (presetData: Omit<ConfigurationPreset, 'id' | 'createdAt' | 'updatedAt'>) => {
+  const handleCreatePreset = async (
+    presetData: Omit<ConfigurationPreset, 'id' | 'createdAt' | 'updatedAt'>,
+  ) => {
     try {
       const newPreset = await apiService.createConfigurationPreset(presetData);
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         presets: [...prev.presets, newPreset],
       }));
     } catch (error) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         error: `Failed to create preset: ${error}`,
       }));
@@ -118,12 +129,12 @@ export const SettingsPage: React.FC = () => {
   const handleDeletePreset = async (presetId: string) => {
     try {
       await apiService.deleteConfigurationPreset(presetId);
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
-        presets: prev.presets.filter(p => p.id !== presetId),
+        presets: prev.presets.filter((p) => p.id !== presetId),
       }));
     } catch (error) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         error: `Failed to delete preset: ${error}`,
       }));
@@ -131,7 +142,7 @@ export const SettingsPage: React.FC = () => {
   };
 
   const handleSave = async () => {
-    setState(prev => ({ ...prev, isLoading: true, error: null }));
+    setState((prev) => ({ ...prev, isLoading: true, error: null }));
     try {
       const savePromises: Promise<any>[] = [];
 
@@ -149,7 +160,7 @@ export const SettingsPage: React.FC = () => {
 
       await Promise.all(savePromises);
 
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         hasUnsavedChanges: false,
         isLoading: false,
@@ -158,7 +169,7 @@ export const SettingsPage: React.FC = () => {
       // Show success feedback
       console.log('Settings saved successfully');
     } catch (error) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         error: `Failed to save settings: ${error}`,
         isLoading: false,
@@ -168,7 +179,7 @@ export const SettingsPage: React.FC = () => {
 
   const handleReset = async () => {
     await loadSettings();
-    setState(prev => ({ ...prev, hasUnsavedChanges: false }));
+    setState((prev) => ({ ...prev, hasUnsavedChanges: false }));
   };
 
   const handleExportSettings = async () => {
@@ -192,7 +203,7 @@ export const SettingsPage: React.FC = () => {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
     } catch (error) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         error: `Failed to export settings: ${error}`,
       }));
@@ -205,7 +216,7 @@ export const SettingsPage: React.FC = () => {
       const settings = JSON.parse(text);
 
       if (settings.project) {
-        setState(prev => ({
+        setState((prev) => ({
           ...prev,
           projectConfig: settings.project,
           hasUnsavedChanges: true,
@@ -213,7 +224,7 @@ export const SettingsPage: React.FC = () => {
       }
 
       if (settings.global) {
-        setState(prev => ({
+        setState((prev) => ({
           ...prev,
           globalConfig: settings.global,
           hasUnsavedChanges: true,
@@ -221,14 +232,14 @@ export const SettingsPage: React.FC = () => {
       }
 
       if (settings.templates) {
-        setState(prev => ({
+        setState((prev) => ({
           ...prev,
           templates: settings.templates,
           hasUnsavedChanges: true,
         }));
       }
     } catch (error) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         error: `Failed to import settings: ${error}`,
       }));
@@ -239,7 +250,7 @@ export const SettingsPage: React.FC = () => {
     if (state.isLoading && !state.projectConfig) {
       return (
         <div className="loading">
-          <div className="loading-spinner"></div>
+          <div className="loading-spinner" />
           <span>Loading settings...</span>
         </div>
       );
@@ -311,11 +322,16 @@ export const SettingsPage: React.FC = () => {
             />
             <button
               className="btn btn-secondary"
-              onClick={() => document.getElementById('import-settings')?.click()}
+              onClick={() =>
+                document.getElementById('import-settings')?.click()
+              }
             >
               📥 Import
             </button>
-            <button className="btn btn-secondary" onClick={handleExportSettings}>
+            <button
+              className="btn btn-secondary"
+              onClick={handleExportSettings}
+            >
               📤 Export
             </button>
             <button
@@ -332,13 +348,11 @@ export const SettingsPage: React.FC = () => {
             >
               {state.isLoading ? (
                 <>
-                  <div className="loading-spinner small"></div>
+                  <div className="loading-spinner small" />
                   Saving...
                 </>
               ) : (
-                <>
-                  💾 Save Changes
-                </>
+                <>💾 Save Changes</>
               )}
             </button>
           </div>
@@ -347,25 +361,33 @@ export const SettingsPage: React.FC = () => {
         <div className="settings-tabs">
           <button
             className={`tab-btn ${state.activeTab === 'project' ? 'active' : ''}`}
-            onClick={() => setState(prev => ({ ...prev, activeTab: 'project' }))}
+            onClick={() =>
+              setState((prev) => ({ ...prev, activeTab: 'project' }))
+            }
           >
             🏗️ Project Settings
           </button>
           <button
             className={`tab-btn ${state.activeTab === 'global' ? 'active' : ''}`}
-            onClick={() => setState(prev => ({ ...prev, activeTab: 'global' }))}
+            onClick={() =>
+              setState((prev) => ({ ...prev, activeTab: 'global' }))
+            }
           >
             🌐 Global Settings
           </button>
           <button
             className={`tab-btn ${state.activeTab === 'templates' ? 'active' : ''}`}
-            onClick={() => setState(prev => ({ ...prev, activeTab: 'templates' }))}
+            onClick={() =>
+              setState((prev) => ({ ...prev, activeTab: 'templates' }))
+            }
           >
             📄 Templates ({state.templates.length})
           </button>
           <button
             className={`tab-btn ${state.activeTab === 'presets' ? 'active' : ''}`}
-            onClick={() => setState(prev => ({ ...prev, activeTab: 'presets' }))}
+            onClick={() =>
+              setState((prev) => ({ ...prev, activeTab: 'presets' }))
+            }
           >
             📦 Presets ({state.presets.length})
           </button>
@@ -375,7 +397,9 @@ export const SettingsPage: React.FC = () => {
       {state.error && (
         <div className="error-banner">
           {state.error}
-          <button onClick={() => setState(prev => ({ ...prev, error: null }))}>
+          <button
+            onClick={() => setState((prev) => ({ ...prev, error: null }))}
+          >
             ×
           </button>
         </div>
@@ -396,9 +420,7 @@ export const SettingsPage: React.FC = () => {
         </div>
       )}
 
-      <div className="settings-content">
-        {renderTabContent()}
-      </div>
+      <div className="settings-content">{renderTabContent()}</div>
     </div>
   );
 };

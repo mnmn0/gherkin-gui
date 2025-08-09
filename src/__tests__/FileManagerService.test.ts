@@ -24,8 +24,14 @@ describe('FileManagerService', () => {
       const specDir = path.join(tempDir, '.gherkin', 'spec');
       const reportDir = path.join(tempDir, '.gherkin', 'report');
 
-      const specExists = await fs.access(specDir).then(() => true).catch(() => false);
-      const reportExists = await fs.access(reportDir).then(() => true).catch(() => false);
+      const specExists = await fs
+        .access(specDir)
+        .then(() => true)
+        .catch(() => false);
+      const reportExists = await fs
+        .access(reportDir)
+        .then(() => true)
+        .catch(() => false);
 
       expect(specExists).toBe(true);
       expect(reportExists).toBe(true);
@@ -63,8 +69,8 @@ describe('FileManagerService', () => {
       const specs = await service.listSpecifications();
 
       expect(specs).toHaveLength(2);
-      expect(specs.some(s => s.name === 'spec1.feature')).toBe(true);
-      expect(specs.some(s => s.name === 'spec2.feature')).toBe(true);
+      expect(specs.some((s) => s.name === 'spec1.feature')).toBe(true);
+      expect(specs.some((s) => s.name === 'spec2.feature')).toBe(true);
     });
 
     it('should delete specification', async () => {
@@ -102,9 +108,9 @@ describe('FileManagerService', () => {
 
       const backupDir = path.join(tempDir, '.gherkin', 'spec', '.backup');
       const backupFiles = await fs.readdir(backupDir);
-      
+
       expect(backupFiles.length).toBeGreaterThan(0);
-      expect(backupFiles.some(f => f.startsWith(fileName))).toBe(true);
+      expect(backupFiles.some((f) => f.startsWith(fileName))).toBe(true);
     });
   });
 
@@ -203,12 +209,12 @@ describe('FileManagerService', () => {
 
       const reports = await service.listReports();
       expect(reports).toHaveLength(2);
-      
-      const firstReport = reports.find(r => r.id === 'report-1');
+
+      const firstReport = reports.find((r) => r.id === 'report-1');
       expect(firstReport?.summary.totalTests).toBe(10);
       expect(firstReport?.summary.successRate).toBe(80);
 
-      const secondReport = reports.find(r => r.id === 'report-2');
+      const secondReport = reports.find((r) => r.id === 'report-2');
       expect(secondReport?.summary.totalTests).toBe(5);
       expect(secondReport?.summary.successRate).toBe(100);
     });
@@ -232,7 +238,7 @@ describe('FileManagerService', () => {
       };
 
       const savedPath = await service.saveReport(report);
-      
+
       let reports = await service.listReports();
       expect(reports).toHaveLength(1);
 
@@ -245,7 +251,7 @@ describe('FileManagerService', () => {
     it('should handle invalid JSON in report files', async () => {
       const reportDir = path.join(tempDir, '.gherkin', 'report');
       const invalidReportPath = path.join(reportDir, 'invalid.json');
-      
+
       await fs.writeFile(invalidReportPath, 'invalid json content');
 
       const reports = await service.listReports();
@@ -255,7 +261,9 @@ describe('FileManagerService', () => {
 
   describe('Error Handling', () => {
     it('should handle missing specification file', async () => {
-      await expect(service.loadSpecification('non-existent.feature')).rejects.toThrow();
+      await expect(
+        service.loadSpecification('non-existent.feature'),
+      ).rejects.toThrow();
     });
 
     it('should handle missing report file', async () => {
@@ -264,7 +272,7 @@ describe('FileManagerService', () => {
 
     it('should return empty arrays for non-existent directories', async () => {
       const nonExistentService = new FileManagerService('/non/existent/path');
-      
+
       const specs = await nonExistentService.listSpecifications();
       expect(specs).toEqual([]);
 

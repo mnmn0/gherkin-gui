@@ -59,26 +59,31 @@ describe('Code Generation Integration', () => {
       springBootAnnotations: [
         '@SpringBootTest',
         '@AutoConfigureTestDatabase',
-        '@TestMethodOrder(OrderAnnotation.class)'
+        '@TestMethodOrder(OrderAnnotation.class)',
       ],
       customImports: [
         'import com.example.pages.LoginPage;',
-        'import com.example.service.UserService;'
-      ]
+        'import com.example.service.UserService;',
+      ],
     };
 
     // Parse the Gherkin
     const parsedGherkin: GherkinAST = await parser.parse(gherkinContent);
 
     // Generate code
-    const generatedCode = await codeGenerator.generateJUnitTest(parsedGherkin, config);
+    const generatedCode = await codeGenerator.generateJUnitTest(
+      parsedGherkin,
+      config,
+    );
 
     // Verify package declaration
     expect(generatedCode).toContain('package com.example.tests;');
 
     // Verify imports
     expect(generatedCode).toContain('import org.junit.jupiter.api.Test;');
-    expect(generatedCode).toContain('import org.springframework.boot.test.context.SpringBootTest;');
+    expect(generatedCode).toContain(
+      'import org.springframework.boot.test.context.SpringBootTest;',
+    );
     expect(generatedCode).toContain('import com.example.pages.LoginPage;');
     expect(generatedCode).toContain('import com.example.service.UserService;');
 
@@ -95,18 +100,26 @@ describe('Code Generation Integration', () => {
 
     // Verify test methods for scenarios
     expect(generatedCode).toContain('@Test');
-    expect(generatedCode).toContain('void testSuccessfulLoginWithValidCredentials()');
-    expect(generatedCode).toContain('void testFailedLoginWithInvalidPassword()');
+    expect(generatedCode).toContain(
+      'void testSuccessfulLoginWithValidCredentials()',
+    );
+    expect(generatedCode).toContain(
+      'void testFailedLoginWithInvalidPassword()',
+    );
 
     // Verify parameterized test for scenario outline
     expect(generatedCode).toContain('@ParameterizedTest');
     expect(generatedCode).toContain('@CsvSource');
-    expect(generatedCode).toContain('void testLoginAttemptsWithDifferentCredentials');
+    expect(generatedCode).toContain(
+      'void testLoginAttemptsWithDifferentCredentials',
+    );
 
     // Verify step implementations are generated
     expect(generatedCode).toContain('// Given I am on the login page');
     expect(generatedCode).toContain('// When I enter my username "john.doe"');
-    expect(generatedCode).toContain('// Then I should be redirected to the dashboard');
+    expect(generatedCode).toContain(
+      '// Then I should be redirected to the dashboard',
+    );
 
     // Verify TODO comments for implementation
     expect(generatedCode).toContain('// TODO: Implement this step');
@@ -123,16 +136,21 @@ describe('Code Generation Integration', () => {
       packageName: 'com.example.tests',
       className: 'ShoppingCartTest',
       springBootAnnotations: ['@SpringBootTest'],
-      template: 'cucumber-spring-boot'
+      template: 'cucumber-spring-boot',
     };
 
     const parsedGherkin: GherkinAST = await parser.parse(gherkinContent);
-    const generatedCode = await codeGenerator.generateJUnitTest(parsedGherkin, config);
+    const generatedCode = await codeGenerator.generateJUnitTest(
+      parsedGherkin,
+      config,
+    );
 
     // Should generate Cucumber step definitions
     expect(generatedCode).toContain('@Given("I am on the product page")');
     expect(generatedCode).toContain('@When("I click add to cart")');
-    expect(generatedCode).toContain('@Then("the item should be added to my cart")');
+    expect(generatedCode).toContain(
+      '@Then("the item should be added to my cart")',
+    );
 
     // Should include Cucumber annotations
     expect(generatedCode).toContain('import io.cucumber.java.en.Given;');
@@ -159,16 +177,19 @@ describe('Code Generation Integration', () => {
     const config: GenerationConfig = {
       packageName: 'com.example.tests',
       className: 'UserRegistrationTest',
-      springBootAnnotations: ['@SpringBootTest']
+      springBootAnnotations: ['@SpringBootTest'],
     };
 
     const parsedGherkin: GherkinAST = await parser.parse(gherkinContent);
-    const generatedCode = await codeGenerator.generateJUnitTest(parsedGherkin, config);
+    const generatedCode = await codeGenerator.generateJUnitTest(
+      parsedGherkin,
+      config,
+    );
 
     // Should generate parameterized test with all parameters
     expect(generatedCode).toContain('@ParameterizedTest');
     expect(generatedCode).toContain('@CsvSource');
-    
+
     // Should contain all parameter values
     expect(generatedCode).toContain('customer, user@test.com');
     expect(generatedCode).toContain('admin, admin@test.com');
@@ -177,7 +198,7 @@ describe('Code Generation Integration', () => {
 
     // Should have proper method signature with all parameters
     expect(generatedCode).toMatch(
-      /void testRegisterWithDifferentUserTypes\(\s*String userType,\s*String email,\s*String password,\s*String confirmPassword,\s*String status,\s*String message\s*\)/
+      /void testRegisterWithDifferentUserTypes\(\s*String userType,\s*String email,\s*String password,\s*String confirmPassword,\s*String status,\s*String message\s*\)/,
     );
   });
 
@@ -191,11 +212,14 @@ describe('Code Generation Integration', () => {
     const config: GenerationConfig = {
       packageName: 'com.example.tests',
       className: 'DataProcessingTest',
-      springBootAnnotations: ['@SpringBootTest']
+      springBootAnnotations: ['@SpringBootTest'],
     };
 
     const parsedGherkin: GherkinAST = await parser.parse(gherkinContent);
-    const generatedCode = await codeGenerator.generateJUnitTest(parsedGherkin, config);
+    const generatedCode = await codeGenerator.generateJUnitTest(
+      parsedGherkin,
+      config,
+    );
 
     // Basic syntax validation
     expect(generatedCode).not.toContain('{{');
@@ -239,11 +263,14 @@ Feature: Database Operations
     const config: GenerationConfig = {
       packageName: 'com.example.tests',
       className: 'DatabaseOperationsTest',
-      springBootAnnotations: ['@SpringBootTest', '@Transactional']
+      springBootAnnotations: ['@SpringBootTest', '@Transactional'],
     };
 
     const parsedGherkin: GherkinAST = await parser.parse(gherkinContent);
-    const generatedCode = await codeGenerator.generateJUnitTest(parsedGherkin, config);
+    const generatedCode = await codeGenerator.generateJUnitTest(
+      parsedGherkin,
+      config,
+    );
 
     // Should include test categories based on tags
     expect(generatedCode).toContain('@Tag("integration")');
@@ -266,7 +293,7 @@ Feature: Database Operations
     const config: GenerationConfig = {
       packageName: 'com.example.tests',
       className: 'IncompleteTest',
-      springBootAnnotations: ['@SpringBootTest']
+      springBootAnnotations: ['@SpringBootTest'],
     };
 
     try {

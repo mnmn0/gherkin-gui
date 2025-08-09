@@ -26,39 +26,45 @@ export const TestExecutionPage: React.FC = () => {
   useEffect(() => {
     loadSpecifications();
     setupEventListeners();
-    
+
     return () => {
       cleanup();
     };
   }, []);
 
   const loadSpecifications = async () => {
-    setState(prev => ({ ...prev, isLoading: true, error: null }));
+    setState((prev) => ({ ...prev, isLoading: true, error: null }));
     try {
       const specs = await apiService.listSpecifications();
-      setState(prev => ({ ...prev, specifications: specs, isLoading: false }));
+      setState((prev) => ({
+        ...prev,
+        specifications: specs,
+        isLoading: false,
+      }));
     } catch (error) {
-      setState(prev => ({ 
-        ...prev, 
+      setState((prev) => ({
+        ...prev,
         error: `Failed to load specifications: ${error}`,
-        isLoading: false 
+        isLoading: false,
       }));
     }
   };
 
   const setupEventListeners = () => {
     const progressUnsubscribe = apiService.onExecutionProgress((data) => {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
-        activeExecutions: new Map(prev.activeExecutions.set(data.executionId, {
-          ...prev.activeExecutions.get(data.executionId),
-          progress: data,
-        })),
+        activeExecutions: new Map(
+          prev.activeExecutions.set(data.executionId, {
+            ...prev.activeExecutions.get(data.executionId),
+            progress: data,
+          }),
+        ),
       }));
     });
 
     const completeUnsubscribe = apiService.onExecutionComplete((data) => {
-      setState(prev => {
+      setState((prev) => {
         const newExecutions = new Map(prev.activeExecutions);
         const execution = newExecutions.get(data.executionId);
         if (execution) {
@@ -73,7 +79,7 @@ export const TestExecutionPage: React.FC = () => {
     });
 
     const errorUnsubscribe = apiService.onError((data) => {
-      setState(prev => ({ ...prev, error: data.message }));
+      setState((prev) => ({ ...prev, error: data.message }));
     });
 
     return () => {
@@ -90,24 +96,31 @@ export const TestExecutionPage: React.FC = () => {
   };
 
   const handleExecuteTest = async (config: TestConfig) => {
-    setState(prev => ({ ...prev, isLoading: true }));
+    setState((prev) => ({ ...prev, isLoading: true }));
     try {
       const executionId = await apiService.executeTests(config);
-      
-      setState(prev => ({
+
+      setState((prev) => ({
         ...prev,
-        activeExecutions: new Map(prev.activeExecutions.set(executionId, {
-          id: executionId,
-          config,
-          startTime: new Date(),
-          status: 'running',
-          progress: { progress: 0, currentTest: '', testsCompleted: 0, totalTests: 0 },
-        })),
+        activeExecutions: new Map(
+          prev.activeExecutions.set(executionId, {
+            id: executionId,
+            config,
+            startTime: new Date(),
+            status: 'running',
+            progress: {
+              progress: 0,
+              currentTest: '',
+              testsCompleted: 0,
+              totalTests: 0,
+            },
+          }),
+        ),
         viewMode: 'monitor',
         isLoading: false,
       }));
     } catch (error) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         error: `Failed to start test execution: ${error}`,
         isLoading: false,
@@ -118,7 +131,7 @@ export const TestExecutionPage: React.FC = () => {
   const handleCancelExecution = async (executionId: string) => {
     try {
       await apiService.cancelTest(executionId);
-      setState(prev => {
+      setState((prev) => {
         const newExecutions = new Map(prev.activeExecutions);
         const execution = newExecutions.get(executionId);
         if (execution) {
@@ -130,7 +143,7 @@ export const TestExecutionPage: React.FC = () => {
         };
       });
     } catch (error) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         error: `Failed to cancel execution: ${error}`,
       }));
@@ -138,7 +151,7 @@ export const TestExecutionPage: React.FC = () => {
   };
 
   const handleViewRunner = () => {
-    setState(prev => ({ ...prev, viewMode: 'runner' }));
+    setState((prev) => ({ ...prev, viewMode: 'runner' }));
   };
 
   return (
@@ -158,7 +171,9 @@ export const TestExecutionPage: React.FC = () => {
             </button>
             <button
               className={`tab-btn ${state.viewMode === 'monitor' ? 'active' : ''}`}
-              onClick={() => setState(prev => ({ ...prev, viewMode: 'monitor' }))}
+              onClick={() =>
+                setState((prev) => ({ ...prev, viewMode: 'monitor' }))
+              }
             >
               📊 Monitor ({state.activeExecutions.size})
             </button>
@@ -169,7 +184,9 @@ export const TestExecutionPage: React.FC = () => {
       {state.error && (
         <div className="error-banner">
           {state.error}
-          <button onClick={() => setState(prev => ({ ...prev, error: null }))}>
+          <button
+            onClick={() => setState((prev) => ({ ...prev, error: null }))}
+          >
             ×
           </button>
         </div>

@@ -42,9 +42,7 @@ export const ProjectSettings: React.FC<ProjectSettingsProps> = ({
               onChange={(e) => handleChange('projectName', e.target.value)}
               placeholder="Enter project name"
             />
-            <div className="form-help">
-              The display name for this project
-            </div>
+            <div className="form-help">The display name for this project</div>
           </div>
 
           <div className="form-group">
@@ -56,9 +54,7 @@ export const ProjectSettings: React.FC<ProjectSettingsProps> = ({
               placeholder="Project description (optional)"
               rows={3}
             />
-            <div className="form-help">
-              Brief description of the project
-            </div>
+            <div className="form-help">Brief description of the project</div>
           </div>
 
           <div className="form-group">
@@ -67,7 +63,9 @@ export const ProjectSettings: React.FC<ProjectSettingsProps> = ({
               id="spec-directory"
               type="text"
               value={config.specificationDirectory}
-              onChange={(e) => handleChange('specificationDirectory', e.target.value)}
+              onChange={(e) =>
+                handleChange('specificationDirectory', e.target.value)
+              }
               placeholder=".gherkin/spec"
             />
             <div className="form-help">
@@ -99,14 +97,17 @@ export const ProjectSettings: React.FC<ProjectSettingsProps> = ({
             <select
               id="build-tool"
               value={config.testConfiguration.buildTool}
-              onChange={(e) => handleTestConfigChange('buildTool', e.target.value as 'maven' | 'gradle')}
+              onChange={(e) =>
+                handleTestConfigChange(
+                  'buildTool',
+                  e.target.value as 'maven' | 'gradle',
+                )
+              }
             >
               <option value="maven">Maven</option>
               <option value="gradle">Gradle</option>
             </select>
-            <div className="form-help">
-              Build tool used for running tests
-            </div>
+            <div className="form-help">Build tool used for running tests</div>
           </div>
 
           <div className="form-group">
@@ -114,7 +115,9 @@ export const ProjectSettings: React.FC<ProjectSettingsProps> = ({
             <select
               id="java-version"
               value={config.testConfiguration.javaVersion}
-              onChange={(e) => handleTestConfigChange('javaVersion', e.target.value)}
+              onChange={(e) =>
+                handleTestConfigChange('javaVersion', e.target.value)
+              }
             >
               <option value="8">Java 8</option>
               <option value="11">Java 11</option>
@@ -131,7 +134,9 @@ export const ProjectSettings: React.FC<ProjectSettingsProps> = ({
             <select
               id="test-framework"
               value={config.testConfiguration.testFramework}
-              onChange={(e) => handleTestConfigChange('testFramework', e.target.value)}
+              onChange={(e) =>
+                handleTestConfigChange('testFramework', e.target.value)
+              }
             >
               <option value="junit5">JUnit 5</option>
               <option value="junit4">JUnit 4</option>
@@ -148,7 +153,9 @@ export const ProjectSettings: React.FC<ProjectSettingsProps> = ({
               id="spring-boot-version"
               type="text"
               value={config.testConfiguration.springBootVersion}
-              onChange={(e) => handleTestConfigChange('springBootVersion', e.target.value)}
+              onChange={(e) =>
+                handleTestConfigChange('springBootVersion', e.target.value)
+              }
               placeholder="3.2.0"
             />
             <div className="form-help">
@@ -167,10 +174,12 @@ export const ProjectSettings: React.FC<ProjectSettingsProps> = ({
               id="default-package"
               type="text"
               value={config.codeGeneration?.defaultPackage || ''}
-              onChange={(e) => handleChange('codeGeneration', {
-                ...config.codeGeneration,
-                defaultPackage: e.target.value,
-              })}
+              onChange={(e) =>
+                handleChange('codeGeneration', {
+                  ...config.codeGeneration,
+                  defaultPackage: e.target.value,
+                })
+              }
               placeholder="com.example.tests"
             />
             <div className="form-help">
@@ -184,10 +193,12 @@ export const ProjectSettings: React.FC<ProjectSettingsProps> = ({
               id="base-test-class"
               type="text"
               value={config.codeGeneration?.baseTestClass || ''}
-              onChange={(e) => handleChange('codeGeneration', {
-                ...config.codeGeneration,
-                baseTestClass: e.target.value,
-              })}
+              onChange={(e) =>
+                handleChange('codeGeneration', {
+                  ...config.codeGeneration,
+                  baseTestClass: e.target.value,
+                })
+              }
               placeholder="BaseIntegrationTest"
             />
             <div className="form-help">
@@ -199,15 +210,21 @@ export const ProjectSettings: React.FC<ProjectSettingsProps> = ({
             <label className="checkbox-label">
               <input
                 type="checkbox"
-                checked={config.codeGeneration?.generateStepDefinitions || false}
-                onChange={(e) => handleChange('codeGeneration', {
-                  ...config.codeGeneration,
-                  generateStepDefinitions: e.target.checked,
-                })}
+                checked={
+                  config.codeGeneration?.generateStepDefinitions || false
+                }
+                onChange={(e) =>
+                  handleChange('codeGeneration', {
+                    ...config.codeGeneration,
+                    generateStepDefinitions: e.target.checked,
+                  })
+                }
               />
               <div className="checkbox-text">
                 <strong>Generate Step Definitions</strong>
-                <small>Create separate step definition classes for reusable steps</small>
+                <small>
+                  Create separate step definition classes for reusable steps
+                </small>
               </div>
             </label>
           </div>
@@ -217,10 +234,12 @@ export const ProjectSettings: React.FC<ProjectSettingsProps> = ({
               <input
                 type="checkbox"
                 checked={config.codeGeneration?.includePageObjects || false}
-                onChange={(e) => handleChange('codeGeneration', {
-                  ...config.codeGeneration,
-                  includePageObjects: e.target.checked,
-                })}
+                onChange={(e) =>
+                  handleChange('codeGeneration', {
+                    ...config.codeGeneration,
+                    includePageObjects: e.target.checked,
+                  })
+                }
               />
               <div className="checkbox-text">
                 <strong>Include Page Objects</strong>
@@ -239,14 +258,18 @@ export const ProjectSettings: React.FC<ProjectSettingsProps> = ({
               <input
                 type="checkbox"
                 checked={config.fileWatching?.enabled || false}
-                onChange={(e) => handleChange('fileWatching', {
-                  ...config.fileWatching,
-                  enabled: e.target.checked,
-                })}
+                onChange={(e) =>
+                  handleChange('fileWatching', {
+                    ...config.fileWatching,
+                    enabled: e.target.checked,
+                  })
+                }
               />
               <div className="checkbox-text">
                 <strong>Enable File Watching</strong>
-                <small>Automatically detect changes to specification files</small>
+                <small>
+                  Automatically detect changes to specification files
+                </small>
               </div>
             </label>
           </div>
@@ -256,15 +279,19 @@ export const ProjectSettings: React.FC<ProjectSettingsProps> = ({
               <input
                 type="checkbox"
                 checked={config.fileWatching?.autoRegenerate || false}
-                onChange={(e) => handleChange('fileWatching', {
-                  ...config.fileWatching,
-                  autoRegenerate: e.target.checked,
-                })}
+                onChange={(e) =>
+                  handleChange('fileWatching', {
+                    ...config.fileWatching,
+                    autoRegenerate: e.target.checked,
+                  })
+                }
                 disabled={!config.fileWatching?.enabled}
               />
               <div className="checkbox-text">
                 <strong>Auto-regenerate Tests</strong>
-                <small>Automatically regenerate test code when specifications change</small>
+                <small>
+                  Automatically regenerate test code when specifications change
+                </small>
               </div>
             </label>
           </div>

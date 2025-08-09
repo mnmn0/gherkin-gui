@@ -1,4 +1,11 @@
-import { GherkinAST, GherkinFeature, GherkinScenario, GherkinStep, GenerationConfig, ValidationResult } from '../types';
+import {
+  GherkinAST,
+  GherkinFeature,
+  GherkinScenario,
+  GherkinStep,
+  GenerationConfig,
+  ValidationResult,
+} from '../types';
 import { GherkinParser } from './GherkinParser';
 
 export class CodeGenerationService {
@@ -16,8 +23,11 @@ export class CodeGenerationService {
     }
   }
 
-  async generateJUnitCode(ast: GherkinAST, config: GenerationConfig): Promise<string> {
-    const feature = ast.feature;
+  async generateJUnitCode(
+    ast: GherkinAST,
+    config: GenerationConfig,
+  ): Promise<string> {
+    const { feature } = ast;
     const className = config.className || this.generateClassName(feature.name);
     const packageName = config.packageName || 'com.example.test';
 
@@ -55,7 +65,11 @@ ${stepMethods}
       });
     }
 
-    if (!code.includes('@SpringBootTest') && !code.includes('@WebMvcTest') && !code.includes('@DataJpaTest')) {
+    if (
+      !code.includes('@SpringBootTest') &&
+      !code.includes('@WebMvcTest') &&
+      !code.includes('@DataJpaTest')
+    ) {
       warnings.push({
         message: 'Consider adding Spring Boot test annotations',
         code: 'MISSING_SPRING_ANNOTATIONS',
@@ -105,19 +119,19 @@ ${stepMethods}
         'import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;',
         'import org.springframework.test.web.servlet.MockMvc;',
         'import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;',
-        'import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;'
+        'import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;',
       );
     }
 
     if (config.springBootAnnotations.includes('@DataJpaTest')) {
       springBootImports.push(
         'import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;',
-        'import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;'
+        'import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;',
       );
     }
 
     const allImports = [...defaultImports, ...springBootImports];
-    
+
     if (config.customImports) {
       allImports.push(...config.customImports);
     }
@@ -127,8 +141,11 @@ ${stepMethods}
 
   private generateClassAnnotations(config: GenerationConfig): string {
     const annotations = ['@SpringBootTest'];
-    
-    if (config.springBootAnnotations && config.springBootAnnotations.length > 0) {
+
+    if (
+      config.springBootAnnotations &&
+      config.springBootAnnotations.length > 0
+    ) {
       annotations.splice(0, 1, ...config.springBootAnnotations);
     }
 
@@ -165,7 +182,10 @@ ${stepMethods}
     return setupCode;
   }
 
-  private generateTestMethods(feature: GherkinFeature, config: GenerationConfig): string {
+  private generateTestMethods(
+    feature: GherkinFeature,
+    _config: GenerationConfig,
+  ): string {
     const testMethods: string[] = [];
 
     feature.scenarios.forEach((scenario, index) => {
@@ -177,7 +197,11 @@ ${stepMethods}
     return testMethods.join('\n\n');
   }
 
-  private generateTestMethod(scenario: GherkinScenario, methodName: string, index: number): string {
+  private generateTestMethod(
+    scenario: GherkinScenario,
+    methodName: string,
+    _index: number,
+  ): string {
     const tags = scenario.tags.length > 0 ? scenario.tags.join(', ') : '';
     const tagComment = tags ? `    // Tags: ${tags}\n` : '';
 
@@ -192,7 +216,7 @@ ${stepMethods}
 `;
     }
 
-    scenario.steps.forEach(step => {
+    scenario.steps.forEach((step) => {
       const stepCall = this.generateStepCall(step);
       testCode += `        ${stepCall};\n`;
     });
@@ -204,23 +228,26 @@ ${stepMethods}
 
   private generateStepCall(step: GherkinStep): string {
     const methodName = this.generateStepMethodName(step);
-    
+
     if (step.dataTable) {
       return `${methodName}WithDataTable(${JSON.stringify(step.dataTable)})`;
-    } else if (step.docString) {
-      return `${methodName}WithDocString("${step.docString.replace(/"/g, '\\"')}")`;
-    } else {
-      return `${methodName}()`;
     }
+    if (step.docString) {
+      return `${methodName}WithDocString("${step.docString.replace(/"/g, '\\"')}")`;
+    }
+    return `${methodName}()`;
   }
 
   private generateStepMethods(feature: GherkinFeature): string {
     const stepMethods = new Set<string>();
 
     const processSteps = (steps: GherkinStep[]) => {
-      steps.forEach(step => {
+      steps.forEach((step) => {
         const methodName = this.generateStepMethodName(step);
-        const methodSignature = this.generateStepMethodSignature(step, methodName);
+        const methodSignature = this.generateStepMethodSignature(
+          step,
+          methodName,
+        );
         stepMethods.add(methodSignature);
       });
     };
@@ -229,27 +256,30 @@ ${stepMethods}
       processSteps(feature.background.steps);
     }
 
-    feature.scenarios.forEach(scenario => {
+    feature.scenarios.forEach((scenario) => {
       processSteps(scenario.steps);
     });
 
     return Array.from(stepMethods).join('\n\n');
   }
 
-  private generateStepMethodSignature(step: GherkinStep, methodName: string): string {
+  private generateStepMethodSignature(
+    step: GherkinStep,
+    methodName: string,
+  ): string {
     let signature = `    private void ${methodName}(`;
     const params: string[] = [];
 
     if (step.dataTable) {
       params.push('Object[][] dataTable');
-      signature += params.join(', ') + `) {
+      signature += `${params.join(', ')}) {
         // Implement: ${step.keyword} ${step.text}
         // Handle data table with ${step.dataTable.length} rows
         fail("Step implementation pending");
     }`;
     } else if (step.docString) {
       params.push('String docString');
-      signature += params.join(', ') + `) {
+      signature += `${params.join(', ')}) {
         // Implement: ${step.keyword} ${step.text}
         // Handle doc string content
         fail("Step implementation pending");
@@ -265,19 +295,19 @@ ${stepMethods}
   }
 
   private generateClassName(featureName: string): string {
-    return featureName
+    return `${featureName
       .replace(/[^a-zA-Z0-9\s]/g, '')
       .split(/\s+/)
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join('') + 'Test';
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join('')}Test`;
   }
 
   private generateMethodName(scenarioName: string): string {
-    return 'test' + scenarioName
+    return `test${scenarioName
       .replace(/[^a-zA-Z0-9\s]/g, '')
       .split(/\s+/)
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join('');
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join('')}`;
   }
 
   private generateStepMethodName(step: GherkinStep): string {
@@ -292,7 +322,7 @@ ${stepMethods}
         return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
       })
       .join('');
-    
+
     return `${prefix}${text.charAt(0).toUpperCase()}${text.slice(1)}`;
   }
 
@@ -303,7 +333,7 @@ ${stepMethods}
 
     for (const line of lines) {
       const trimmed = line.trim();
-      
+
       if (trimmed.includes('}') && !trimmed.includes('{')) {
         indentLevel = Math.max(0, indentLevel - 1);
       }
@@ -328,24 +358,29 @@ ${stepMethods}
     return { open, close };
   }
 
-  generateSpringBootTestTemplate(testType: 'integration' | 'web' | 'data' = 'integration'): string {
+  generateSpringBootTestTemplate(
+    testType: 'integration' | 'web' | 'data' = 'integration',
+  ): string {
     switch (testType) {
       case 'web':
         return `@WebMvcTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)`;
-        
+
       case 'data':
         return `@DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)`;
-        
+
       default:
         return `@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)`;
     }
   }
 
-  generateCucumberCompatibleCode(ast: GherkinAST, config: GenerationConfig): string {
-    const feature = ast.feature;
+  generateCucumberCompatibleCode(
+    ast: GherkinAST,
+    config: GenerationConfig,
+  ): string {
+    const { feature } = ast;
     const packageName = config.packageName || 'com.example.test.steps';
 
     return `package ${packageName};
@@ -368,17 +403,17 @@ ${this.generateCucumberStepDefinitions(feature)}
     const stepDefinitions = new Set<string>();
 
     const processSteps = (steps: GherkinStep[]) => {
-      steps.forEach(step => {
+      steps.forEach((step) => {
         const annotation = this.getCucumberAnnotation(step.keyword);
         const methodName = this.generateStepMethodName(step);
         const pattern = this.generateCucumberPattern(step.text);
-        
+
         const stepDef = `    @${annotation}("${pattern}")
     public void ${methodName}() {
         // Implement: ${step.text}
         throw new io.cucumber.java.PendingException();
     }`;
-        
+
         stepDefinitions.add(stepDef);
       });
     };
@@ -387,7 +422,7 @@ ${this.generateCucumberStepDefinitions(feature)}
       processSteps(feature.background.steps);
     }
 
-    feature.scenarios.forEach(scenario => {
+    feature.scenarios.forEach((scenario) => {
       processSteps(scenario.steps);
     });
 

@@ -29,31 +29,31 @@ export const ReportsPage: React.FC = () => {
   }, []);
 
   const loadReports = async () => {
-    setState(prev => ({ ...prev, isLoading: true, error: null }));
+    setState((prev) => ({ ...prev, isLoading: true, error: null }));
     try {
       const reports = await apiService.listReports();
-      setState(prev => ({ ...prev, reports, isLoading: false }));
+      setState((prev) => ({ ...prev, reports, isLoading: false }));
     } catch (error) {
-      setState(prev => ({ 
-        ...prev, 
+      setState((prev) => ({
+        ...prev,
         error: `Failed to load reports: ${error}`,
-        isLoading: false 
+        isLoading: false,
       }));
     }
   };
 
   const handleReportSelect = async (reportFile: ReportFile) => {
-    setState(prev => ({ ...prev, isLoading: true }));
+    setState((prev) => ({ ...prev, isLoading: true }));
     try {
       const report = await apiService.loadReport(reportFile.filePath);
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         selectedReport: report,
         viewMode: 'viewer',
         isLoading: false,
       }));
     } catch (error) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         error: `Failed to load report: ${error}`,
         isLoading: false,
@@ -62,20 +62,20 @@ export const ReportsPage: React.FC = () => {
   };
 
   const handleDeleteReport = async (reportFile: ReportFile) => {
-    setState(prev => ({ ...prev, isLoading: true }));
+    setState((prev) => ({ ...prev, isLoading: true }));
     try {
       await apiService.deleteReport(reportFile.filePath);
       await loadReports();
       if (state.selectedReport?.id === reportFile.id) {
-        setState(prev => ({
+        setState((prev) => ({
           ...prev,
           selectedReport: null,
           viewMode: 'list',
         }));
       }
-      setState(prev => ({ ...prev, isLoading: false }));
+      setState((prev) => ({ ...prev, isLoading: false }));
     } catch (error) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
         error: `Failed to delete report: ${error}`,
         isLoading: false,
@@ -84,7 +84,7 @@ export const ReportsPage: React.FC = () => {
   };
 
   const handleBack = () => {
-    setState(prev => ({
+    setState((prev) => ({
       ...prev,
       selectedReport: null,
       viewMode: 'list',
@@ -92,7 +92,7 @@ export const ReportsPage: React.FC = () => {
   };
 
   const handleViewAnalytics = () => {
-    setState(prev => ({ ...prev, viewMode: 'analytics' }));
+    setState((prev) => ({ ...prev, viewMode: 'analytics' }));
   };
 
   return (
@@ -110,13 +110,16 @@ export const ReportsPage: React.FC = () => {
             </div>
             <div className="stat-item">
               <span className="stat-value">
-                {state.reports.filter(r => r.summary.successRate === 100).length}
+                {
+                  state.reports.filter((r) => r.summary.successRate === 100)
+                    .length
+                }
               </span>
               <span className="stat-label">Passed</span>
             </div>
             <div className="stat-item">
               <span className="stat-value">
-                {state.reports.filter(r => r.summary.failedTests > 0).length}
+                {state.reports.filter((r) => r.summary.failedTests > 0).length}
               </span>
               <span className="stat-label">Failed</span>
             </div>
@@ -127,7 +130,9 @@ export const ReportsPage: React.FC = () => {
       {state.error && (
         <div className="error-banner">
           {state.error}
-          <button onClick={() => setState(prev => ({ ...prev, error: null }))}>
+          <button
+            onClick={() => setState((prev) => ({ ...prev, error: null }))}
+          >
             ×
           </button>
         </div>
@@ -146,17 +151,11 @@ export const ReportsPage: React.FC = () => {
         )}
 
         {state.viewMode === 'viewer' && state.selectedReport && (
-          <ReportViewer
-            report={state.selectedReport}
-            onBack={handleBack}
-          />
+          <ReportViewer report={state.selectedReport} onBack={handleBack} />
         )}
 
         {state.viewMode === 'analytics' && (
-          <ReportAnalytics
-            reports={state.reports}
-            onBack={handleBack}
-          />
+          <ReportAnalytics reports={state.reports} onBack={handleBack} />
         )}
       </div>
     </div>

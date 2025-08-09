@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
-import { ConfigurationPreset, ProjectConfig, GlobalConfig } from '../../../main/types';
+import {
+  ConfigurationPreset,
+  ProjectConfig,
+  GlobalConfig,
+} from '../../../main/types';
 import './PresetManager.css';
 
 interface PresetManagerProps {
@@ -7,7 +11,9 @@ interface PresetManagerProps {
   currentProjectConfig: ProjectConfig;
   currentGlobalConfig: GlobalConfig;
   onApplyPreset: (preset: ConfigurationPreset) => void;
-  onCreatePreset: (preset: Omit<ConfigurationPreset, 'id' | 'createdAt' | 'updatedAt'>) => void;
+  onCreatePreset: (
+    preset: Omit<ConfigurationPreset, 'id' | 'createdAt' | 'updatedAt'>,
+  ) => void;
   onDeletePreset: (presetId: string) => void;
 }
 
@@ -19,7 +25,8 @@ export const PresetManager: React.FC<PresetManagerProps> = ({
   onCreatePreset,
   onDeletePreset,
 }) => {
-  const [selectedPreset, setSelectedPreset] = useState<ConfigurationPreset | null>(null);
+  const [selectedPreset, setSelectedPreset] =
+    useState<ConfigurationPreset | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [createForm, setCreateForm] = useState({
     name: '',
@@ -51,7 +58,10 @@ export const PresetManager: React.FC<PresetManagerProps> = ({
       Object.assign(config, currentGlobalConfig);
     }
 
-    const newPreset: Omit<ConfigurationPreset, 'id' | 'createdAt' | 'updatedAt'> = {
+    const newPreset: Omit<
+      ConfigurationPreset,
+      'id' | 'createdAt' | 'updatedAt'
+    > = {
       name: createForm.name,
       description: createForm.description,
       category: createForm.category,
@@ -81,16 +91,21 @@ export const PresetManager: React.FC<PresetManagerProps> = ({
     });
   };
 
-  const builtInPresets = presets.filter(p => p.isBuiltIn);
-  const customPresets = presets.filter(p => !p.isBuiltIn);
+  const builtInPresets = presets.filter((p) => p.isBuiltIn);
+  const customPresets = presets.filter((p) => !p.isBuiltIn);
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case 'project': return '🏗️';
-      case 'testing': return '🧪';
-      case 'generation': return '⚙️';
-      case 'editor': return '✏️';
-      default: return '📄';
+      case 'project':
+        return '🏗️';
+      case 'testing':
+        return '🧪';
+      case 'generation':
+        return '⚙️';
+      case 'editor':
+        return '✏️';
+      default:
+        return '📄';
     }
   };
 
@@ -102,7 +117,9 @@ export const PresetManager: React.FC<PresetManagerProps> = ({
     >
       <div className="preset-header">
         <div className="preset-title">
-          <span className="preset-icon">{getCategoryIcon(preset.category)}</span>
+          <span className="preset-icon">
+            {getCategoryIcon(preset.category)}
+          </span>
           <span className="preset-name">{preset.name}</span>
         </div>
         <div className="preset-actions">
@@ -129,9 +146,7 @@ export const PresetManager: React.FC<PresetManagerProps> = ({
         </div>
       </div>
 
-      <div className="preset-description">
-        {preset.description}
-      </div>
+      <div className="preset-description">{preset.description}</div>
 
       <div className="preset-meta">
         <span className="preset-category">{preset.category}</span>
@@ -156,8 +171,8 @@ export const PresetManager: React.FC<PresetManagerProps> = ({
               <button className="btn btn-secondary" onClick={handleCancel}>
                 Cancel
               </button>
-              <button 
-                className="btn btn-primary" 
+              <button
+                className="btn btn-primary"
                 onClick={handleSavePreset}
                 disabled={!createForm.name.trim()}
               >
@@ -173,7 +188,9 @@ export const PresetManager: React.FC<PresetManagerProps> = ({
                 id="preset-name"
                 type="text"
                 value={createForm.name}
-                onChange={(e) => setCreateForm(prev => ({ ...prev, name: e.target.value }))}
+                onChange={(e) =>
+                  setCreateForm((prev) => ({ ...prev, name: e.target.value }))
+                }
                 placeholder="Enter preset name"
               />
             </div>
@@ -183,7 +200,12 @@ export const PresetManager: React.FC<PresetManagerProps> = ({
               <textarea
                 id="preset-description"
                 value={createForm.description}
-                onChange={(e) => setCreateForm(prev => ({ ...prev, description: e.target.value }))}
+                onChange={(e) =>
+                  setCreateForm((prev) => ({
+                    ...prev,
+                    description: e.target.value,
+                  }))
+                }
                 placeholder="Describe what this preset configures"
                 rows={3}
               />
@@ -194,7 +216,12 @@ export const PresetManager: React.FC<PresetManagerProps> = ({
               <select
                 id="preset-category"
                 value={createForm.category}
-                onChange={(e) => setCreateForm(prev => ({ ...prev, category: e.target.value as any }))}
+                onChange={(e) =>
+                  setCreateForm((prev) => ({
+                    ...prev,
+                    category: e.target.value as any,
+                  }))
+                }
               >
                 <option value="project">Project Settings</option>
                 <option value="testing">Testing Configuration</option>
@@ -210,10 +237,12 @@ export const PresetManager: React.FC<PresetManagerProps> = ({
                   <input
                     type="checkbox"
                     checked={createForm.includeProjectConfig}
-                    onChange={(e) => setCreateForm(prev => ({ 
-                      ...prev, 
-                      includeProjectConfig: e.target.checked 
-                    }))}
+                    onChange={(e) =>
+                      setCreateForm((prev) => ({
+                        ...prev,
+                        includeProjectConfig: e.target.checked,
+                      }))
+                    }
                   />
                   <div className="checkbox-text">
                     <strong>Project Configuration</strong>
@@ -225,10 +254,12 @@ export const PresetManager: React.FC<PresetManagerProps> = ({
                   <input
                     type="checkbox"
                     checked={createForm.includeGlobalConfig}
-                    onChange={(e) => setCreateForm(prev => ({ 
-                      ...prev, 
-                      includeGlobalConfig: e.target.checked 
-                    }))}
+                    onChange={(e) =>
+                      setCreateForm((prev) => ({
+                        ...prev,
+                        includeGlobalConfig: e.target.checked,
+                      }))
+                    }
                   />
                   <div className="checkbox-text">
                     <strong>Global Configuration</strong>
@@ -273,13 +304,15 @@ export const PresetManager: React.FC<PresetManagerProps> = ({
         <div className="preset-detail">
           <div className="detail-header">
             <div className="detail-title">
-              <span className="detail-icon">{getCategoryIcon(selectedPreset.category)}</span>
+              <span className="detail-icon">
+                {getCategoryIcon(selectedPreset.category)}
+              </span>
               <div>
                 <h4>{selectedPreset.name}</h4>
                 <p>{selectedPreset.description}</p>
               </div>
             </div>
-            <button 
+            <button
               className="btn btn-primary"
               onClick={() => onApplyPreset(selectedPreset)}
             >

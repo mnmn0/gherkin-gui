@@ -18,15 +18,12 @@ export const TestRunner: React.FC<TestRunnerProps> = ({
   const [selectedSpecs, setSelectedSpecs] = useState<Set<string>>(new Set());
   const [config, setConfig] = useState<TestConfig>({
     specificationPath: '',
-    javaClasspath: [
-      'target/classes',
-      'target/test-classes'
-    ],
+    javaClasspath: ['target/classes', 'target/test-classes'],
     springProfiles: ['test'],
     jvmArgs: ['-Xmx512m'],
     environmentVars: {
-      'SPRING_PROFILES_ACTIVE': 'test'
-    }
+      SPRING_PROFILES_ACTIVE: 'test',
+    },
   });
 
   const handleSpecSelect = (specId: string) => {
@@ -43,42 +40,44 @@ export const TestRunner: React.FC<TestRunnerProps> = ({
     if (selectedSpecs.size === specifications.length) {
       setSelectedSpecs(new Set());
     } else {
-      setSelectedSpecs(new Set(specifications.map(s => s.id)));
+      setSelectedSpecs(new Set(specifications.map((s) => s.id)));
     }
   };
 
-  const handleConfigChange = (field: keyof TestConfig, value: any) => {
-    setConfig(prev => ({ ...prev, [field]: value }));
-  };
-
-  const handleArrayAdd = (field: 'javaClasspath' | 'springProfiles' | 'jvmArgs', value: string) => {
+  const handleArrayAdd = (
+    field: 'javaClasspath' | 'springProfiles' | 'jvmArgs',
+    value: string,
+  ) => {
     if (!value.trim()) return;
-    setConfig(prev => ({
+    setConfig((prev) => ({
       ...prev,
-      [field]: [...prev[field], value.trim()]
+      [field]: [...prev[field], value.trim()],
     }));
   };
 
-  const handleArrayRemove = (field: 'javaClasspath' | 'springProfiles' | 'jvmArgs', index: number) => {
-    setConfig(prev => ({
+  const handleArrayRemove = (
+    field: 'javaClasspath' | 'springProfiles' | 'jvmArgs',
+    index: number,
+  ) => {
+    setConfig((prev) => ({
       ...prev,
-      [field]: prev[field].filter((_, i) => i !== index)
+      [field]: prev[field].filter((_, i) => i !== index),
     }));
   };
 
   const handleEnvVarAdd = (key: string, value: string) => {
     if (!key.trim()) return;
-    setConfig(prev => ({
+    setConfig((prev) => ({
       ...prev,
       environmentVars: {
         ...prev.environmentVars,
-        [key.trim()]: value
-      }
+        [key.trim()]: value,
+      },
     }));
   };
 
   const handleEnvVarRemove = (key: string) => {
-    setConfig(prev => {
+    setConfig((prev) => {
       const newEnvVars = { ...prev.environmentVars };
       delete newEnvVars[key];
       return { ...prev, environmentVars: newEnvVars };
@@ -87,9 +86,9 @@ export const TestRunner: React.FC<TestRunnerProps> = ({
 
   const handleExecute = () => {
     const selectedSpecPaths = specifications
-      .filter(spec => selectedSpecs.has(spec.id))
-      .map(spec => spec.filePath);
-    
+      .filter((spec) => selectedSpecs.has(spec.id))
+      .map((spec) => spec.filePath);
+
     if (selectedSpecPaths.length === 0) {
       alert('Please select at least one specification to execute.');
       return;
@@ -97,7 +96,7 @@ export const TestRunner: React.FC<TestRunnerProps> = ({
 
     const testConfig: TestConfig = {
       ...config,
-      specificationPath: selectedSpecPaths.join(',')
+      specificationPath: selectedSpecPaths.join(','),
     };
 
     onExecute(testConfig);
@@ -112,18 +111,26 @@ export const TestRunner: React.FC<TestRunnerProps> = ({
           <div className="section-header">
             <h3>Select Specifications</h3>
             <div className="section-actions">
-              <button className="btn btn-secondary btn-small" onClick={onRefresh}>
+              <button
+                className="btn btn-secondary btn-small"
+                onClick={onRefresh}
+              >
                 🔄 Refresh
               </button>
-              <button className="btn btn-secondary btn-small" onClick={handleSelectAll}>
-                {selectedSpecs.size === specifications.length ? 'Deselect All' : 'Select All'}
+              <button
+                className="btn btn-secondary btn-small"
+                onClick={handleSelectAll}
+              >
+                {selectedSpecs.size === specifications.length
+                  ? 'Deselect All'
+                  : 'Select All'}
               </button>
             </div>
           </div>
 
           {isLoading ? (
             <div className="loading">
-              <div className="loading-spinner"></div>
+              <div className="loading-spinner" />
               <span>Loading specifications...</span>
             </div>
           ) : specifications.length === 0 ? (
@@ -134,7 +141,7 @@ export const TestRunner: React.FC<TestRunnerProps> = ({
             </div>
           ) : (
             <div className="spec-list">
-              {specifications.map(spec => (
+              {specifications.map((spec) => (
                 <div
                   key={spec.id}
                   className={`spec-item ${selectedSpecs.has(spec.id) ? 'selected' : ''}`}
@@ -152,7 +159,9 @@ export const TestRunner: React.FC<TestRunnerProps> = ({
                     <div className="spec-meta">
                       <span>{spec.filePath}</span>
                       <span>{(spec.size / 1024).toFixed(1)} KB</span>
-                      <span>{new Date(spec.lastModified).toLocaleDateString()}</span>
+                      <span>
+                        {new Date(spec.lastModified).toLocaleDateString()}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -161,7 +170,10 @@ export const TestRunner: React.FC<TestRunnerProps> = ({
           )}
 
           <div className="selection-summary">
-            <span>{selectedSpecs.size} of {specifications.length} specifications selected</span>
+            <span>
+              {selectedSpecs.size} of {specifications.length} specifications
+              selected
+            </span>
           </div>
         </div>
 
@@ -178,9 +190,11 @@ export const TestRunner: React.FC<TestRunnerProps> = ({
                   {config.javaClasspath.map((item, index) => (
                     <div key={index} className="array-item">
                       <span className="array-value">{item}</span>
-                      <button 
+                      <button
                         className="btn-remove"
-                        onClick={() => handleArrayRemove('javaClasspath', index)}
+                        onClick={() =>
+                          handleArrayRemove('javaClasspath', index)
+                        }
                       >
                         ×
                       </button>
@@ -209,9 +223,11 @@ export const TestRunner: React.FC<TestRunnerProps> = ({
                   {config.springProfiles.map((item, index) => (
                     <div key={index} className="array-item">
                       <span className="array-value">{item}</span>
-                      <button 
+                      <button
                         className="btn-remove"
-                        onClick={() => handleArrayRemove('springProfiles', index)}
+                        onClick={() =>
+                          handleArrayRemove('springProfiles', index)
+                        }
                       >
                         ×
                       </button>
@@ -240,7 +256,7 @@ export const TestRunner: React.FC<TestRunnerProps> = ({
                   {config.jvmArgs.map((item, index) => (
                     <div key={index} className="array-item">
                       <span className="array-value">{item}</span>
-                      <button 
+                      <button
                         className="btn-remove"
                         onClick={() => handleArrayRemove('jvmArgs', index)}
                       >
@@ -268,18 +284,20 @@ export const TestRunner: React.FC<TestRunnerProps> = ({
               <h4>Environment Variables</h4>
               <div className="env-vars">
                 <div className="env-var-list">
-                  {Object.entries(config.environmentVars).map(([key, value]) => (
-                    <div key={key} className="env-var-item">
-                      <div className="env-var-key">{key}</div>
-                      <div className="env-var-value">{value}</div>
-                      <button 
-                        className="btn-remove"
-                        onClick={() => handleEnvVarRemove(key)}
-                      >
-                        ×
-                      </button>
-                    </div>
-                  ))}
+                  {Object.entries(config.environmentVars).map(
+                    ([key, value]) => (
+                      <div key={key} className="env-var-item">
+                        <div className="env-var-key">{key}</div>
+                        <div className="env-var-value">{value}</div>
+                        <button
+                          className="btn-remove"
+                          onClick={() => handleEnvVarRemove(key)}
+                        >
+                          ×
+                        </button>
+                      </div>
+                    ),
+                  )}
                 </div>
                 <div className="env-var-add">
                   <input
@@ -288,8 +306,12 @@ export const TestRunner: React.FC<TestRunnerProps> = ({
                     className="env-key-input"
                     onKeyPress={(e) => {
                       if (e.key === 'Enter') {
-                        const valueInput = e.currentTarget.nextElementSibling as HTMLInputElement;
-                        handleEnvVarAdd(e.currentTarget.value, valueInput.value);
+                        const valueInput = e.currentTarget
+                          .nextElementSibling as HTMLInputElement;
+                        handleEnvVarAdd(
+                          e.currentTarget.value,
+                          valueInput.value,
+                        );
                         e.currentTarget.value = '';
                         valueInput.value = '';
                       }
@@ -301,7 +323,8 @@ export const TestRunner: React.FC<TestRunnerProps> = ({
                     className="env-value-input"
                     onKeyPress={(e) => {
                       if (e.key === 'Enter') {
-                        const keyInput = e.currentTarget.previousElementSibling as HTMLInputElement;
+                        const keyInput = e.currentTarget
+                          .previousElementSibling as HTMLInputElement;
                         handleEnvVarAdd(keyInput.value, e.currentTarget.value);
                         keyInput.value = '';
                         e.currentTarget.value = '';
@@ -321,13 +344,11 @@ export const TestRunner: React.FC<TestRunnerProps> = ({
             >
               {isLoading ? (
                 <>
-                  <div className="loading-spinner small"></div>
+                  <div className="loading-spinner small" />
                   Starting...
                 </>
               ) : (
-                <>
-                  🚀 Execute Tests ({selectedSpecs.size} specs)
-                </>
+                <>🚀 Execute Tests ({selectedSpecs.size} specs)</>
               )}
             </button>
           </div>

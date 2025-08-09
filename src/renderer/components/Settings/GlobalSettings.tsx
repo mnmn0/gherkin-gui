@@ -72,9 +72,7 @@ export const GlobalSettings: React.FC<GlobalSettingsProps> = ({
               <option value="dark">Dark</option>
               <option value="auto">Auto (System)</option>
             </select>
-            <div className="form-help">
-              Application color theme
-            </div>
+            <div className="form-help">Application color theme</div>
           </div>
 
           <div className="form-group checkbox-group">
@@ -86,7 +84,9 @@ export const GlobalSettings: React.FC<GlobalSettingsProps> = ({
               />
               <div className="checkbox-text">
                 <strong>Auto-save Changes</strong>
-                <small>Automatically save changes to specifications and settings</small>
+                <small>
+                  Automatically save changes to specifications and settings
+                </small>
               </div>
             </label>
           </div>
@@ -96,7 +96,9 @@ export const GlobalSettings: React.FC<GlobalSettingsProps> = ({
               <input
                 type="checkbox"
                 checked={config.showWelcomeScreen || false}
-                onChange={(e) => handleChange('showWelcomeScreen', e.target.checked)}
+                onChange={(e) =>
+                  handleChange('showWelcomeScreen', e.target.checked)
+                }
               />
               <div className="checkbox-text">
                 <strong>Show Welcome Screen</strong>
@@ -124,9 +126,7 @@ export const GlobalSettings: React.FC<GlobalSettingsProps> = ({
               <option value="Courier New">Courier New</option>
               <option value="Source Code Pro">Source Code Pro</option>
             </select>
-            <div className="form-help">
-              Font family for the code editor
-            </div>
+            <div className="form-help">Font family for the code editor</div>
           </div>
 
           <div className="form-group">
@@ -134,7 +134,9 @@ export const GlobalSettings: React.FC<GlobalSettingsProps> = ({
             <select
               id="font-size"
               value={config.editor?.fontSize?.toString() || '14'}
-              onChange={(e) => handleEditorChange('fontSize', parseInt(e.target.value))}
+              onChange={(e) =>
+                handleEditorChange('fontSize', parseInt(e.target.value))
+              }
             >
               <option value="10">10px</option>
               <option value="11">11px</option>
@@ -145,9 +147,7 @@ export const GlobalSettings: React.FC<GlobalSettingsProps> = ({
               <option value="18">18px</option>
               <option value="20">20px</option>
             </select>
-            <div className="form-help">
-              Font size for the code editor
-            </div>
+            <div className="form-help">Font size for the code editor</div>
           </div>
 
           <div className="form-group">
@@ -155,15 +155,15 @@ export const GlobalSettings: React.FC<GlobalSettingsProps> = ({
             <select
               id="tab-size"
               value={config.editor?.tabSize?.toString() || '2'}
-              onChange={(e) => handleEditorChange('tabSize', parseInt(e.target.value))}
+              onChange={(e) =>
+                handleEditorChange('tabSize', parseInt(e.target.value))
+              }
             >
               <option value="2">2 spaces</option>
               <option value="4">4 spaces</option>
               <option value="8">8 spaces</option>
             </select>
-            <div className="form-help">
-              Number of spaces for indentation
-            </div>
+            <div className="form-help">Number of spaces for indentation</div>
           </div>
 
           <div className="form-group checkbox-group">
@@ -171,7 +171,9 @@ export const GlobalSettings: React.FC<GlobalSettingsProps> = ({
               <input
                 type="checkbox"
                 checked={config.editor?.wordWrap || false}
-                onChange={(e) => handleEditorChange('wordWrap', e.target.checked)}
+                onChange={(e) =>
+                  handleEditorChange('wordWrap', e.target.checked)
+                }
               />
               <div className="checkbox-text">
                 <strong>Word Wrap</strong>
@@ -185,7 +187,9 @@ export const GlobalSettings: React.FC<GlobalSettingsProps> = ({
               <input
                 type="checkbox"
                 checked={config.editor?.showLineNumbers || true}
-                onChange={(e) => handleEditorChange('showLineNumbers', e.target.checked)}
+                onChange={(e) =>
+                  handleEditorChange('showLineNumbers', e.target.checked)
+                }
               />
               <div className="checkbox-text">
                 <strong>Show Line Numbers</strong>
@@ -199,7 +203,9 @@ export const GlobalSettings: React.FC<GlobalSettingsProps> = ({
               <input
                 type="checkbox"
                 checked={config.editor?.highlightActiveLine || true}
-                onChange={(e) => handleEditorChange('highlightActiveLine', e.target.checked)}
+                onChange={(e) =>
+                  handleEditorChange('highlightActiveLine', e.target.checked)
+                }
               />
               <div className="checkbox-text">
                 <strong>Highlight Active Line</strong>
@@ -222,10 +228,13 @@ export const GlobalSettings: React.FC<GlobalSettingsProps> = ({
               max="400"
               step="20"
               value={config.ui?.sidebarWidth || 280}
-              onChange={(e) => handleUIChange('sidebarWidth', parseInt(e.target.value))}
+              onChange={(e) =>
+                handleUIChange('sidebarWidth', parseInt(e.target.value))
+              }
             />
             <div className="form-help">
-              Width of the navigation sidebar ({config.ui?.sidebarWidth || 280}px)
+              Width of the navigation sidebar ({config.ui?.sidebarWidth || 280}
+              px)
             </div>
           </div>
 
@@ -234,7 +243,9 @@ export const GlobalSettings: React.FC<GlobalSettingsProps> = ({
             <select
               id="zoom-level"
               value={config.ui?.zoomLevel?.toString() || '1'}
-              onChange={(e) => handleUIChange('zoomLevel', parseFloat(e.target.value))}
+              onChange={(e) =>
+                handleUIChange('zoomLevel', parseFloat(e.target.value))
+              }
             >
               <option value="0.8">80%</option>
               <option value="0.9">90%</option>
@@ -253,7 +264,9 @@ export const GlobalSettings: React.FC<GlobalSettingsProps> = ({
               <input
                 type="checkbox"
                 checked={config.ui?.compactMode || false}
-                onChange={(e) => handleUIChange('compactMode', e.target.checked)}
+                onChange={(e) =>
+                  handleUIChange('compactMode', e.target.checked)
+                }
               />
               <div className="checkbox-text">
                 <strong>Compact Mode</strong>
@@ -267,11 +280,15 @@ export const GlobalSettings: React.FC<GlobalSettingsProps> = ({
               <input
                 type="checkbox"
                 checked={config.ui?.showStatusBar || true}
-                onChange={(e) => handleUIChange('showStatusBar', e.target.checked)}
+                onChange={(e) =>
+                  handleUIChange('showStatusBar', e.target.checked)
+                }
               />
               <div className="checkbox-text">
                 <strong>Show Status Bar</strong>
-                <small>Display status information at the bottom of the window</small>
+                <small>
+                  Display status information at the bottom of the window
+                </small>
               </div>
             </label>
           </div>
@@ -289,7 +306,9 @@ export const GlobalSettings: React.FC<GlobalSettingsProps> = ({
               min="5"
               max="50"
               value={config.maxRecentFiles || 10}
-              onChange={(e) => handleChange('maxRecentFiles', parseInt(e.target.value))}
+              onChange={(e) =>
+                handleChange('maxRecentFiles', parseInt(e.target.value))
+              }
             />
             <div className="form-help">
               Maximum number of recent files to remember
@@ -304,7 +323,9 @@ export const GlobalSettings: React.FC<GlobalSettingsProps> = ({
               min="1"
               max="60"
               value={config.backupInterval || 5}
-              onChange={(e) => handleChange('backupInterval', parseInt(e.target.value))}
+              onChange={(e) =>
+                handleChange('backupInterval', parseInt(e.target.value))
+              }
             />
             <div className="form-help">
               How often to create automatic backups
@@ -316,11 +337,15 @@ export const GlobalSettings: React.FC<GlobalSettingsProps> = ({
               <input
                 type="checkbox"
                 checked={config.enableTelemetry || false}
-                onChange={(e) => handleChange('enableTelemetry', e.target.checked)}
+                onChange={(e) =>
+                  handleChange('enableTelemetry', e.target.checked)
+                }
               />
               <div className="checkbox-text">
                 <strong>Enable Telemetry</strong>
-                <small>Send anonymous usage data to help improve the application</small>
+                <small>
+                  Send anonymous usage data to help improve the application
+                </small>
               </div>
             </label>
           </div>
@@ -330,11 +355,16 @@ export const GlobalSettings: React.FC<GlobalSettingsProps> = ({
               <input
                 type="checkbox"
                 checked={config.enableDebugLogging || false}
-                onChange={(e) => handleChange('enableDebugLogging', e.target.checked)}
+                onChange={(e) =>
+                  handleChange('enableDebugLogging', e.target.checked)
+                }
               />
               <div className="checkbox-text">
                 <strong>Enable Debug Logging</strong>
-                <small>Enable detailed logging for troubleshooting (may impact performance)</small>
+                <small>
+                  Enable detailed logging for troubleshooting (may impact
+                  performance)
+                </small>
               </div>
             </label>
           </div>
