@@ -1,0 +1,5 @@
+Feature: Watched Feature
+  Scenario: Initial test
+    Given initial condition
+    When initial action
+    Then initial result

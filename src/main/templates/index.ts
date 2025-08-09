@@ -1,10 +1,12 @@
-import { CodeTemplate } from '../types';
+import { GenerationTemplate } from '../types';
 
-export const DEFAULT_TEMPLATES: CodeTemplate[] = [
+export const DEFAULT_TEMPLATES: GenerationTemplate[] = [
   {
+    id: 'spring-boot-integration-test',
     name: 'Spring Boot Integration Test',
     description: 'Full integration test with Spring Boot context',
-    template: `package {{packageName}};
+    type: 'junit5',
+    content: `package {{packageName}};
 
 {{imports}}
 import org.springframework.boot.test.context.SpringBootTest;
@@ -47,51 +49,56 @@ public class {{className}} {
     variables: [
       {
         name: 'packageName',
+        type: 'string',
         description: 'Java package name for the test class',
         defaultValue: 'com.example.test',
-        required: true,
       },
       {
         name: 'className',
+        type: 'string',
         description: 'Name of the test class',
-        required: true,
       },
       {
         name: 'testProfile',
+        type: 'string',
         description: 'Spring profile for testing',
         defaultValue: 'test',
-        required: false,
       },
       {
         name: 'serviceClass',
+        type: 'string',
         description: 'Main service class to test',
         defaultValue: 'ApplicationService',
-        required: false,
       },
       {
         name: 'serviceInstance',
+        type: 'string',
         description: 'Instance name for the service',
         defaultValue: 'applicationService',
-        required: false,
       },
       {
         name: 'setupCode',
+        type: 'string',
         description: 'Custom setup code',
         defaultValue: '// Initialize test data',
-        required: false,
       },
       {
         name: 'teardownCode',
+        type: 'string',
         description: 'Custom teardown code',
         defaultValue: '// Cleanup test data',
-        required: false,
       },
     ],
+    isDefault: true,
+    createdAt: new Date('2024-01-01T00:00:00Z'),
+    updatedAt: new Date('2024-01-01T00:00:00Z'),
   },
   {
+    id: 'spring-boot-webmvc-test',
     name: 'Spring Boot Web MVC Test',
     description: 'Web layer test using @WebMvcTest',
-    template: `package {{packageName}};
+    type: 'junit5',
+    content: `package {{packageName}};
 
 {{imports}}
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -134,51 +141,56 @@ public class {{className}} {
     variables: [
       {
         name: 'packageName',
+        type: 'string',
         description: 'Java package name for the test class',
         defaultValue: 'com.example.web',
-        required: true,
       },
       {
         name: 'className',
+        type: 'string',
         description: 'Name of the test class',
-        required: true,
       },
       {
         name: 'controllerClass',
+        type: 'string',
         description: 'Controller class to test',
         defaultValue: 'UserController',
-        required: true,
       },
       {
         name: 'serviceClass',
+        type: 'string',
         description: 'Service class to mock',
         defaultValue: 'UserService',
-        required: true,
       },
       {
         name: 'serviceInstance',
+        type: 'string',
         description: 'Instance name for the mocked service',
         defaultValue: 'userService',
-        required: false,
       },
       {
         name: 'testProfile',
+        type: 'string',
         description: 'Spring profile for testing',
         defaultValue: 'test',
-        required: false,
       },
       {
         name: 'setupCode',
+        type: 'string',
         description: 'Custom setup code for mocks',
         defaultValue: '// Setup mock behaviors',
-        required: false,
       },
     ],
+    isDefault: true,
+    createdAt: new Date('2024-01-01T00:00:00Z'),
+    updatedAt: new Date('2024-01-01T00:00:00Z'),
   },
   {
+    id: 'spring-boot-datajpa-test',
     name: 'Spring Boot Data JPA Test',
     description: 'Data layer test using @DataJpaTest',
-    template: `package {{packageName}};
+    type: 'junit5',
+    content: `package {{packageName}};
 
 {{imports}}
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -214,45 +226,50 @@ public class {{className}} {
     variables: [
       {
         name: 'packageName',
+        type: 'string',
         description: 'Java package name for the test class',
         defaultValue: 'com.example.repository',
-        required: true,
       },
       {
         name: 'className',
+        type: 'string',
         description: 'Name of the test class',
-        required: true,
       },
       {
         name: 'repositoryClass',
+        type: 'string',
         description: 'Repository interface to test',
         defaultValue: 'UserRepository',
-        required: true,
       },
       {
         name: 'repositoryInstance',
+        type: 'string',
         description: 'Instance name for the repository',
         defaultValue: 'userRepository',
-        required: false,
       },
       {
         name: 'testProfile',
+        type: 'string',
         description: 'Spring profile for testing',
         defaultValue: 'test',
-        required: false,
       },
       {
         name: 'setupCode',
+        type: 'string',
         description: 'Custom setup code for test data',
         defaultValue: '// Setup test entities',
-        required: false,
       },
     ],
+    isDefault: true,
+    createdAt: new Date('2024-01-01T00:00:00Z'),
+    updatedAt: new Date('2024-01-01T00:00:00Z'),
   },
   {
+    id: 'cucumber-step-definitions',
     name: 'Cucumber Step Definitions',
     description: 'Cucumber step definitions with Spring Boot',
-    template: `package {{packageName}};
+    type: 'cucumber',
+    content: `package {{packageName}};
 
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.When;
@@ -279,27 +296,32 @@ public class {{className}} {
     variables: [
       {
         name: 'packageName',
+        type: 'string',
         description: 'Java package name for step definitions',
         defaultValue: 'com.example.steps',
-        required: true,
       },
       {
         name: 'className',
+        type: 'string',
         description: 'Name of the step definitions class',
-        required: true,
       },
       {
         name: 'testProfile',
+        type: 'string',
         description: 'Spring profile for testing',
         defaultValue: 'test',
-        required: false,
       },
     ],
+    isDefault: true,
+    createdAt: new Date('2024-01-01T00:00:00Z'),
+    updatedAt: new Date('2024-01-01T00:00:00Z'),
   },
   {
+    id: 'testcontainers-integration-test',
     name: 'TestContainers Integration Test',
     description: 'Integration test with TestContainers for database',
-    template: `package {{packageName}};
+    type: 'junit5',
+    content: `package {{packageName}};
 
 {{imports}}
 import org.springframework.boot.test.context.SpringBootTest;
@@ -350,89 +372,95 @@ public class {{className}} {
     variables: [
       {
         name: 'packageName',
+        type: 'string',
         description: 'Java package name for the test class',
         defaultValue: 'com.example.integration',
-        required: true,
       },
       {
         name: 'className',
+        type: 'string',
         description: 'Name of the test class',
-        required: true,
       },
       {
         name: 'postgresVersion',
+        type: 'string',
         description: 'PostgreSQL container version',
         defaultValue: 'postgres:15',
-        required: false,
       },
       {
         name: 'databaseName',
+        type: 'string',
         description: 'Test database name',
         defaultValue: 'testdb',
-        required: false,
       },
       {
         name: 'dbUsername',
+        type: 'string',
         description: 'Database username',
         defaultValue: 'testuser',
-        required: false,
       },
       {
         name: 'dbPassword',
+        type: 'string',
         description: 'Database password',
         defaultValue: 'testpass',
-        required: false,
       },
       {
         name: 'testProfile',
+        type: 'string',
         description: 'Spring profile for testing',
         defaultValue: 'integration-test',
-        required: false,
       },
       {
         name: 'setupCode',
+        type: 'string',
         description: 'Custom setup code',
         defaultValue: '// Initialize test data with containers',
-        required: false,
       },
     ],
+    isDefault: true,
+    createdAt: new Date('2024-01-01T00:00:00Z'),
+    updatedAt: new Date('2024-01-01T00:00:00Z'),
   },
 ];
 
 export class TemplateEngine {
-  substituteVariables(template: string, variables: Record<string, string>): string {
+  substituteVariables(
+    template: string,
+    variables: Record<string, string>,
+  ): string {
     let result = template;
-    
+
     for (const [key, value] of Object.entries(variables)) {
       const placeholder = new RegExp(`\\{\\{${key}\\}\\}`, 'g');
       result = result.replace(placeholder, value || '');
     }
-    
+
     return result;
   }
 
   validateTemplate(template: string): { isValid: boolean; errors: string[] } {
     const errors: string[] = [];
-    
+
     const placeholders = template.match(/\{\{[^}]+\}\}/g) || [];
-    
+
     for (const placeholder of placeholders) {
       const variableName = placeholder.replace(/[{}]/g, '');
       if (!/^[a-zA-Z][a-zA-Z0-9_]*$/.test(variableName)) {
         errors.push(`Invalid variable name: ${variableName}`);
       }
     }
-    
+
     const unclosedBraces = template.match(/\{\{[^}]*$/g);
     if (unclosedBraces) {
       errors.push('Unclosed template braces found');
     }
-    
+
     const unmatchedClosing = template.match(/[^{]\}\}/g);
     if (unmatchedClosing) {
       errors.push('Unmatched closing braces found');
     }
-    
+
     return {
       isValid: errors.length === 0,
       errors,
@@ -442,51 +470,65 @@ export class TemplateEngine {
   extractVariables(template: string): string[] {
     const matches = template.match(/\{\{([^}]+)\}\}/g) || [];
     return matches
-      .map(match => match.replace(/[{}]/g, ''))
+      .map((match) => match.replace(/[{}]/g, ''))
       .filter((value, index, array) => array.indexOf(value) === index);
   }
 
-  createTemplateFromGenerated(generatedCode: string, templateName: string): CodeTemplate {
-    const variablePattern = /\b(?:com\.example\.[a-z]+|UserService|UserController|test|TestClass)\b/g;
+  createTemplateFromGenerated(
+    generatedCode: string,
+    templateName: string,
+  ): GenerationTemplate {
     const variables = new Set<string>();
-    
+
     let template = generatedCode;
-    
-    template = template.replace(/package\s+(com\.example\.[a-z]+);/, (match, packageName) => {
+
+    template = template.replace(/package\s+(com\.example\.[a-z]+);/, () => {
       variables.add('packageName');
       return 'package {{packageName}};';
     });
-    
-    template = template.replace(/public\s+class\s+([A-Z][a-zA-Z0-9]*)\s*\{/, (match, className) => {
-      variables.add('className');
-      return 'public class {{className}} {';
-    });
-    
-    template = template.replace(/@ActiveProfiles\("([^"]+)"\)/, (match, profile) => {
+
+    template = template.replace(
+      /public\s+class\s+([A-Z][a-zA-Z0-9]*)\s*\{/,
+      () => {
+        variables.add('className');
+        return 'public class {{className}} {';
+      },
+    );
+
+    template = template.replace(/@ActiveProfiles\("([^"]+)"\)/, () => {
       variables.add('testProfile');
       return '@ActiveProfiles("{{testProfile}}")';
     });
 
-    const templateVariables = Array.from(variables).map(name => ({
+    const templateVariables = Array.from(variables).map((name) => ({
       name,
+      type: 'string' as const,
       description: `${name} parameter`,
-      required: true,
     }));
 
     return {
+      id: `generated-${Date.now()}`,
       name: templateName,
       description: `Generated template: ${templateName}`,
-      template,
+      type: 'custom',
+      content: template,
       variables: templateVariables,
+      isDefault: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
   }
 }
 
-export function getTemplateByName(name: string): CodeTemplate | undefined {
-  return DEFAULT_TEMPLATES.find(template => template.name === name);
+export function getTemplateByName(
+  name: string,
+): GenerationTemplate | undefined {
+  return DEFAULT_TEMPLATES.find((template) => template.name === name);
 }
 
-export function getTemplatesForSpringBootType(type: 'web' | 'data' | 'integration'): CodeTemplate[] {
+export function getTemplatesForSpringBootType(
+  type: 'web' | 'data' | 'integration',
+): GenerationTemplate[] {
   const typeKeywords = {
     web: ['WebMvcTest', 'MockMvc', 'Controller'],
     data: ['DataJpaTest', 'Repository', 'Entity'],
@@ -494,12 +536,13 @@ export function getTemplatesForSpringBootType(type: 'web' | 'data' | 'integratio
   };
 
   const keywords = typeKeywords[type] || [];
-  
-  return DEFAULT_TEMPLATES.filter(template => 
-    keywords.some(keyword => 
-      template.name.includes(keyword) || 
-      template.description.includes(keyword) ||
-      template.template.includes(keyword)
-    )
+
+  return DEFAULT_TEMPLATES.filter((template) =>
+    keywords.some(
+      (keyword) =>
+        template.name.includes(keyword) ||
+        template.description.includes(keyword) ||
+        template.content.includes(keyword),
+    ),
   );
 }

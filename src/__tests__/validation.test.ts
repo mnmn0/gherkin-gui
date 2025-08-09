@@ -49,7 +49,7 @@ describe('GherkinValidator', () => {
       expect(result.errors).toContainEqual(
         expect.objectContaining({
           code: 'MISSING_FEATURE_NAME',
-        })
+        }),
       );
     });
 
@@ -65,7 +65,7 @@ describe('GherkinValidator', () => {
       expect(result.warnings).toContainEqual(
         expect.objectContaining({
           code: 'NO_SCENARIOS',
-        })
+        }),
       );
     });
 
@@ -103,16 +103,11 @@ describe('GherkinValidator', () => {
         scenarios: [
           {
             name: 'Login with different users',
-            steps: [
-              { keyword: 'Given', text: 'user exists' },
-            ],
+            steps: [{ keyword: 'Given', text: 'user exists' }],
             tags: [],
             examples: {
               headers: ['username', 'password'],
-              rows: [
-                ['admin'],
-                ['user', 'pass', 'extra'],
-              ],
+              rows: [['admin'], ['user', 'pass', 'extra']],
             },
           },
         ],
@@ -124,7 +119,7 @@ describe('GherkinValidator', () => {
       expect(result.errors).toContainEqual(
         expect.objectContaining({
           code: 'EXAMPLE_COLUMN_MISMATCH',
-        })
+        }),
       );
     });
 
@@ -171,7 +166,7 @@ describe('GherkinValidator', () => {
       expect(result.warnings).toContainEqual(
         expect.objectContaining({
           code: 'BACKGROUND_INVALID_KEYWORDS',
-        })
+        }),
       );
     });
   });
@@ -208,12 +203,12 @@ describe('TestConfigValidator', () => {
     expect(result.errors).toContainEqual(
       expect.objectContaining({
         code: 'MISSING_SPEC_PATH',
-      })
+      }),
     );
     expect(result.errors).toContainEqual(
       expect.objectContaining({
         code: 'MISSING_BUILD_TOOL',
-      })
+      }),
     );
   });
 
@@ -233,7 +228,7 @@ describe('TestConfigValidator', () => {
     expect(result.errors).toContainEqual(
       expect.objectContaining({
         code: 'INVALID_BUILD_TOOL',
-      })
+      }),
     );
   });
 });
@@ -248,13 +243,14 @@ describe('ProjectConfigValidator', () => {
   it('should validate a valid project config', () => {
     const config: ProjectConfig = {
       projectName: 'My Spring Boot App',
-      projectPath: '/path/to/project',
-      buildTool: 'maven',
-      buildFilePath: '/path/to/pom.xml',
-      javaHome: '/usr/lib/jvm/java-17',
-      defaultClasspath: ['/path/to/classes'],
-      defaultSpringProfiles: ['test'],
-      codeGenerationTemplates: [],
+      specificationDirectory: '.gherkin/spec',
+      reportDirectory: '.gherkin/report',
+      testConfiguration: {
+        buildTool: 'maven',
+        javaVersion: '11',
+        testFramework: 'junit5',
+        springBootVersion: '3.0.0',
+      },
     };
 
     const result = validator.validateProjectConfig(config);
@@ -269,33 +265,31 @@ describe('ProjectConfigValidator', () => {
     expect(result.errors).toContainEqual(
       expect.objectContaining({
         code: 'MISSING_PROJECT_NAME',
-      })
+      }),
     );
     expect(result.errors).toContainEqual(
       expect.objectContaining({
-        code: 'MISSING_PROJECT_PATH',
-      })
+        code: 'MISSING_SPEC_DIRECTORY',
+      }),
     );
   });
 
-  it('should warn about empty classpath', () => {
+  it('should validate project config with minimal fields', () => {
     const config: ProjectConfig = {
       projectName: 'Test Project',
-      projectPath: '/path/to/project',
-      buildTool: 'maven',
-      buildFilePath: '/path/to/pom.xml',
-      defaultClasspath: [],
-      defaultSpringProfiles: [],
-      codeGenerationTemplates: [],
+      specificationDirectory: '.gherkin/spec',
+      reportDirectory: '.gherkin/report',
+      testConfiguration: {
+        buildTool: 'maven',
+        javaVersion: '11',
+        testFramework: 'junit5',
+        springBootVersion: '3.0.0',
+      },
     };
 
     const result = validator.validateProjectConfig(config);
     expect(result.valid).toBe(true);
-    expect(result.warnings).toContainEqual(
-      expect.objectContaining({
-        code: 'EMPTY_DEFAULT_CLASSPATH',
-      })
-    );
+    expect(result.valid).toBe(true);
   });
 });
 
@@ -325,7 +319,7 @@ describe('validateGherkinSyntax', () => {
     expect(result.errors).toContainEqual(
       expect.objectContaining({
         code: 'NO_FEATURE',
-      })
+      }),
     );
   });
 
@@ -343,7 +337,7 @@ describe('validateGherkinSyntax', () => {
     expect(result.errors).toContainEqual(
       expect.objectContaining({
         code: 'ORPHAN_STEP',
-      })
+      }),
     );
   });
 
@@ -361,7 +355,7 @@ describe('validateGherkinSyntax', () => {
     expect(result.errors).toContainEqual(
       expect.objectContaining({
         code: 'BACKGROUND_POSITION',
-      })
+      }),
     );
   });
 

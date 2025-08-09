@@ -7,7 +7,12 @@ import {
   TestReport,
   ProjectConfig,
   ValidationResult,
+  GlobalConfig,
+  GenerationTemplate,
+  ConfigurationPreset,
+  ConfigurationPresetData,
 } from '../../main/types';
+import { IpcEvent } from '../../main/types/ipc';
 
 export class ApiService {
   // File operations
@@ -32,7 +37,10 @@ export class ApiService {
   }
 
   // Code generation
-  async generateCode(specContent: string, config: GenerationConfig): Promise<string> {
+  async generateCode(
+    specContent: string,
+    config: GenerationConfig,
+  ): Promise<string> {
     return window.electron.invoke('code:generate', { specContent, config });
   }
 
@@ -75,8 +83,49 @@ export class ApiService {
     return window.electron.invoke('project:save-config', config);
   }
 
-  async validateProjectConfig(config: ProjectConfig): Promise<ValidationResult> {
+  async validateProjectConfig(
+    config: ProjectConfig,
+  ): Promise<ValidationResult> {
     return window.electron.invoke('project:validate-config', config);
+  }
+
+  async getProjectConfig(): Promise<ProjectConfig> {
+    return window.electron.invoke('project:get-config', undefined);
+  }
+
+  // Global configuration
+  async getGlobalConfig(): Promise<GlobalConfig> {
+    return window.electron.invoke('global:get-config', undefined);
+  }
+
+  async saveGlobalConfig(config: GlobalConfig): Promise<void> {
+    return window.electron.invoke('global:save-config', config);
+  }
+
+  // Template management
+  async getGenerationTemplates(): Promise<GenerationTemplate[]> {
+    return window.electron.invoke('template:list', undefined);
+  }
+
+  async saveGenerationTemplates(
+    templates: GenerationTemplate[],
+  ): Promise<void> {
+    return window.electron.invoke('template:save-all', templates);
+  }
+
+  // Preset management
+  async getConfigurationPresets(): Promise<ConfigurationPreset[]> {
+    return window.electron.invoke('preset:list', undefined);
+  }
+
+  async createConfigurationPreset(
+    preset: ConfigurationPresetData,
+  ): Promise<ConfigurationPreset> {
+    return window.electron.invoke('preset:create', preset);
+  }
+
+  async deleteConfigurationPreset(presetId: string): Promise<void> {
+    return window.electron.invoke('preset:delete', presetId);
   }
 
   // Event listeners
@@ -96,7 +145,7 @@ export class ApiService {
     return window.electron.on('error:occurred', callback);
   }
 
-  removeAllListeners(channel: string): void {
+  removeAllListeners(channel: IpcEvent): void {
     window.electron.removeAllListeners(channel);
   }
 }

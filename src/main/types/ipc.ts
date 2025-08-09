@@ -9,6 +9,10 @@ import {
   ValidationResult,
   ExecutionProgress,
   TestResult,
+  GlobalConfig,
+  GenerationTemplate,
+  ConfigurationPreset,
+  ConfigurationPresetData,
 } from './index';
 
 export interface IpcChannels {
@@ -76,11 +80,45 @@ export interface IpcChannels {
     request: ProjectConfig;
     response: ValidationResult;
   };
+  'project:get-config': {
+    request: void;
+    response: ProjectConfig;
+  };
+  'global:get-config': {
+    request: void;
+    response: GlobalConfig;
+  };
+  'global:save-config': {
+    request: GlobalConfig;
+    response: void;
+  };
+  'template:list': {
+    request: void;
+    response: GenerationTemplate[];
+  };
+  'template:save-all': {
+    request: GenerationTemplate[];
+    response: void;
+  };
+  'preset:list': {
+    request: void;
+    response: ConfigurationPreset[];
+  };
+  'preset:create': {
+    request: ConfigurationPresetData;
+    response: ConfigurationPreset;
+  };
+  'preset:delete': {
+    request: string;
+    response: void;
+  };
 }
 
 export interface IpcEvents {
+  'execution:started': { executionId: string; config: TestConfig };
   'execution:progress': ExecutionProgress;
   'execution:complete': { executionId: string; result: TestResult };
+  'execution:cancelled': { executionId: string };
   'file:changed': {
     filePath: string;
     changeType: 'created' | 'modified' | 'deleted';

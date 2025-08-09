@@ -1,6 +1,5 @@
 import * as fs from 'fs/promises';
 import * as path from 'path';
-import { v4 as uuidv4 } from 'uuid';
 import {
   SpecificationFile,
   ReportFile,
@@ -10,7 +9,9 @@ import {
 
 export class FileManagerService {
   private projectPath: string;
+
   private specPath: string;
+
   private reportPath: string;
 
   constructor(projectPath?: string) {
@@ -24,8 +25,8 @@ export class FileManagerService {
     try {
       await fs.mkdir(this.specPath, { recursive: true });
       await fs.mkdir(this.reportPath, { recursive: true });
-    } catch (error) {
-      console.error('Failed to create directories:', error);
+    } catch {
+      // Directory creation failed - this will be handled by subsequent operations
     }
   }
 
@@ -39,7 +40,7 @@ export class FileManagerService {
         if (file.endsWith('.feature')) {
           const filePath = path.join(this.specPath, file);
           const stats = await fs.stat(filePath);
-          
+
           specifications.push({
             id: this.generateIdFromPath(filePath),
             name: file,
@@ -50,21 +51,20 @@ export class FileManagerService {
         }
       }
 
-      return specifications.sort((a, b) => 
-        b.lastModified.getTime() - a.lastModified.getTime()
+      return specifications.sort(
+        (a, b) => b.lastModified.getTime() - a.lastModified.getTime(),
       );
-    } catch (error) {
-      console.error('Failed to list specifications:', error);
+    } catch {
       return [];
     }
   }
 
   async loadSpecification(filePath: string): Promise<string> {
     try {
-      const resolvedPath = path.isAbsolute(filePath) 
-        ? filePath 
+      const resolvedPath = path.isAbsolute(filePath)
+        ? filePath
         : path.join(this.specPath, filePath);
-      
+
       const content = await fs.readFile(resolvedPath, 'utf-8');
       return content;
     } catch (error) {
@@ -75,21 +75,21 @@ export class FileManagerService {
   async saveSpecification(fileName: string, content: string): Promise<string> {
     try {
       await this.ensureDirectories();
-      
+
       if (!fileName.endsWith('.feature')) {
         fileName += '.feature';
       }
-      
+
       const filePath = path.join(this.specPath, fileName);
-      
+
       const backupPath = await this.createBackup(filePath);
-      
+
       await fs.writeFile(filePath, content, 'utf-8');
-      
+
       if (backupPath) {
         await this.cleanupOldBackups(fileName);
       }
-      
+
       return filePath;
     } catch (error) {
       throw new Error(`Failed to save specification: ${error}`);
@@ -101,9 +101,9 @@ export class FileManagerService {
       const resolvedPath = path.isAbsolute(filePath)
         ? filePath
         : path.join(this.specPath, filePath);
-      
+
       await this.createBackup(resolvedPath);
-      
+
       await fs.unlink(resolvedPath);
     } catch (error) {
       throw new Error(`Failed to delete specification: ${error}`);
@@ -113,21 +113,22 @@ export class FileManagerService {
   async createSpecification(name: string, content?: string): Promise<string> {
     try {
       await this.ensureDirectories();
-      
+
       if (!name.endsWith('.feature')) {
         name += '.feature';
       }
-      
+
       const filePath = path.join(this.specPath, name);
-      
+
       const exists = await this.fileExists(filePath);
       if (exists) {
         throw new Error(`Specification ${name} already exists`);
       }
-      
-      const defaultContent = content || this.getDefaultSpecificationContent(name);
+
+      const defaultContent =
+        content || this.getDefaultSpecificationContent(name);
       await fs.writeFile(filePath, defaultContent, 'utf-8');
-      
+
       return filePath;
     } catch (error) {
       throw new Error(`Failed to create specification: ${error}`);
@@ -143,30 +144,32 @@ export class FileManagerService {
       for (const file of files) {
         if (file.endsWith('.json')) {
           const filePath = path.join(this.reportPath, file);
-          
+
           try {
             const content = await fs.readFile(filePath, 'utf-8');
-            const report: TestReport = JSON.parse(content);
             const stats = await fs.stat(filePath);
-            
+            const report: TestReport = JSON.parse(content);
+
             reports.push({
               id: report.id,
               executionId: report.executionId,
               filePath,
               timestamp: new Date(report.timestamp),
               summary: this.calculateSummary(report),
+              name: path.basename(filePath),
+              createdAt: stats.mtime.toISOString(),
+              size: stats.size,
             });
-          } catch (parseError) {
-            console.error(`Failed to parse report ${file}:`, parseError);
+          } catch {
+            // Skip invalid report files
           }
         }
       }
 
-      return reports.sort((a, b) => 
-        b.timestamp.getTime() - a.timestamp.getTime()
+      return reports.sort(
+        (a, b) => b.timestamp.getTime() - a.timestamp.getTime(),
       );
-    } catch (error) {
-      console.error('Failed to list reports:', error);
+    } catch {
       return [];
     }
   }
@@ -176,14 +179,14 @@ export class FileManagerService {
       const resolvedPath = path.isAbsolute(filePath)
         ? filePath
         : path.join(this.reportPath, filePath);
-      
+
       const content = await fs.readFile(resolvedPath, 'utf-8');
       const report: TestReport = JSON.parse(content);
-      
+
       if (typeof report.timestamp === 'string') {
         report.timestamp = new Date(report.timestamp);
       }
-      
+
       return report;
     } catch (error) {
       throw new Error(`Failed to load report: ${error}`);
@@ -193,15 +196,15 @@ export class FileManagerService {
   async saveReport(report: TestReport): Promise<string> {
     try {
       await this.ensureDirectories();
-      
+
       const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
       const fileName = `report-${timestamp}.json`;
       const filePath = path.join(this.reportPath, fileName);
-      
+
       await fs.writeFile(filePath, JSON.stringify(report, null, 2), 'utf-8');
-      
+
       await this.cleanupOldReports();
-      
+
       return filePath;
     } catch (error) {
       throw new Error(`Failed to save report: ${error}`);
@@ -213,7 +216,7 @@ export class FileManagerService {
       const resolvedPath = path.isAbsolute(filePath)
         ? filePath
         : path.join(this.reportPath, filePath);
-      
+
       await fs.unlink(resolvedPath);
     } catch (error) {
       throw new Error(`Failed to delete report: ${error}`);
@@ -224,21 +227,20 @@ export class FileManagerService {
     try {
       const exists = await this.fileExists(filePath);
       if (!exists) return null;
-      
+
       const backupDir = path.join(path.dirname(filePath), '.backup');
       await fs.mkdir(backupDir, { recursive: true });
-      
+
       const fileName = path.basename(filePath);
       const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
       const backupName = `${fileName}.${timestamp}.backup`;
       const backupPath = path.join(backupDir, backupName);
-      
+
       const content = await fs.readFile(filePath, 'utf-8');
       await fs.writeFile(backupPath, content, 'utf-8');
-      
+
       return backupPath;
-    } catch (error) {
-      console.error('Failed to create backup:', error);
+    } catch {
       return null;
     }
   }
@@ -248,36 +250,36 @@ export class FileManagerService {
       const backupDir = path.join(this.specPath, '.backup');
       const exists = await this.fileExists(backupDir);
       if (!exists) return;
-      
+
       const files = await fs.readdir(backupDir);
       const backups = files
-        .filter(f => f.startsWith(fileName))
+        .filter((f) => f.startsWith(fileName))
         .sort()
         .reverse();
-      
+
       const maxBackups = 5;
       if (backups.length > maxBackups) {
         for (const backup of backups.slice(maxBackups)) {
           await fs.unlink(path.join(backupDir, backup));
         }
       }
-    } catch (error) {
-      console.error('Failed to cleanup backups:', error);
+    } catch {
+      // Backup cleanup failed - not critical
     }
   }
 
   private async cleanupOldReports(maxReports: number = 50): Promise<void> {
     try {
       const reports = await this.listReports();
-      
+
       if (reports.length > maxReports) {
         const toDelete = reports.slice(maxReports);
         for (const report of toDelete) {
           await this.deleteReport(report.filePath);
         }
       }
-    } catch (error) {
-      console.error('Failed to cleanup old reports:', error);
+    } catch {
+      // Report cleanup failed - not critical
     }
   }
 
@@ -301,13 +303,14 @@ export class FileManagerService {
     const passed = result.passedTests;
     const failed = result.failedTests;
     const skipped = result.skippedTests;
-    
+
     return {
       totalTests: total,
       passedTests: passed,
       failedTests: failed,
       skippedTests: skipped,
       successRate: total > 0 ? (passed / total) * 100 : 0,
+      executionTime: result.executionTime,
     };
   }
 

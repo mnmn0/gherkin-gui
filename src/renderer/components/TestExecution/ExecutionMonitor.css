@@ -1,0 +1,343 @@
+.execution-monitor {
+  padding: 20px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.execution-monitor.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #7f8c8d;
+  padding: 40px 20px;
+}
+
+.empty-icon {
+  font-size: 64px;
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+
+.empty-state h3 {
+  margin: 0 0 8px 0;
+  color: #2c3e50;
+  font-size: 20px;
+}
+
+.empty-state p {
+  margin: 0 0 20px 0;
+  font-size: 14px;
+}
+
+.monitor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.header-info h3 {
+  margin: 0 0 4px 0;
+  color: #2c3e50;
+  font-size: 20px;
+}
+
+.header-info p {
+  margin: 0;
+  color: #7f8c8d;
+  font-size: 14px;
+}
+
+.execution-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.execution-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  border-left: 4px solid #95a5a6;
+}
+
+.execution-card.running {
+  border-left-color: #3498db;
+}
+
+.execution-card.completed {
+  border-left-color: #27ae60;
+}
+
+.execution-card.failed {
+  border-left-color: #e74c3c;
+}
+
+.execution-card.cancelled {
+  border-left-color: #f39c12;
+}
+
+.execution-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #f8f9fa;
+}
+
+.execution-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.status-icon {
+  font-size: 18px;
+}
+
+.execution-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.execution-id {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 14px;
+}
+
+.execution-time {
+  font-size: 12px;
+  color: #7f8c8d;
+}
+
+.execution-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.running {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.status-badge.completed {
+  background-color: #e8f5e8;
+  color: #2e7d32;
+}
+
+.status-badge.failed {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.status-badge.cancelled {
+  background-color: #fff3e0;
+  color: #ef6c00;
+}
+
+.current-test {
+  padding: 12px 20px;
+  background-color: #f0f8ff;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 13px;
+}
+
+.current-test-label {
+  color: #7f8c8d;
+  margin-right: 8px;
+}
+
+.current-test-name {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.progress-section {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.progress-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.progress-text {
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.progress-percent {
+  color: #3498db;
+  font-weight: 600;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background-color: #ecf0f1;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #3498db;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.result-summary {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.result-stats {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 12px;
+}
+
+.result-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 60px;
+}
+
+.stat-number {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+
+.stat-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.result-stat.passed .stat-number,
+.result-stat.passed .stat-label {
+  color: #27ae60;
+}
+
+.result-stat.failed .stat-number,
+.result-stat.failed .stat-label {
+  color: #e74c3c;
+}
+
+.result-stat.skipped .stat-number,
+.result-stat.skipped .stat-label {
+  color: #f39c12;
+}
+
+.success-rate {
+  text-align: center;
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 14px;
+}
+
+.execution-config {
+  padding: 16px 20px;
+}
+
+.execution-config h4 {
+  margin: 0 0 12px 0;
+  color: #2c3e50;
+  font-size: 14px;
+}
+
+.config-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.config-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+.config-label {
+  color: #7f8c8d;
+  font-weight: 500;
+  min-width: 120px;
+}
+
+.config-value {
+  color: #2c3e50;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  flex: 1;
+  text-align: right;
+  word-break: break-all;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background-color: #3498db;
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #2980b9;
+}
+
+.btn-secondary {
+  background-color: #95a5a6;
+  color: white;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: #7f8c8d;
+}
+
+.btn-small {
+  padding: 6px 12px;
+  font-size: 12px;
+}

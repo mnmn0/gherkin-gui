@@ -185,7 +185,9 @@ describe('CodeGenerationService', () => {
       const ast = await service.parseGherkin(content);
       const code = await service.generateJUnitCode(ast, config);
 
-      expect(code).toContain('public class ComplexFeatureNameWithSpecialCharactersTest');
+      expect(code).toContain(
+        'public class ComplexFeatureNameWithSpecialCharactersTest',
+      );
     });
 
     it('should include custom imports', async () => {
@@ -247,7 +249,7 @@ public class TestClass {
       expect(result.errors).toContainEqual(
         expect.objectContaining({
           code: 'MISSING_PACKAGE',
-        })
+        }),
       );
     });
 
@@ -267,7 +269,7 @@ public class TestClass {
       expect(result.errors).toContainEqual(
         expect.objectContaining({
           code: 'NO_TEST_METHODS',
-        })
+        }),
       );
     });
 
@@ -288,7 +290,7 @@ public class TestClass {
       expect(result.errors).toContainEqual(
         expect.objectContaining({
           code: 'UNBALANCED_BRACES',
-        })
+        }),
       );
     });
 
@@ -308,7 +310,7 @@ public class TestClass {
       expect(result.warnings).toContainEqual(
         expect.objectContaining({
           code: 'MISSING_SPRING_ANNOTATIONS',
-        })
+        }),
       );
     });
   });
@@ -356,7 +358,7 @@ public class TestClass {
       const ast = await service.parseGherkin(content);
       const code = service.generateCucumberCompatibleCode(ast, config);
 
-      expect(code).toContain('@Given("I have user (.+) with age (\\\\d+)")');
+      expect(code).toContain('@Given("I have user \\"(.+) (.+)\\" with age (\\d+)")');
     });
   });
 

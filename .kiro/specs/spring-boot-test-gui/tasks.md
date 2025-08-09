@@ -83,11 +83,11 @@
   - _Requirements: 5.3, 6.1_
 
 - [ ] 6. Build main application layout and navigation
-- [ ] 6.1 Create main application layout components
-  - Implement AppLayout component with sidebar navigation and content area
-  - Create NavigationSidebar with menu items for specifications, code generation, test execution, and reports
-  - Build ContentArea component for displaying different feature modules
-  - _Requirements: 1.1, 6.1_
+- [ ] 6.1 Create main application layout components with Japanese UI
+  - Implement AppLayout component with sidebar navigation and content area using Japanese labels
+  - Create NavigationSidebar with Japanese menu items (テスト仕様, コード生成, テスト実行, レポート, 設定)
+  - Build ContentArea component for displaying different feature modules with Japanese headings
+  - _Requirements: 1.1, 6.1, 9.1, 9.2_
 
 - [ ] 6.2 Set up React routing and state management
   - Configure React Router for navigation between different application sections
@@ -96,17 +96,17 @@
   - _Requirements: 1.1, 6.3_
 
 - [ ] 7. Implement specification management UI
-- [ ] 7.1 Create specification list and file browser
-  - Build SpecificationList component to display all .feature files from .gherkin/spec/
-  - Implement file metadata display (name, last modified, size)
-  - Add file operations (create, delete, rename) with confirmation dialogs
-  - _Requirements: 1.1, 2.1, 2.3_
+- [ ] 7.1 Create specification list and file browser with Japanese interface
+  - Build SpecificationList component to display all .feature files with Japanese column headers (ファイル名, 最終更新日, サイズ)
+  - Implement file metadata display with Japanese labels and date formatting
+  - Add file operations (作成, 削除, 名前変更) with Japanese confirmation dialogs
+  - _Requirements: 1.1, 2.1, 2.3, 9.1, 9.4_
 
-- [ ] 7.2 Build Gherkin specification editor
-  - Create SpecificationEditor component with syntax highlighting for Gherkin
-  - Implement real-time validation and error highlighting for Gherkin syntax
-  - Add auto-completion for Gherkin keywords (Given, When, Then, And, But)
-  - _Requirements: 1.2, 1.3_
+- [ ] 7.2 Build Gherkin specification editor with Japanese interface
+  - Create SpecificationEditor component with syntax highlighting and Japanese UI labels
+  - Implement real-time validation with Japanese error messages for Gherkin syntax
+  - Add auto-completion for Gherkin keywords with Japanese tooltips and help text
+  - _Requirements: 1.2, 1.3, 9.3, 9.4_
 
 - [ ] 7.3 Add specification preview and validation
   - Implement SpecificationViewer for read-only display of parsed Gherkin
@@ -141,17 +141,17 @@
   - _Requirements: 4.2, 4.3_
 
 - [ ] 10. Create test report viewing interface
-- [ ] 10.1 Build report list and browser
-  - Implement ReportList component displaying all test reports from .gherkin/report/
-  - Add report metadata display (execution time, test counts, success rate)
-  - Create filtering and sorting options by date, success rate, or test name
-  - _Requirements: 5.2, 6.1, 6.3_
+- [ ] 10.1 Build report list and browser with Japanese interface
+  - Implement ReportList component with Japanese column headers (実行時間, テスト数, 成功率)
+  - Add report metadata display with Japanese labels and proper date/time formatting
+  - Create filtering and sorting options with Japanese labels (日付順, 成功率順, テスト名順)
+  - _Requirements: 5.2, 6.1, 6.3, 9.1, 9.5_
 
-- [ ] 10.2 Create detailed report viewer
-  - Build ReportViewer component showing comprehensive test results
-  - Display individual test case results with execution times and error details
-  - Implement expandable sections for stack traces and error messages
-  - _Requirements: 6.1, 6.2, 6.4_
+- [ ] 10.2 Create detailed report viewer with Japanese interface
+  - Build ReportViewer component with Japanese status labels (成功, 失敗, スキップ)
+  - Display individual test case results with Japanese labels for execution times and error details
+  - Implement expandable sections with Japanese headers for stack traces and error messages
+  - _Requirements: 6.1, 6.2, 6.4, 9.3, 9.5_
 
 - [ ] 10.3 Add report analytics and visualization
   - Create ReportAnalytics component with test trend charts and statistics
@@ -186,17 +186,17 @@
   - _Requirements: 1.1, 4.3, 6.1_
 
 - [ ] 13. Add comprehensive error handling and user feedback
-- [ ] 13.1 Implement application-wide error handling
-  - Create ErrorHandler service with categorized error processing
-  - Implement user notification system with toast messages and modal dialogs
-  - Add error logging and recovery mechanisms for different error types
-  - _Requirements: 1.1, 2.4, 3.2, 4.4, 5.4, 6.4_
+- [ ] 13.1 Implement application-wide error handling with Japanese messages
+  - Create ErrorHandler service with categorized error processing and Japanese error messages
+  - Implement user notification system with Japanese toast messages and modal dialogs
+  - Add error logging and recovery mechanisms with Japanese user-friendly error descriptions
+  - _Requirements: 1.1, 2.4, 3.2, 4.4, 5.4, 6.4, 9.3_
 
-- [ ] 13.2 Build user feedback and validation systems
-  - Create inline validation for all form inputs with real-time feedback
-  - Implement React error boundaries for component-level error catching
-  - Add confirmation dialogs for destructive operations (delete files, cancel tests)
-  - _Requirements: 1.4, 2.3, 4.4_
+- [ ] 13.2 Build user feedback and validation systems with Japanese interface
+  - Create inline validation for all form inputs with Japanese real-time feedback messages
+  - Implement React error boundaries with Japanese error messages for component-level error catching
+  - Add Japanese confirmation dialogs for destructive operations (ファイルを削除, テストをキャンセル)
+  - _Requirements: 1.4, 2.3, 4.4, 9.3, 9.4_
 
 - [ ] 14. Create comprehensive test suite
 - [ ] 14.1 Write unit tests for all services and components
@@ -211,15 +211,28 @@
   - Implement mock external process execution for test execution scenarios
   - _Requirements: All requirements - integration testing_
 
-- [ ] 15. Final integration and polish
-- [ ] 15.1 Integrate all components and test end-to-end workflows
+- [ ] 15. Implement comprehensive Japanese UI strings and constants
+- [ ] 15.1 Create Japanese UI strings constants file
+  - Create centralized constants file with all Japanese UI strings organized by component
+  - Implement consistent Japanese terminology for technical terms (テスト仕様, 実行結果, 設定など)
+  - Add Japanese date/time formatting utilities for consistent display across the application
+  - _Requirements: 9.1, 9.2, 9.5_
+
+- [ ] 15.2 Apply Japanese strings to all UI components
+  - Replace all hardcoded English strings in components with Japanese equivalents
+  - Update all button labels, menu items, form labels, and placeholder text to Japanese
+  - Ensure consistent Japanese formatting for numbers, dates, and file sizes
+  - _Requirements: 9.1, 9.2, 9.4, 9.5_
+
+- [ ] 16. Final integration and polish
+- [ ] 16.1 Integrate all components and test end-to-end workflows
   - Connect all UI components with backend services through IPC layer
-  - Test complete user workflows from specification creation to report viewing
-  - Implement final error handling and edge case management
+  - Test complete user workflows from specification creation to report viewing with Japanese interface
+  - Implement final error handling and edge case management with Japanese error messages
   - _Requirements: All requirements - complete integration_
 
-- [ ] 15.2 Add application polish and user experience improvements
-  - Implement keyboard shortcuts for common operations
-  - Add drag-and-drop functionality for file operations
-  - Create application icons, splash screen, and about dialog
-  - _Requirements: 1.1, 6.1 - user experience enhancements_
+- [ ] 16.2 Add application polish and Japanese user experience improvements
+  - Implement keyboard shortcuts with Japanese tooltips for common operations
+  - Add drag-and-drop functionality with Japanese feedback messages for file operations
+  - Create application icons, Japanese splash screen, and Japanese about dialog
+  - _Requirements: 1.1, 6.1, 9.1, 9.2 - user experience enhancements_

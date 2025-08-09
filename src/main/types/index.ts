@@ -68,6 +68,18 @@ export interface TestResult {
   skippedTests: number;
   executionTime: number;
   testCases: TestCase[];
+  testName: string;
+  status: 'PASSED' | 'FAILED' | 'SKIPPED';
+  errorMessage?: string;
+  stackTrace?: string;
+  assertions: TestAssertion[];
+}
+
+export interface TestAssertion {
+  message: string;
+  passed: boolean;
+  expected?: any;
+  actual?: any;
 }
 
 export interface TestCase {
@@ -85,6 +97,9 @@ export interface ReportFile {
   filePath: string;
   timestamp: Date;
   summary: TestSummary;
+  name: string;
+  createdAt: string;
+  size: number;
 }
 
 export interface TestReport {
@@ -94,6 +109,12 @@ export interface TestReport {
   specificationPath: string;
   testResult: TestResult;
   configuration: TestConfig;
+  startTime: string;
+  endTime: string;
+  environment: string;
+  reportName?: string;
+  summary: TestSummary;
+  testSuites: TestSuite[];
 }
 
 export interface TestSummary {
@@ -102,31 +123,21 @@ export interface TestSummary {
   failedTests: number;
   skippedTests: number;
   successRate: number;
+  executionTime: number;
+  recentFailures?: TestFailure[];
 }
 
-export interface ProjectConfig {
-  projectName: string;
-  projectPath: string;
-  buildTool: 'maven' | 'gradle';
-  buildFilePath: string;
-  javaHome?: string;
-  defaultClasspath: string[];
-  defaultSpringProfiles: string[];
-  codeGenerationTemplates: CodeTemplate[];
+export interface TestFailure {
+  testName: string;
+  errorMessage: string;
+  timestamp: string;
 }
 
-export interface CodeTemplate {
+export interface TestSuite {
   name: string;
-  description: string;
-  template: string;
-  variables: TemplateVariable[];
-}
-
-export interface TemplateVariable {
-  name: string;
-  description: string;
-  defaultValue?: string;
-  required: boolean;
+  testResults: TestResult[];
+  status: 'passed' | 'failed' | 'skipped';
+  executionTime: number;
 }
 
 export interface GenerationConfig {
@@ -176,8 +187,98 @@ export interface ExecutionProgress {
 export interface AppError {
   code: string;
   message: string;
-  category: 'filesystem' | 'parsing' | 'generation' | 'execution' | 'configuration';
+  category:
+    | 'filesystem'
+    | 'parsing'
+    | 'generation'
+    | 'execution'
+    | 'configuration';
   severity: 'info' | 'warning' | 'error' | 'critical';
   context?: Record<string, any>;
   timestamp: Date;
+}
+
+export interface GenerationTemplate {
+  id: string;
+  name: string;
+  description: string;
+  type: 'junit5' | 'junit4' | 'testng' | 'cucumber' | 'custom';
+  content: string;
+  variables: TemplateVariable[];
+  isDefault: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface TemplateVariable {
+  name: string;
+  type: 'string' | 'boolean' | 'number' | 'array';
+  defaultValue?: string;
+  description?: string;
+}
+
+export interface ProjectConfig {
+  projectName: string;
+  description?: string;
+  specificationDirectory: string;
+  reportDirectory: string;
+  testConfiguration: {
+    buildTool: 'maven' | 'gradle';
+    javaVersion: string;
+    testFramework: string;
+    springBootVersion: string;
+  };
+  codeGeneration?: {
+    defaultPackage: string;
+    baseTestClass?: string;
+    generateStepDefinitions: boolean;
+    includePageObjects: boolean;
+  };
+  fileWatching?: {
+    enabled: boolean;
+    autoRegenerate: boolean;
+  };
+}
+
+export interface GlobalConfig {
+  language?: string;
+  theme?: 'light' | 'dark' | 'auto';
+  autoSave?: boolean;
+  showWelcomeScreen?: boolean;
+  editor?: {
+    fontFamily?: string;
+    fontSize?: number;
+    tabSize?: number;
+    wordWrap?: boolean;
+    showLineNumbers?: boolean;
+    highlightActiveLine?: boolean;
+  };
+  ui?: {
+    sidebarWidth?: number;
+    zoomLevel?: number;
+    compactMode?: boolean;
+    showStatusBar?: boolean;
+  };
+  maxRecentFiles?: number;
+  backupInterval?: number;
+  enableTelemetry?: boolean;
+  enableDebugLogging?: boolean;
+}
+
+export interface ConfigurationPreset {
+  id: string;
+  name: string;
+  description: string;
+  category: 'project' | 'testing' | 'generation' | 'editor';
+  config: Partial<ProjectConfig & GlobalConfig>;
+  isBuiltIn: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ConfigurationPresetData {
+  name: string;
+  description: string;
+  category: 'project' | 'testing' | 'generation' | 'editor';
+  config: Partial<ProjectConfig & GlobalConfig>;
 }

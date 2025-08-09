@@ -93,3 +93,15 @@ Spring BootテストGUIソフトウェアは、開発者がGUI上でテスト仕
 2. WHEN the user sets up a project THEN the system SHALL allow specification of Maven/Gradle build file locations
 3. WHEN configuring test execution THEN the system SHALL support custom JVM arguments and environment variables
 4. WHEN settings are saved THEN the system SHALL persist configuration for future test runs
+
+### Requirement 9
+
+**User Story:** As a Japanese developer, I want the entire user interface to be displayed in Japanese, so that I can use the application in my native language without language barriers.
+
+#### Acceptance Criteria
+
+1. WHEN the application starts THEN the system SHALL display all UI elements, menus, buttons, and labels in Japanese
+2. WHEN the user navigates through different sections THEN the system SHALL show all navigation items, headings, and descriptions in Japanese
+3. WHEN error messages or notifications are displayed THEN the system SHALL present them in Japanese with clear and understandable text
+4. WHEN the user interacts with forms and dialogs THEN the system SHALL show all field labels, placeholders, and validation messages in Japanese
+5. WHEN displaying test results and reports THEN the system SHALL use Japanese labels for status indicators, column headers, and summary information

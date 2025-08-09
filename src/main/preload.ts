@@ -7,7 +7,7 @@ const electronHandler = {
   // IPC invoke methods
   invoke: <K extends IpcChannel>(
     channel: K,
-    data: IpcChannels[K]['request']
+    data: IpcChannels[K]['request'],
   ): Promise<IpcChannels[K]['response']> => {
     return ipcRenderer.invoke(channel, data);
   },
@@ -15,7 +15,7 @@ const electronHandler = {
   // IPC event listeners
   on: <K extends IpcEvent>(
     channel: K,
-    callback: (data: IpcEvents[K]) => void
+    callback: (data: IpcEvents[K]) => void,
   ): (() => void) => {
     const subscription = (_event: IpcRendererEvent, data: IpcEvents[K]) =>
       callback(data);
@@ -28,7 +28,7 @@ const electronHandler = {
 
   once: <K extends IpcEvent>(
     channel: K,
-    callback: (data: IpcEvents[K]) => void
+    callback: (data: IpcEvents[K]) => void,
   ): void => {
     ipcRenderer.once(channel, (_event, data: IpcEvents[K]) => callback(data));
   },

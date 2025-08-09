@@ -1,0 +1,153 @@
+.specification-viewer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.viewer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 24px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.spec-info h2 {
+  margin: 0 0 8px 0;
+  color: #2c3e50;
+  font-size: 24px;
+}
+
+.spec-metadata {
+  display: flex;
+  gap: 16px;
+  font-size: 14px;
+  color: #7f8c8d;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.viewer-content {
+  flex: 1;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  background-color: #fafafa;
+}
+
+.gherkin-preview {
+  height: 100%;
+  overflow: auto;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.gherkin-line {
+  display: flex;
+  padding: 2px 0;
+  border-left: 4px solid transparent;
+}
+
+.gherkin-line:hover {
+  background-color: #f0f8ff;
+}
+
+.line-number {
+  color: #999;
+  font-size: 12px;
+  width: 40px;
+  text-align: right;
+  padding-right: 12px;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.line-content {
+  padding-right: 12px;
+  white-space: pre;
+}
+
+.gherkin-line.feature {
+  border-left-color: #e74c3c;
+  background-color: #fdf2f2;
+}
+
+.gherkin-line.feature .line-content {
+  color: #c0392b;
+  font-weight: bold;
+}
+
+.gherkin-line.scenario {
+  border-left-color: #f39c12;
+  background-color: #fff9f0;
+}
+
+.gherkin-line.scenario .line-content {
+  color: #d68910;
+  font-weight: bold;
+}
+
+.gherkin-line.background {
+  border-left-color: #9b59b6;
+  background-color: #f8f4fd;
+}
+
+.gherkin-line.background .line-content {
+  color: #8e44ad;
+  font-weight: bold;
+}
+
+.gherkin-line.step {
+  border-left-color: #27ae60;
+  background-color: #f1f9f4;
+}
+
+.gherkin-line.step .line-content {
+  color: #229954;
+}
+
+.gherkin-line.examples {
+  border-left-color: #3498db;
+  background-color: #f0f8ff;
+}
+
+.gherkin-line.examples .line-content {
+  color: #2980b9;
+  font-weight: bold;
+}
+
+.gherkin-line.tag {
+  border-left-color: #e67e22;
+  background-color: #fef5e7;
+}
+
+.gherkin-line.tag .line-content {
+  color: #ca6f1e;
+  font-weight: bold;
+}
+
+.gherkin-line.comment .line-content {
+  color: #95a5a6;
+  font-style: italic;
+}
+
+.gherkin-line.table {
+  border-left-color: #16a085;
+  background-color: #e8f8f5;
+}
+
+.gherkin-line.table .line-content {
+  color: #138d75;
+  font-family: monospace;
+}
