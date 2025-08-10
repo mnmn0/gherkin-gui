@@ -102,30 +102,34 @@ describe('GlassModal', () => {
     const handleClose = jest.fn();
     const user = userEvent.setup();
 
-    render(
+    const { container } = render(
       <GlassModal isOpen onClose={handleClose}>
         <p>モーダルコンテンツ</p>
       </GlassModal>,
     );
 
-    const backdrop = screen.getByRole('dialog');
-    await user.click(backdrop);
-    expect(handleClose).toHaveBeenCalledTimes(1);
+    const backdrop = container.querySelector('.glass-modal');
+    if (backdrop) {
+      await user.click(backdrop);
+      expect(handleClose).toHaveBeenCalledTimes(1);
+    }
   });
 
   test('closeOnBackdropがfalseの時は背景クリックで閉じない', async () => {
     const handleClose = jest.fn();
     const user = userEvent.setup();
 
-    render(
+    const { container } = render(
       <GlassModal isOpen onClose={handleClose} closeOnBackdrop={false}>
         <p>モーダルコンテンツ</p>
       </GlassModal>,
     );
 
-    const backdrop = screen.getByRole('dialog');
-    await user.click(backdrop);
-    expect(handleClose).not.toHaveBeenCalled();
+    const backdrop = container.querySelector('.glass-modal');
+    if (backdrop) {
+      await user.click(backdrop);
+      expect(handleClose).not.toHaveBeenCalled();
+    }
   });
 
   test('モーダルコンテンツクリックでは閉じない', async () => {

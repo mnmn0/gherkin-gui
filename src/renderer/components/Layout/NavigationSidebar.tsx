@@ -10,7 +10,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
-import { useTheme, useUserPreferences } from '../../contexts/ThemeContext';
+import { useUserPreferences } from '../../contexts/ThemeContext';
 import ThemeToggle from '../Common/ThemeToggle';
 import GlassCard from '../Common/GlassCard';
 import './NavigationSidebar.css';

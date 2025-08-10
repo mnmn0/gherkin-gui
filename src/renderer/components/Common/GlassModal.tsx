@@ -130,15 +130,7 @@ const GlassModal: React.FC<GlassModalProps> = ({
   if (!isOpen) return null;
 
   const modal = (
-    <div
-      className={`glass-modal ${className}`}
-      onClick={handleBackdropClick}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby={title ? 'modal-title' : ariaProps['aria-labelledby']}
-      aria-describedby={ariaProps['aria-describedby']}
-      onKeyDown={handleKeyDown}
-    >
+    <div className={`glass-modal ${className}`} onClick={handleBackdropClick}>
       <div className={`glass-modal__backdrop ${getBackdropClass()}`} />
 
       <div className="glass-modal__container">
@@ -146,6 +138,10 @@ const GlassModal: React.FC<GlassModalProps> = ({
           ref={modalRef}
           className={`glass-modal__content ${getSizeClass()} ${contentClassName}`}
           onKeyDown={handleKeyDown}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={title ? 'modal-title' : ariaProps['aria-labelledby']}
+          aria-describedby={ariaProps['aria-describedby']}
           tabIndex={-1}
         >
           <GlassCard

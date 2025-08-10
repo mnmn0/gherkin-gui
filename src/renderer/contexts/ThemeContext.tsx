@@ -1,4 +1,11 @@
-import React, { createContext, useContext, useEffect, useState, useMemo } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useMemo,
+  useCallback,
+} from 'react';
 import { ThemeMode, ThemeContextType, UserPreferences } from '../types/theme';
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -68,7 +75,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
           setPreferences((prev) => ({ ...prev, ...parsedPreferences }));
           setTheme(parsedPreferences.theme || 'auto');
         }
-      } catch (error) {
+      } catch {
         // 設定の読み込みに失敗した場合はデフォルト設定を使用
       }
     };
@@ -83,7 +90,7 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
         'gherkin-gui-preferences',
         JSON.stringify(preferences),
       );
-    } catch (error) {
+    } catch {
       // 設定の保存に失敗した場合はログに記録
     }
   }, [preferences]);
@@ -129,36 +136,42 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     );
   }, [theme, systemTheme, preferences]);
 
-  const toggleTheme = () => {
+  const toggleTheme = useCallback(() => {
     const newTheme: ThemeMode =
       theme === 'light' ? 'dark' : theme === 'dark' ? 'auto' : 'light';
     setTheme(newTheme);
     setPreferences((prev) => ({ ...prev, theme: newTheme }));
-  };
+  }, [theme]);
 
-  const setThemeMode = (newTheme: ThemeMode) => {
+  const setThemeMode = useCallback((newTheme: ThemeMode) => {
     setTheme(newTheme);
     setPreferences((prev) => ({ ...prev, theme: newTheme }));
-  };
+  }, []);
 
   // ダミーテーマオブジェクト（実際にはCSS変数を使用）
-  const currentTheme = {
-    colors: {} as any,
-    typography: {} as any,
-    spacing: {} as any,
-    borderRadius: {} as any,
-    shadows: {} as any,
-    animations: {} as any,
-    zIndex: {} as any,
-  };
+  const currentTheme = useMemo(
+    () => ({
+      colors: {} as any,
+      typography: {} as any,
+      spacing: {} as any,
+      borderRadius: {} as any,
+      shadows: {} as any,
+      animations: {} as any,
+      zIndex: {} as any,
+    }),
+    [],
+  );
 
-  const contextValue: ThemeContextType = useMemo(() => ({
-    theme,
-    currentTheme,
-    toggleTheme,
-    setTheme: setThemeMode,
-    systemTheme,
-  }), [theme, currentTheme, toggleTheme, setThemeMode, systemTheme]);
+  const contextValue: ThemeContextType = useMemo(
+    () => ({
+      theme,
+      currentTheme,
+      toggleTheme,
+      setTheme: setThemeMode,
+      systemTheme,
+    }),
+    [theme, systemTheme, currentTheme, toggleTheme, setThemeMode],
+  );
 
   return (
     <ThemeContext.Provider value={contextValue}>
@@ -195,7 +208,7 @@ export const useUserPreferences = () => {
           const parsedPreferences = JSON.parse(saved);
           setPreferences((prev) => ({ ...prev, ...parsedPreferences }));
         }
-      } catch (error) {
+      } catch {
         // 設定の読み込みに失敗した場合はデフォルト設定を使用
       }
     };
@@ -212,7 +225,7 @@ export const useUserPreferences = () => {
         'gherkin-gui-preferences',
         JSON.stringify(newPreferences),
       );
-    } catch (error) {
+    } catch {
       // 設定の保存に失敗した場合はログに記録
     }
 

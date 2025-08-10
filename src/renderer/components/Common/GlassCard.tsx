@@ -56,16 +56,15 @@ const GlassCard: React.FC<GlassCardProps> = ({
     '--glass-blur': `${blurMap[blur]}px`,
   } as React.CSSProperties;
 
-  const cardProps = {
-    className: classes,
-    style,
-    onClick: interactive ? onClick : undefined,
-    tabIndex: interactive ? (ariaProps.tabIndex ?? 0) : undefined,
-    ...ariaProps,
-  };
-
   return (
-    <div {...cardProps}>
+    <div
+      className={classes}
+      style={style}
+      onClick={interactive ? onClick : undefined}
+      tabIndex={interactive ? (ariaProps.tabIndex ?? 0) : undefined}
+      aria-label={ariaProps['aria-label']}
+      role={ariaProps.role}
+    >
       {padding ? (
         <div className="glass-card__content">{children}</div>
       ) : (

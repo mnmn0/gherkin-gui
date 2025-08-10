@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import './Toast.css';
 
 export interface ToastMessage {
@@ -19,6 +19,14 @@ export const Toast: React.FC<ToastProps> = ({ toast, onClose }) => {
   const [isVisible, setIsVisible] = useState(true);
   const [isLeaving, setIsLeaving] = useState(false);
 
+  const handleClose = useCallback(() => {
+    setIsLeaving(true);
+    setTimeout(() => {
+      setIsVisible(false);
+      onClose(toast.id);
+    }, 300);
+  }, [onClose, toast.id]);
+
   useEffect(() => {
     if (!toast.persistent && toast.duration !== 0) {
       const duration = toast.duration || 5000;
@@ -28,15 +36,7 @@ export const Toast: React.FC<ToastProps> = ({ toast, onClose }) => {
 
       return () => clearTimeout(timer);
     }
-  }, [toast, toast.duration, toast.persistent]);
-
-  const handleClose = () => {
-    setIsLeaving(true);
-    setTimeout(() => {
-      setIsVisible(false);
-      onClose(toast.id);
-    }, 300);
-  };
+  }, [toast, toast.duration, toast.persistent, handleClose]);
 
   const getIcon = () => {
     switch (toast.type) {
