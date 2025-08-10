@@ -1,0 +1,241 @@
+.glass-card {
+  background: var(--glass-bg);
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-base);
+}
+
+/* Backdrop filter support */
+@supports (backdrop-filter: blur(1px)) {
+  .glass-card {
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+  }
+}
+
+/* Fallback for browsers without backdrop-filter */
+.glass-card--fallback,
+.glassmorphism-disabled .glass-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+/* Border */
+.glass-card {
+  border: 1px solid var(--glass-border);
+}
+
+.glass-card--no-border {
+  border: none;
+}
+
+/* Shadow */
+.glass-card {
+  box-shadow: var(--glass-shadow);
+}
+
+.glass-card--no-shadow {
+  box-shadow: none;
+}
+
+/* Size Variants */
+.glass-card--sm {
+  border-radius: var(--radius-md);
+}
+
+.glass-card--sm .glass-card__content {
+  padding: var(--space-3);
+}
+
+.glass-card--md .glass-card__content {
+  padding: var(--space-4);
+}
+
+.glass-card--lg {
+  border-radius: var(--radius-xl);
+}
+
+.glass-card--lg .glass-card__content {
+  padding: var(--space-6);
+}
+
+.glass-card--xl {
+  border-radius: var(--radius-2xl);
+}
+
+.glass-card--xl .glass-card__content {
+  padding: var(--space-8);
+}
+
+/* No padding variant */
+.glass-card--no-padding .glass-card__content {
+  padding: 0;
+}
+
+/* Blur Levels */
+.glass-card--blur-light {
+  --glass-blur: 8px;
+}
+
+.glass-card--blur-medium {
+  --glass-blur: 16px;
+}
+
+.glass-card--blur-heavy {
+  --glass-blur: 32px;
+}
+
+/* Hover Effects */
+.glass-card--hoverable:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--glass-shadow), 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="dark"] .glass-card--hoverable:hover {
+  box-shadow: var(--glass-shadow), 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+/* Interactive States */
+.glass-card--interactive {
+  cursor: pointer;
+  user-select: none;
+}
+
+.glass-card--interactive:hover {
+  transform: translateY(-1px);
+  border-color: var(--color-primary-300);
+  background: rgba(255, 255, 255, 0.8);
+}
+
+[data-theme="dark"] .glass-card--interactive:hover {
+  border-color: var(--color-primary-700);
+  background: rgba(17, 24, 39, 0.8);
+}
+
+.glass-card--interactive:active {
+  transform: translateY(0);
+}
+
+.glass-card--interactive:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+/* Content wrapper */
+.glass-card__content {
+  position: relative;
+  z-index: 1;
+}
+
+/* Glass effect overlay for enhanced blur */
+.glass-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+}
+
+[data-theme="dark"] .glass-card::before {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.02) 100%
+  );
+}
+
+/* Compact view adjustments */
+.view-compact .glass-card--sm .glass-card__content {
+  padding: var(--space-2);
+}
+
+.view-compact .glass-card--md .glass-card__content {
+  padding: var(--space-3);
+}
+
+.view-compact .glass-card--lg .glass-card__content {
+  padding: var(--space-4);
+}
+
+.view-compact .glass-card--xl .glass-card__content {
+  padding: var(--space-6);
+}
+
+/* Accessibility improvements */
+@media (prefers-contrast: high) {
+  .glass-card {
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+  }
+  
+  .glass-card--interactive:focus-visible {
+    outline-width: 3px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .glass-card,
+  .glass-card--hoverable:hover,
+  .glass-card--interactive:hover,
+  .glass-card--interactive:active {
+    transition: none;
+    transform: none;
+  }
+}
+
+/* Browser-specific optimizations */
+@supports not (backdrop-filter: blur(1px)) {
+  .glass-card {
+    background: var(--color-surface);
+  }
+  
+  .glass-card::before {
+    display: none;
+  }
+}
+
+/* Performance optimization for animations */
+.glass-card--hoverable,
+.glass-card--interactive {
+  will-change: transform;
+}
+
+.glass-card--hoverable:not(:hover),
+.glass-card--interactive:not(:hover):not(:focus):not(:active) {
+  will-change: auto;
+}
+
+/* Special variants */
+.glass-card--success {
+  border-color: var(--color-success-300);
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.glass-card--warning {
+  border-color: var(--color-warning-300);
+  background: rgba(245, 158, 11, 0.1);
+}
+
+.glass-card--error {
+  border-color: var(--color-error-300);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* Nested glass cards */
+.glass-card .glass-card {
+  background: rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="dark"] .glass-card .glass-card {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}

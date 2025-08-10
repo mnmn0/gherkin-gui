@@ -1,0 +1,211 @@
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.breadcrumb-list {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+.breadcrumb-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.breadcrumb-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-base);
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  font-size: inherit;
+  font-weight: var(--font-weight-normal);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+}
+
+.breadcrumb-link:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-primary-600);
+}
+
+.breadcrumb-link:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+.breadcrumb-current {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-1) var(--space-2);
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+.breadcrumb-current.active {
+  color: var(--color-primary-600);
+  font-weight: var(--font-weight-semibold);
+}
+
+.breadcrumb-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.breadcrumb-home-icon {
+  color: inherit;
+  flex-shrink: 0;
+}
+
+.breadcrumb-separator-wrapper {
+  display: flex;
+  align-items: center;
+  color: var(--color-text-muted);
+  margin: 0 var(--space-1);
+}
+
+.breadcrumb-separator {
+  color: inherit;
+  flex-shrink: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .breadcrumb-list {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    flex-wrap: nowrap;
+  }
+  
+  .breadcrumb-list::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .breadcrumb-label {
+    max-width: 120px;
+  }
+  
+  .breadcrumb-item:not(:last-child) .breadcrumb-label {
+    max-width: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .breadcrumb {
+    font-size: var(--font-size-xs);
+  }
+  
+  .breadcrumb-label {
+    max-width: 100px;
+  }
+  
+  .breadcrumb-item:not(:last-child) .breadcrumb-label {
+    max-width: 60px;
+  }
+  
+  .breadcrumb-home-icon {
+    width: 12px;
+    height: 12px;
+  }
+  
+  .breadcrumb-separator {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+/* Compact view adjustments */
+.view-compact .breadcrumb {
+  font-size: var(--font-size-xs);
+}
+
+.view-compact .breadcrumb-link,
+.view-compact .breadcrumb-current {
+  padding: var(--space-1);
+}
+
+.view-compact .breadcrumb-label {
+  max-width: 150px;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .breadcrumb-link {
+    border: 1px solid transparent;
+  }
+  
+  .breadcrumb-link:hover,
+  .breadcrumb-link:focus {
+    border-color: var(--color-border);
+  }
+  
+  .breadcrumb-link:focus-visible {
+    outline-width: 3px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .breadcrumb-link {
+    transition: none;
+  }
+}
+
+/* Glass effect variant */
+.breadcrumb.glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2) var(--space-3);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
+  box-shadow: var(--glass-shadow);
+}
+
+.glassmorphism-disabled .breadcrumb.glass {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+}
+
+/* Custom separator variants */
+.breadcrumb--dot .breadcrumb-separator::before {
+  content: '•';
+  font-weight: bold;
+}
+
+.breadcrumb--slash .breadcrumb-separator::before {
+  content: '/';
+  font-weight: normal;
+}
+
+.breadcrumb--arrow .breadcrumb-separator::before {
+  content: '→';
+}
+
+/* Interactive states */
+.breadcrumb-link:active {
+  transform: scale(0.98);
+}
+
+/* Keyboard navigation improvements */
+.breadcrumb-link:focus {
+  position: relative;
+  z-index: 1;
+}
